@@ -1,46 +1,34 @@
 # Schema Information
 
-## notes
+## tasks
 column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
 title       | string    | not null
-body        | text      | not null
-author_id   | integer   | not null, foreign key (references users), indexed
-notebook_id | integer   | not null, foreign key (references notebooks), indexed
-archived    | boolean   | not null, default: false
+description | text      | not null
+manager_id  | integer   | not null, foreign key (references users), indexed
+Assignee_id | integer | not null, foreign key (references users), indexed
+project_id  | integer   | not null, foreign key (references projects), indexed
+completed   | boolean   | not null, default: false
 
-## notebooks
+## projects
 column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
-author_id   | integer   | not null, foreign key (references users), indexed
+manager_id  | integer   | not null, foreign key (references users), indexed
 title       | string    | not null
-description | string    | 
+description | string    | not null
 
-## reminders
+
+##posts (maybe)
 column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
-user_id     | integer   | not null, foreign key (references users), indexed
-note_id     | string    | not null, foreign key (references notes), indexed
-date        | datetime  | not null
-type        | string    | not null
-prev_id     | integer   | foreign key (references reminders), indexed
+text        | string    | not null
+employee_id | integer   | not null, foreign key (references users), indexed
+task_id     | integer   | not null, foreign key (references tasks), indexed
+(maybe a read receipt? Read | boolean | not null)
 
-## tags
-column name | data type | details
-------------|-----------|-----------------------
-id          | integer   | not null, primary key
-name        | string    | not null
-
-## taggings
-column name | data type | details
-------------|-----------|-----------------------
-id          | integer   | not null, primary key
-name        | string    | not null
-note_id     | integer   | not null, foreign key (references notes), indexed, unique [tag_id]
-tag_id      | integer   | not null, foreign key (references tags), indexed
 
 ## users
 column name     | data type | details

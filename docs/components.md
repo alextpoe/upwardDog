@@ -2,12 +2,14 @@
 
 * `App`
   * `SearchIndex`
-  * `NotebooksIndex`
-    * `NotebookIndexItem`
-  * `NotebookForm`
-  * `NotesIndex`
-    * `NoteForm`
-    * `NoteIndexItem`
-  * `NoteDetail`
-    * `NoteTags`
-    * `NoteEditArea`
+  * `ProjectsIndex`
+    * `ProjectIndexItem`
+  * `ProjectForm`
+  * `TasksIndex`
+    * `TaskForm`
+    * `TaskIndexItem`
+  * `TaskDetail`
+    * `TaskPosts`
+    * `TaskEditArea`
+
+  

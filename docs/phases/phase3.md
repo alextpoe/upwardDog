@@ -1,13 +1,12 @@
-# Phase 3: Notebooks and Tags (2 days)
+# Phase 3: Projects (2 days)
 
 ## Rails
 ### Models
-* Notebook
-* Tag
-* Tagging
+* Project
+
 
 ### Controllers
-* Api::NotebooksController (create, destroy, index, show, update)
+* Api::ProjectsController (create, destroy, index, show, update)
 
 ### Views
 * notebooks/index.json.jbuilder
@@ -16,29 +15,28 @@
 
 ## Flux
 ### Views (React Components)
-* NotebooksIndex
-  - NotebookIndexItem
-* NotebookForm
-* SearchIndex
+* ProjectsIndex
+  - ProjectIndexItem
+* ProjectForm
 
 ### Stores
-* Notebook
+* Project
 
 ### Actions
-* ApiActions.receiveAllNotebooks -> triggered by ApiUtil
-* ApiActions.receiveSingleNotebook
-* ApiActions.deleteNotebook
-* NotebookActions.fetchAllNotebooks -> triggers ApiUtil
-* NotebookActions.fetchSingleNotebook
-* NotebookActions.createNotebook
-* NotebookActions.editNotebook
-* NotebookActions.destroyNotebook
+* ApiActions.receiveAllProjects -> triggered by ApiUtil
+* ApiActions.receiveSingleProject
+* ApiActions.deleteProject
+* ProjectActions.fetchAllProjects -> triggers ApiUtil
+* ProjectActions.fetchSingleProject
+* ProjectActions.createProject
+* ProjectActions.editProject
+* ProjectActions.destroyProject
 
 ### ApiUtil
-* ApiUtil.fetchAllNotebooks
-* ApiUtil.fetchSingleNotebook
-* ApiUtil.createNotebook
-* ApiUtil.editNotebook
-* ApiUtil.destroyNotebook
+* ApiUtil.fetchAllProjects
+* ApiUtil.fetchSingleProject
+* ApiUtil.createProject
+* ApiUtil.editProject
+* ApiUtil.destroyProject
 
 ## Gems/Libraries

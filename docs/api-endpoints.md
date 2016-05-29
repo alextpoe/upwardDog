@@ -9,6 +9,7 @@
 ### Users
 
 - `GET /users/new`
+- `GET / users/:id/tasks`
 - `POST /users`
 - `PATCH /users`
 
@@ -20,34 +21,21 @@
 
 ## JSON API
 
-### Notes
+### Tasks
 
-- `GET /api/notes`
-  - Notes index/search
-  - accepts `tag_name` query param to list notes by tag
-  - accepts pagination params (if I get there)
-- `POST /api/notes`
-- `GET /api/notes/:id`
-- `PATCH /api/notes/:id`
-- `DELETE /api/notes/:id`
+- `GET /api/tasks`
+  - Tasks index/search
+- `POST /api/tasks`
+- `GET /api/tasks/:id`
+- `PATCH /api/tasks/:id`
+- `DELETE /api/tasks/:id`
 
-### Notebooks
+### Projects
 
-- `GET /api/notebooks`
-- `POST /api/notebooks`
-- `GET /api/notebooks/:id`
-- `PATCH /api/notebooks/:id`
-- `DELETE /api/notebooks/:id`
-- `GET /api/notebooks/:id/notes`
-  - index of all notes for a notebook
-  - accepts pagination params (if I get there)
-
-### Tags
-
-- A note's tags will be included in the note show template
-- `GET /api/tags`
-  - includes query param for typeahead suggestions
-- `POST /api/notes/:note_id/tags`: add tag to note by name
-  - if note doesn't already exist, it will be created
-- `DELETE /api/notes/:note_id/tags/:tag_name`: remove tag from note by
-  name
+- `GET /api/Projects`
+- `POST /api/Projects`
+- `GET /api/Projects/:id`
+- `PATCH /api/Projects/:id`
+- `DELETE /api/Projects/:id`
+- `GET /api/Projects/:id/tasks`
+  - index of all tasks for a notebook
