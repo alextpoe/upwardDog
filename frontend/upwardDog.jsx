@@ -6,9 +6,11 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var hashHistory = ReactRouter.hashHistory;
 
-var routes = (
+var App = require('./components/App');
+
+var Router = (
   <Router history={ hashHistory }>
-    <Route>
+    <Route path="/" component={App}>
 
     </Route>
   </Router>
@@ -16,5 +18,6 @@ var routes = (
 
 
 document.addEventListener("DOMContentLoaded", function () {
-  ReactDOM.render(Router, "root");
+  var root = document.getElementById('content');
+  ReactDOM.render(Router, 'root');
 });

@@ -52,14 +52,17 @@
 	var Route = ReactRouter.Route;
 	var hashHistory = ReactRouter.hashHistory;
 	
-	var routes = React.createElement(
+	var App = __webpack_require__(220);
+	
+	var Router = React.createElement(
 	  Router,
 	  { history: hashHistory },
-	  React.createElement(Route, null)
+	  React.createElement(Route, { path: '/', component: App })
 	);
 	
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(Router, "root");
+	  var root = document.getElementById('content');
+	  ReactDOM.render(Router, 'root');
 	});
 
 /***/ },
@@ -25180,6 +25183,25 @@
 	
 	exports.default = (0, _createRouterHistory2.default)(_createHashHistory2.default);
 	module.exports = exports['default'];
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var App = React.createClass({
+	  displayName: 'App',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      'New'
+	    );
+	  }
+	});
 
 /***/ }
 /******/ ]);
