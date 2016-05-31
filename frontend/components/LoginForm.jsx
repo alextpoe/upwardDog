@@ -10,8 +10,6 @@ var LoginForm = React.createClass({
     this.sessionListener = SessionStore.addListener(this.onChange);
   },
 
-  componentWillUnmount: function () {
-  },
 
   onChange: function () {
     if (SessionStore.isUserLoggedIn()){

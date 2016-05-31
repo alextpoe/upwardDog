@@ -25246,8 +25246,6 @@
 	    this.sessionListener = SessionStore.addListener(this.onChange);
 	  },
 	
-	  componentWillUnmount: function () {},
-	
 	  onChange: function () {
 	    if (SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/");
