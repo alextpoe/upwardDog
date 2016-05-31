@@ -25234,6 +25234,7 @@
 
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(222);
+	var SessionApiUtil = __webpack_require__(244);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -25242,14 +25243,47 @@
 	    return { username: "", password: "" };
 	  },
 	
-	  componentDidMount: function () {
-	    this.sessionListener = SessionStore.addListener(this.onChange);
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
 	  },
 	
-	  onChange: function () {
+	  componentDidMount: function () {
+	    this.sessionListener = SessionStore.addListener(this.redirectIfLoggedIn);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionListener.remove();
+	  },
+	
+	  redirectIfLoggedIn: function () {
 	    if (SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/");
 	    }
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	
+	    var loginData = {
+	      username: this.state.username,
+	      password: this.state.password
+	    };
+	
+	    if (this.props.location.pathname === "/login") {
+	      SessionApiUtil.login(loginData);
+	    } else {
+	      UserApiUtil.signup(loginData);
+	    }
+	  },
+	
+	  usernameChange: function (event) {
+	    var newUsername = event.target.value;
+	    this.setState({ username: newUsername });
+	  },
+	
+	  passwordChange: function (event) {
+	    var newPassword = event.target.value;
+	    this.setState({ password: newPassword });
 	  },
 	
 	  render: function () {
@@ -25260,6 +25294,7 @@
 	        'form',
 	        { onSubmit: this.onSubmit },
 	        React.createElement('input', {
+	          type: 'text',
 	          value: this.state.username,
 	          onChange: this.usernameChange }),
 	        React.createElement('input', {
@@ -25284,6 +25319,7 @@
 
 	var Store = __webpack_require__(223).Store;
 	var AppDispatcher = __webpack_require__(241);
+	var SessionConstants = __webpack_require__(246);
 	
 	var SessionStore = new Store(AppDispatcher);
 	
@@ -32089,8 +32125,10 @@
 
 /***/ },
 /* 244 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var SessionActions = __webpack_require__(245);
+	
 	var SessionApiUtil = {
 	  login: function (credentials) {
 	    $.ajax({
@@ -32133,6 +32171,41 @@
 	};
 	
 	module.exports = SessionApiUtil;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(241);
+	var SessionConstants = __webpack_require__(246);
+	
+	var SessionActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    AppDispatcher.dispatch({
+	      actionType: SessionConstants.LOGIN,
+	      currentUser: currentUser
+	    });
+	  },
+	
+	  removeCurrentUser: function () {
+	    AppDispatcher.dispatch({
+	      actionType: SessionConstants.LOGOUT
+	    });
+	  }
+	};
+	
+	module.exports = SessionActions;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports) {
+
+	var SessionConstants = {
+	  LOGIN: "LOGIN",
+	  LOGOUT: "LOGOUT"
+	};
+	
+	module.exports = SessionConstants;
 
 /***/ }
 /******/ ]);

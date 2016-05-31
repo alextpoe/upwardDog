@@ -1,3 +1,5 @@
+var SessionActions = require('../actions/SessionActions');
+
 var SessionApiUtil = {
   login: function (credentials) {
     $.ajax({
