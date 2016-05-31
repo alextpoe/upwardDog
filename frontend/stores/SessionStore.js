@@ -29,3 +29,17 @@ SessionStore.__onDispatch = function (payload) {
       break;
   }
 };
+
+SessionStore.currentUser = function () {
+  return $.extend({}, _currentUser);
+};
+
+SessionStore.currentUserHasBeenFetched = function () {
+  return _currentUserHasBeenFetched;
+};
+
+SessionStore.isUserLoggedIn = function () {
+  return !!_currentUser.id;
+};
+
+module.exports = SessionStore;

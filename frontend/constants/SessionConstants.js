@@ -3,4 +3,4 @@ var SessionConstants = {
   LOGOUT: "LOGOUT"
 };
 
-module.exports = SessionContants;
+module.exports = SessionConstants;
