@@ -6,7 +6,6 @@
 
 # Ignore bundler config.
 /.bundle
-bundle
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -15,3 +14,6 @@ bundle
 
 # Ignore node_modules
 node_modules
+
+# Ignore bundle.js.
+bundle.js
