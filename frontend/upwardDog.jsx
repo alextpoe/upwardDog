@@ -6,10 +6,15 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var hashHistory = ReactRouter.hashHistory;
 
-var Router = (
+var routes = (
   <Router history={ hashHistory }>
     <Route>
 
     </Route>
   </Router>
 );
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  ReactDOM.render(Router, "root");
+});

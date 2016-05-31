@@ -52,11 +52,15 @@
 	var Route = ReactRouter.Route;
 	var hashHistory = ReactRouter.hashHistory;
 	
-	var Router = React.createElement(
+	var routes = React.createElement(
 	  Router,
 	  { history: hashHistory },
 	  React.createElement(Route, null)
 	);
+	
+	document.addEventListener("DOMContentLoaded", function () {
+	  ReactDOM.render(Router, "root");
+	});
 
 /***/ },
 /* 1 */
