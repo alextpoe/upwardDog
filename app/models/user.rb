@@ -10,7 +10,12 @@ class User < ActiveRecord::Base
 
   has_many :teams
   has_many :projects
-  has_many :tasks
+  has_many(
+    :tasks,
+    class_name: "Task",
+    foreign_key: :assignee_id,
+    primary_key: :id
+  )
 
   def password=(password)
     self.password_digest = BCrypt::Password.create(password)
