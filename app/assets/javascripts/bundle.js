@@ -32430,7 +32430,7 @@
 /* 251 */
 /***/ function(module, exports) {
 
-	window.TasksApiUtil = {
+	var TasksApiUtil = {
 	  receiveAllTasks: function (tasks) {
 	    $.ajax({
 	      type: "GET",
