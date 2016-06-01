@@ -22,7 +22,7 @@ var App = React.createClass({
         <nav className="top-header">
           <div className="placeholder">placeholder</div>
           <div className="log-in">
-            <Link to="/login">Log In</Link>
+            <Link to="/login" onClick={this.clickHandle}>Log In</Link>
             &nbsp;
             or
             &nbsp;

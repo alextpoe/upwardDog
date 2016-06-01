@@ -25246,7 +25246,7 @@
 	          { className: 'log-in' },
 	          React.createElement(
 	            Link,
-	            { to: '/login' },
+	            { to: '/login', onClick: this.clickHandle },
 	            'Log In'
 	          ),
 	          '  or  ',

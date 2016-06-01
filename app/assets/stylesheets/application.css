@@ -67,7 +67,6 @@
  .top-header{
    display: block;
    height: 50px;
-   background: blue;
    width: 100%;
  }
 
@@ -98,7 +97,6 @@
    text-align: center;
    color: black;
    font-size: 30px;
-   background: blue;
    height: 300px;
    display: block;
    width: 100%;
