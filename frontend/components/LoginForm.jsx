@@ -1,5 +1,6 @@
 var React = require('react');
 var SessionStore = require('../stores/SessionStore');
+var ErrorStore = require('../stores/ErrorStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
 var UserApiUtil = require('../util/UserApiUtil');
 
@@ -12,11 +13,14 @@ var LoginForm = React.createClass({
     router: React.PropTypes.object.isRequired
   },
 
+
   componentDidMount: function () {
+    this.errorListener = ErrorStore.addListener(this.forceUpdate.bind(this));
     this.sessionListener = SessionStore.addListener(this.redirectIfLoggedIn);
   },
 
   componentWillUnmount: function () {
+    this.errorListener.remove();
     this.sessionListener.remove();
   },
 
@@ -24,6 +28,17 @@ var LoginForm = React.createClass({
     if (SessionStore.isUserLoggedIn()) {
       this.context.router.push("/");
     }
+  },
+
+  fieldErrors: function (field) {
+    var errors = ErrorStore.formErrors(this.formType());
+    if (!errors[field]) { return; }
+
+    var messages = errors[field].map(function (errorMsg, i) {
+      return <li key={ i }>{ errorMsg }</li>;
+    });
+
+    return <ul>{ messages }</ul>
   },
 
   onSubmit: function(event) {
@@ -59,15 +74,32 @@ var LoginForm = React.createClass({
     return (
       <div>
         <form onSubmit={this.onSubmit}>
-          <input
-            type="text"
-            value={this.state.username}
-            onChange={this.usernameChange}/>
 
-          <input
-            type="password"
-            value={this.state.password}
-            onChange={this.passwordChange}/>
+          { this.fieldErrors("base") }
+          
+          <label> Username:
+
+            { this.fieldErrors("username") }
+
+            <input
+              type="text"
+              value={this.state.username}
+              onChange={this.usernameChange}/>
+          </label>
+
+        <br />
+
+          <label>
+
+            { this.fieldErrors("password") }
+
+            <input
+              type="password"
+              value={this.state.password}
+              onChange={this.passwordChange}/>
+          </label>
+
+        <br />
 
           <button type="submit">{this.formType()}</button>
         </form>

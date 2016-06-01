@@ -8,11 +8,11 @@ var SessionApiUtil = {
       dataType: "json",
       data: { user: credentials },
       success: function (currentUser) {
-        console.log("success");
         SessionActions.receiveCurrentUser(currentUser);
       },
-      error: function () {
-
+      error: function (xhr) {
+        var errors = xhr.responseJSON;
+        ErrorActions.setErrors("login", errors);
       }
     });
   },
@@ -24,7 +24,6 @@ var SessionApiUtil = {
       dataType: "json",
       success: function () {
         SessionActions.removeCurrentUser();
-        console.log("deleted");
       },
       error: function () {
 
@@ -40,7 +39,7 @@ var SessionApiUtil = {
         SessionActions.receiveCurrentUser(currentUser);
       },
       error: function (){
-
+        
       },
       complete: complete
     });
