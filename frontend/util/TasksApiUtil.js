@@ -1,11 +1,11 @@
-var SessionApiUtil = {
+window.TasksApiUtil = {
   receiveAllTasks: function (tasks) {
     $.ajax({
       type: "GET",
       url: "api/user/tasks",
       dataType: "json",
       data: {tasks: tasks},
-      success: function () {
+      success: function (data) {
         console.log("success");
       }
     });
@@ -26,7 +26,7 @@ var SessionApiUtil = {
   getTask: function (id) {
     $.ajax({
       type: "GET",
-      url: "api/user/task/" + id,
+      url: "api/user/tasks/" + id,
       dataType: "json",
       success: function () {
         console.log("success");
@@ -34,10 +34,10 @@ var SessionApiUtil = {
     });
   },
 
-  editTask: function (task) {
+  editTask: function (task, id) {
     $.ajax({
       type: "PATCH",
-      url: "api/user/tasks/" + task.id,
+      url: "api/user/tasks/" + id,
       dataType: "json",
       data: {task: task},
       success: function () {
@@ -57,4 +57,4 @@ var SessionApiUtil = {
   }
 };
 
-module.exports = SessionApiUtil;
+module.exports = TasksApiUtil;

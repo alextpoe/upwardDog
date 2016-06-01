@@ -4,7 +4,7 @@ class Api::TasksController < ApplicationController
   end
 
   def show
-    @task = Task.find_by(params[:task][:id])
+    @task = Task.find(params[:id])
   end
 
   def new
@@ -23,10 +23,29 @@ class Api::TasksController < ApplicationController
   end
 
   def update
-    @task = Task.find_by(task_params)
+    @task = Task.find(params[:id])
+    if @task.update(task_params)
+      render :index
+    end
   end
 
   def destroy
-    @task = Task.find_by(task_params)
+    @task = Task.find(params[:id])
+    if(@task.destroy)
+      render :index
+    end
+  end
+
+  private
+
+  def task_params
+    params.require(:task).permit(
+      :title,
+      :description,
+      :manager_id,
+      :assignee_id,
+      :project_id,
+      :completed
+      )
   end
 end

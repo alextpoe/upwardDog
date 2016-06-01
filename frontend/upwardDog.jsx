@@ -12,6 +12,7 @@ var LoginForm = require('./components/LoginForm');
 
 var SessionStore = require('./stores/SessionStore');
 var SessionApiUtil = require('./util/SessionApiUtil');
+var TasksApiUtil = require('./util/TasksApiUtil');
 
 var routes = (
   <Route path="/" component={App} >
@@ -20,6 +21,7 @@ var routes = (
     <Route path="/signup" component={ LoginForm } />
   </Route>
 );
+
 
 function _ensureLoggedIn(nextState, replace, asyncDoneCallback) {
   if (SessionStore.currentUserHasBeenFetched()){
