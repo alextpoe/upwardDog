@@ -25212,16 +25212,48 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var SessionStore = __webpack_require__(222);
+	var SessionApiUtil = __webpack_require__(245);
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
+	  componentDidMount: function () {
+	    SessionStore.addListener(this.forceUpdate.bind(this));
+	  },
+	
+	  header: function () {
+	    if (SessionStore.isUserLoggedIn()) {
+	      debugger;
+	      return React.createElement('input', {
+	        type: 'submit',
+	        value: 'Log Out',
+	        onClick: SessionApiUtil.logout });
+	    } else if (["/login", "signup"].indexOf(this.props.location.pathname) === -1) {
+	      return React.createElement(
+	        'nav',
+	        null,
+	        React.createElement(
+	          Link,
+	          { to: '/login' },
+	          'Log In'
+	        ),
+	        'or',
+	        React.createElement(
+	          Link,
+	          { to: '/signup' },
+	          'Sign Up'
+	        )
+	      );
+	    }
+	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      'Hello',
+	      this.header(),
 	      this.props.children
 	    );
 	  }
