@@ -5,6 +5,7 @@ var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var hashHistory = ReactRouter.hashHistory;
+var IndexRoute = ReactRouter.IndexRoute;
 
 var App = require('./components/App');
 var LoginForm = require('./components/LoginForm');
@@ -14,6 +15,7 @@ var SessionApiUtil = require('./util/SessionApiUtil');
 
 var routes = (
   <Route path="/" component={App} >
+  <IndexRoute component={App} />
     <Route path="/login" component={ LoginForm } />
     <Route path="/signup" component={ LoginForm } />
   </Route>

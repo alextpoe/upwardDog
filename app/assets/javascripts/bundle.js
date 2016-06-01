@@ -51,6 +51,7 @@
 	var Router = ReactRouter.Router;
 	var Route = ReactRouter.Route;
 	var hashHistory = ReactRouter.hashHistory;
+	var IndexRoute = ReactRouter.IndexRoute;
 	
 	var App = __webpack_require__(220);
 	var LoginForm = __webpack_require__(246);
@@ -61,6 +62,7 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
+	  React.createElement(IndexRoute, { component: App }),
 	  React.createElement(Route, { path: '/login', component: LoginForm }),
 	  React.createElement(Route, { path: '/signup', component: LoginForm })
 	);
@@ -25233,13 +25235,13 @@
 	    } else if (["/login", "signup"].indexOf(this.props.location.pathname) === -1) {
 	      return React.createElement(
 	        'nav',
-	        null,
+	        { className: 'top-header' },
 	        React.createElement(
 	          Link,
 	          { to: '/login' },
 	          'Log In'
 	        ),
-	        'or',
+	        '  or  ',
 	        React.createElement(
 	          Link,
 	          { to: '/signup' },
@@ -25252,8 +25254,27 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
-	      this.header(),
+	      { className: 'container' },
+	      React.createElement(
+	        'header',
+	        { className: 'page-header' },
+	        this.header()
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'front' },
+	        React.createElement(
+	          'h1',
+	          { className: 'land' },
+	          'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+	          React.createElement(
+	            'p',
+	            { className: 'pretty' },
+	            'Lorem ipsum.'
+	          )
+	        )
+	      ),
+	      React.createElement('footer', { className: 'page-header' }),
 	      this.props.children
 	    );
 	  }
@@ -32247,7 +32268,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'login' },
 	      React.createElement(
 	        'form',
 	        { onSubmit: this.onSubmit },
@@ -32259,6 +32280,7 @@
 	          this.fieldErrors("username"),
 	          React.createElement('input', {
 	            type: 'text',
+	            className: 'username',
 	            value: this.state.username,
 	            onChange: this.usernameChange })
 	        ),
@@ -32266,8 +32288,10 @@
 	        React.createElement(
 	          'label',
 	          null,
+	          ' Password:',
 	          this.fieldErrors("password"),
 	          React.createElement('input', {
+	            className: 'password',
 	            type: 'password',
 	            value: this.state.password,
 	            onChange: this.passwordChange })

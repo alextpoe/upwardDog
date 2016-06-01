@@ -19,9 +19,11 @@ var App = React.createClass({
       );
     } else if (["/login", "signup"].indexOf(this.props.location.pathname) === -1) {
       return (
-        <nav>
+        <nav className="top-header">
           <Link to="/login">Log In</Link>
+          &nbsp;
           or
+          &nbsp;
           <Link to="/signup">Sign Up</Link>
         </nav>
       );
@@ -30,8 +32,20 @@ var App = React.createClass({
 
   render: function () {
     return(
-      <div>
-        {this.header()}
+      <div className="container">
+        <header className="page-header">
+
+          { this.header() }
+        </header>
+          <div className="front">
+            <h1 className="land">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              <p className="pretty">
+                Lorem ipsum.
+              </p>
+            </h1>
+          </div>
+        <footer className="page-header"/>
         {this.props.children}
       </div>
     );

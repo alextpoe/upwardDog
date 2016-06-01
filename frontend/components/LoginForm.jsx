@@ -72,28 +72,30 @@ var LoginForm = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <div className="login">
         <form onSubmit={this.onSubmit}>
 
           { this.fieldErrors("base") }
-          
+
           <label> Username:
 
             { this.fieldErrors("username") }
 
             <input
               type="text"
+              className="username"
               value={this.state.username}
               onChange={this.usernameChange}/>
           </label>
 
         <br />
 
-          <label>
+          <label> Password:
 
             { this.fieldErrors("password") }
 
             <input
+              className="password"
               type="password"
               value={this.state.password}
               onChange={this.passwordChange}/>
