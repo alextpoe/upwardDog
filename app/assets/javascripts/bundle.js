@@ -56,7 +56,7 @@
 	var LoginForm = __webpack_require__(221);
 	
 	var SessionStore = __webpack_require__(222);
-	var SessionApiUtil = __webpack_require__(244);
+	var SessionApiUtil = __webpack_require__(245);
 	
 	var routes = React.createElement(
 	  Route,
@@ -25234,7 +25234,7 @@
 
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(222);
-	var SessionApiUtil = __webpack_require__(244);
+	var SessionApiUtil = __webpack_require__(245);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -25319,27 +25319,27 @@
 
 	var Store = __webpack_require__(223).Store;
 	var AppDispatcher = __webpack_require__(241);
-	var SessionConstants = __webpack_require__(246);
+	var SessionConstants = __webpack_require__(244);
 	
 	var SessionStore = new Store(AppDispatcher);
 	
 	var _currentUser = {};
 	var _currentUserHasBeenFetched = false;
 	
-	function _login(currentUser) {
+	var _login = function (currentUser) {
 	  _currentUser = currentUser;
 	  _currentUserHasBeenFetched = true;
-	}
+	};
 	
-	function _logout() {
+	var _logout = function () {
 	  _currentUser = {};
 	  _currentUserHasBeenFetched = true;
-	}
+	};
 	
 	SessionStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case SessionConstants.LOGIN:
-	      _login(payload.current_user);
+	      _login(payload.currentUser);
 	      SessionStore.__emitChange();
 	      break;
 	    case SessionConstants.LOGOUT:
@@ -25354,6 +25354,7 @@
 	};
 	
 	SessionStore.currentUserHasBeenFetched = function () {
+	
 	  return _currentUserHasBeenFetched;
 	};
 	
@@ -32125,9 +32126,20 @@
 
 /***/ },
 /* 244 */
+/***/ function(module, exports) {
+
+	var SessionConstants = {
+	  LOGIN: "LOGIN",
+	  LOGOUT: "LOGOUT"
+	};
+	
+	module.exports = SessionConstants;
+
+/***/ },
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionActions = __webpack_require__(245);
+	var SessionActions = __webpack_require__(246);
 	
 	var SessionApiUtil = {
 	  login: function (credentials) {
@@ -32137,8 +32149,8 @@
 	      dataType: "json",
 	      data: { user: credentials },
 	      success: function (currentUser) {
-	        SessionActions.receiveCurrentUser(currentUser);
 	        console.log("success");
+	        SessionActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function () {}
 	    });
@@ -32173,11 +32185,11 @@
 	module.exports = SessionApiUtil;
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(241);
-	var SessionConstants = __webpack_require__(246);
+	var SessionConstants = __webpack_require__(244);
 	
 	var SessionActions = {
 	  receiveCurrentUser: function (currentUser) {
@@ -32195,17 +32207,6 @@
 	};
 	
 	module.exports = SessionActions;
-
-/***/ },
-/* 246 */
-/***/ function(module, exports) {
-
-	var SessionConstants = {
-	  LOGIN: "LOGIN",
-	  LOGOUT: "LOGOUT"
-	};
-	
-	module.exports = SessionConstants;
 
 /***/ }
 /******/ ]);

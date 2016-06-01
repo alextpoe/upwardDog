@@ -7,21 +7,21 @@ var SessionStore = new Store(AppDispatcher);
 var _currentUser = {};
 var _currentUserHasBeenFetched = false;
 
-function _login(currentUser) {
+var _login = function (currentUser) {
   _currentUser = currentUser;
   _currentUserHasBeenFetched = true;
-}
+};
 
-function _logout() {
+var _logout = function () {
   _currentUser = {};
   _currentUserHasBeenFetched = true;
-}
+};
 
 
 SessionStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case SessionConstants.LOGIN:
-      _login(payload.current_user);
+      _login(payload.currentUser);
       SessionStore.__emitChange();
       break;
     case SessionConstants.LOGOUT:
@@ -36,6 +36,7 @@ SessionStore.currentUser = function () {
 };
 
 SessionStore.currentUserHasBeenFetched = function () {
+
   return _currentUserHasBeenFetched;
 };
 

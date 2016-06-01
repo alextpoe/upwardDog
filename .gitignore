@@ -16,4 +16,4 @@
 node_modules
 
 # Ignore bundle.js.
-bundle.js
+/bundle.js
