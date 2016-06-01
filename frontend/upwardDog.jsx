@@ -14,7 +14,8 @@ var SessionApiUtil = require('./util/SessionApiUtil');
 
 var routes = (
   <Route path="/" component={App}>
-    <Route path="/login" component={ LoginForm }/>
+    <Route path="/login" component={ LoginForm } />
+    <Route path="/signup" component={ LoginForm } />
   </Route>
 );
 

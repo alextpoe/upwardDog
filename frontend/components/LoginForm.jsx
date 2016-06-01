@@ -1,6 +1,7 @@
 var React = require('react');
 var SessionStore = require('../stores/SessionStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
+var UserApiUtil = require('../util/UserApiUtil');
 
 var LoginForm = React.createClass({
   getInitialState: function () {
@@ -50,6 +51,10 @@ var LoginForm = React.createClass({
     this.setState({password: newPassword});
   },
 
+  formType: function () {
+    return this.props.location.pathname.slice(1);
+  },
+
   render: function () {
     return (
       <div>
@@ -64,7 +69,7 @@ var LoginForm = React.createClass({
             value={this.state.password}
             onChange={this.passwordChange}/>
 
-          <button type="submit">Log In</button>
+          <button type="submit">{this.formType()}</button>
         </form>
       </div>
     );

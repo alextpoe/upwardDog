@@ -61,7 +61,8 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(Route, { path: '/login', component: LoginForm })
+	  React.createElement(Route, { path: '/login', component: LoginForm }),
+	  React.createElement(Route, { path: '/signup', component: LoginForm })
 	);
 	
 	function _ensureLoggedIn(nextState, replace, asyncDoneCallback) {
@@ -25235,6 +25236,7 @@
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(222);
 	var SessionApiUtil = __webpack_require__(245);
+	var UserApiUtil = __webpack_require__(247);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -25286,6 +25288,10 @@
 	    this.setState({ password: newPassword });
 	  },
 	
+	  formType: function () {
+	    return this.props.location.pathname.slice(1);
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -25304,7 +25310,7 @@
 	        React.createElement(
 	          'button',
 	          { type: 'submit' },
-	          'Log In'
+	          this.formType()
 	        )
 	      )
 	    );
@@ -32207,6 +32213,29 @@
 	};
 	
 	module.exports = SessionActions;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var SessionActions = __webpack_require__(246);
+	
+	var UserApiUtil = {
+	  signup: function (formData) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/user",
+	      dataType: "json",
+	      data: { user: formData },
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	      },
+	      error: function () {}
+	    });
+	  }
+	};
+	
+	module.exports = UserApiUtil;
 
 /***/ }
 /******/ ]);

@@ -1,4 +1,4 @@
-var SessionActions = require('../actions/actions/SessionAction');
+var SessionActions = require('../actions/SessionActions');
 
 var UserApiUtil = {
   signup: function (formData) {
