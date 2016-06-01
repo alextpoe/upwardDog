@@ -2,7 +2,7 @@
 
 [Heroku link][heroku] **NB:** This should be a link to your production site
 
-[heroku]: http://www.http://upward-dog.herokuapp.com/
+[heroku]: http://upward-dog.herokuapp.com/
 
 ## Minimum Viable Product
 
