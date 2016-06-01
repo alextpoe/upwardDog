@@ -15,7 +15,7 @@ var SessionApiUtil = require('./util/SessionApiUtil');
 var TasksApiUtil = require('./util/TasksApiUtil');
 
 var routes = (
-  <Route path="/" component={App}>
+  <Route path="/" component={App} history={hashHistory}>
     <Route path="/login" component={ LoginForm } />
     <Route path="/signup" component={ LoginForm } />
   </Route>

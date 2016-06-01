@@ -41,6 +41,10 @@ var LoginForm = React.createClass({
     return <ul>{ messages }</ul>
   },
 
+  bgClick: function (){
+    this.context.router.push("/");
+  },
+
   onSubmit: function(event) {
     event.preventDefault();
 
@@ -72,7 +76,10 @@ var LoginForm = React.createClass({
 
   render: function () {
     return (
-      <div className="login">
+      <div>
+        <div className="login" onClick={this.bgClick}>
+        </div>
+
         <form className="login-form" onSubmit={this.onSubmit}>
 
           { this.fieldErrors("base") }
@@ -105,6 +112,7 @@ var LoginForm = React.createClass({
 
           <button type="submit">{this.formType()}</button>
         </form>
+
       </div>
     );
   }

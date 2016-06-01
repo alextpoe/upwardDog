@@ -62,7 +62,7 @@
 	
 	var routes = React.createElement(
 	  Route,
-	  { path: '/', component: App },
+	  { path: '/', component: App, history: hashHistory },
 	  React.createElement(Route, { path: '/login', component: LoginForm }),
 	  React.createElement(Route, { path: '/signup', component: LoginForm })
 	);
@@ -25221,8 +25221,16 @@
 	var App = React.createClass({
 	  displayName: 'App',
 	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
 	  componentDidMount: function () {
 	    SessionStore.addListener(this.forceUpdate.bind(this));
+	  },
+	
+	  clickHandle: function (event) {
+	    this.context.router.push("/login");
 	  },
 	
 	  header: function () {
@@ -25239,7 +25247,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'placeholder' },
-	          'placeholder'
+	          React.createElement('img', { src: window.logo_url })
 	        ),
 	        React.createElement(
 	          'div',
@@ -25273,7 +25281,7 @@
 	      React.createElement(
 	        'footer',
 	        { className: 'footer' },
-	        'Here\'s more writing that will be filled with some thing clever.'
+	        'Here\'s more writing that will be filled with something clever.'
 	      ),
 	      this.props.children
 	    );
@@ -32236,6 +32244,10 @@
 	    );
 	  },
 	
+	  bgClick: function () {
+	    this.context.router.push("/");
+	  },
+	
 	  onSubmit: function (event) {
 	    event.preventDefault();
 	
@@ -32268,7 +32280,8 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'login' },
+	      null,
+	      React.createElement('div', { className: 'login', onClick: this.bgClick }),
 	      React.createElement(
 	        'form',
 	        { className: 'login-form', onSubmit: this.onSubmit },

@@ -88,9 +88,16 @@
    text-align: center;
    color: white;
    font-size: 40px;
-   background: #fc7279;
    height: 700px;
-   width: 100%
+   width: 100%;
+       /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffc019+0,ff7b9c+40,fc7279+73 */
+    background: rgb(255,192,25); /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover, rgba(255,192,25,1) 0%, rgba(255,123,156,1) 40%, rgba(252,114,121,1) 73%); /* FF3.6-15 */
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(255,192,25,1) 0%,rgba(255,123,156,1) 40%,rgba(252,114,121,1) 73%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(ellipse at center, rgba(255,192,25,1) 0%,rgba(255,123,156,1) 40%,rgba(252,114,121,1) 73%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc019', endColorstr='#fc7279',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    copy
+
  }
 
  .footer{
@@ -109,7 +116,8 @@
    right: 0px;
    bottom: 0px;
    margin: auto;
-   background: #fc7279;
+   background: rgba(0, 0, 0, 0.4);
+
  }
 
  .login-form{
