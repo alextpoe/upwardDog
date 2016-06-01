@@ -20,11 +20,14 @@ var App = React.createClass({
     } else if (["/login", "signup"].indexOf(this.props.location.pathname) === -1) {
       return (
         <nav className="top-header">
-          <Link to="/login">Log In</Link>
-          &nbsp;
-          or
-          &nbsp;
-          <Link to="/signup">Sign Up</Link>
+          <div className="placeholder">placeholder</div>
+          <div className="log-in">
+            <Link to="/login">Log In</Link>
+            &nbsp;
+            or
+            &nbsp;
+            <Link to="/signup">Sign Up</Link>
+          </div>
         </nav>
       );
     }
@@ -33,19 +36,13 @@ var App = React.createClass({
   render: function () {
     return(
       <div className="container">
-        <header className="page-header">
-
-          { this.header() }
-        </header>
-          <div className="front">
-            <h1 className="land">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              <p className="pretty">
-                Lorem ipsum.
-              </p>
-            </h1>
-          </div>
-        <footer className="page-header"/>
+        { this.header() }
+        <div className="pretty">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+        </div>
+        <footer className="footer">
+          Here's more writing that will be filled with some thing clever.
+        </footer>
         {this.props.children}
       </div>
     );

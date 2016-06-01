@@ -73,7 +73,7 @@ var LoginForm = React.createClass({
   render: function () {
     return (
       <div className="login">
-        <form onSubmit={this.onSubmit}>
+        <form className="login-form" onSubmit={this.onSubmit}>
 
           { this.fieldErrors("base") }
 
@@ -90,7 +90,7 @@ var LoginForm = React.createClass({
 
         <br />
 
-          <label> Password:
+          <label className="login-field"> Password:
 
             { this.fieldErrors("password") }
 

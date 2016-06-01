@@ -63,7 +63,6 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: App }),
 	  React.createElement(Route, { path: '/login', component: LoginForm }),
 	  React.createElement(Route, { path: '/signup', component: LoginForm })
 	);
@@ -25238,15 +25237,24 @@
 	        'nav',
 	        { className: 'top-header' },
 	        React.createElement(
-	          Link,
-	          { to: '/login' },
-	          'Log In'
+	          'div',
+	          { className: 'placeholder' },
+	          'placeholder'
 	        ),
-	        '  or  ',
 	        React.createElement(
-	          Link,
-	          { to: '/signup' },
-	          'Sign Up'
+	          'div',
+	          { className: 'log-in' },
+	          React.createElement(
+	            Link,
+	            { to: '/login' },
+	            'Log In'
+	          ),
+	          '  or  ',
+	          React.createElement(
+	            Link,
+	            { to: '/signup' },
+	            'Sign Up'
+	          )
 	        )
 	      );
 	    }
@@ -25256,26 +25264,17 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'container' },
-	      React.createElement(
-	        'header',
-	        { className: 'page-header' },
-	        this.header()
-	      ),
+	      this.header(),
 	      React.createElement(
 	        'div',
-	        { className: 'front' },
-	        React.createElement(
-	          'h1',
-	          { className: 'land' },
-	          'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-	          React.createElement(
-	            'p',
-	            { className: 'pretty' },
-	            'Lorem ipsum.'
-	          )
-	        )
+	        { className: 'pretty' },
+	        'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
 	      ),
-	      React.createElement('footer', { className: 'page-header' }),
+	      React.createElement(
+	        'footer',
+	        { className: 'footer' },
+	        'Here\'s more writing that will be filled with some thing clever.'
+	      ),
 	      this.props.children
 	    );
 	  }
@@ -32272,7 +32271,7 @@
 	      { className: 'login' },
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.onSubmit },
+	        { className: 'login-form', onSubmit: this.onSubmit },
 	        this.fieldErrors("base"),
 	        React.createElement(
 	          'label',
@@ -32288,7 +32287,7 @@
 	        React.createElement('br', null),
 	        React.createElement(
 	          'label',
-	          null,
+	          { className: 'login-field' },
 	          ' Password:',
 	          this.fieldErrors("password"),
 	          React.createElement('input', {
