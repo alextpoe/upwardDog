@@ -96,8 +96,6 @@
     background: -webkit-radial-gradient(center, ellipse cover, rgba(255,192,25,1) 0%,rgba(255,123,156,1) 40%,rgba(252,114,121,1) 73%); /* Chrome10-25,Safari5.1-6 */
     background: radial-gradient(ellipse at center, rgba(255,192,25,1) 0%,rgba(255,123,156,1) 40%,rgba(252,114,121,1) 73%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc019', endColorstr='#fc7279',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    copy
-
  }
 
  .footer{
@@ -117,7 +115,6 @@
    bottom: 0px;
    margin: auto;
    background: rgba(0, 0, 0, 0.4);
-
  }
 
  .login-form{
@@ -139,7 +136,7 @@
    height: 40px;
    margin: 0;
    padding: 0 0 0 10px;
-   width: 100%
+   width: 100%;
  }
 
  .login-field{
