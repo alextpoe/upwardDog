@@ -81,36 +81,40 @@ var LoginForm = React.createClass({
         </div>
 
         <form className="login-form" onSubmit={this.onSubmit}>
-
+          <h1 className="form-heading">Log In</h1>
           { this.fieldErrors("base") }
+          <div className="form-fields">
+            <label>
+              <span className="field">Username:</span>
 
-          <label> Username:
+              { this.fieldErrors("username") }
 
-            { this.fieldErrors("username") }
+              <input
+                type="text"
+                className="username"
+                value={this.state.username}
+                onChange={this.usernameChange}/>
+            </label>
 
-            <input
-              type="text"
-              className="username"
-              value={this.state.username}
-              onChange={this.usernameChange}/>
-          </label>
+          <br />
 
+            <label >
+              <span className="field">
+                Password:
+              </span>
+
+              { this.fieldErrors("password") }
+
+              <input
+                className="password"
+                type="password"
+                value={this.state.password}
+                onChange={this.passwordChange}/>
+            </label>
+          </div>
         <br />
 
-          <label className="login-field"> Password:
-
-            { this.fieldErrors("password") }
-
-            <input
-              className="password"
-              type="password"
-              value={this.state.password}
-              onChange={this.passwordChange}/>
-          </label>
-
-        <br />
-
-          <button type="submit">{this.formType()}</button>
+          <button className="log-submit" type="submit">{this.formType()}</button>
         </form>
 
       </div>

@@ -25,18 +25,18 @@ var App = React.createClass({
           value="Log Out"
           onClick={ SessionApiUtil.logout } />
       );
-    } else if (["/login", "signup"].indexOf(this.props.location.pathname) === -1) {
+    } else if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
       return (
         <nav className="top-header">
           <div className="placeholder">
             <img src={window.logo_url} />
           </div>
           <div className="log-in">
-            <Link to="/login" onClick={this.clickHandle}>Log In</Link>
+            <Link className="login-link" to="/login" onClick={this.clickHandle}>Log In</Link>
             &nbsp;
             or
             &nbsp;
-            <Link to="/signup">Sign Up</Link>
+            <Link className="signup" to="/signup">Get Started for FREE</Link>
           </div>
         </nav>
       );
@@ -48,7 +48,9 @@ var App = React.createClass({
       <div className="container">
         { this.header() }
         <div className="pretty">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          <div className="below-header">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </div>
         </div>
         <footer className="footer">
           Here's more writing that will be filled with something clever.

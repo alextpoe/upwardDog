@@ -58,7 +58,7 @@
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var TasksApiUtil = __webpack_require__(251);
+	var TasksApiUtil = __webpack_require__(250);
 	
 	var routes = React.createElement(
 	  Route,
@@ -25240,7 +25240,7 @@
 	        type: 'submit',
 	        value: 'Log Out',
 	        onClick: SessionApiUtil.logout });
-	    } else if (["/login", "signup"].indexOf(this.props.location.pathname) === -1) {
+	    } else if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
 	      return React.createElement(
 	        'nav',
 	        { className: 'top-header' },
@@ -25254,14 +25254,14 @@
 	          { className: 'log-in' },
 	          React.createElement(
 	            Link,
-	            { to: '/login', onClick: this.clickHandle },
+	            { className: 'login-link', to: '/login', onClick: this.clickHandle },
 	            'Log In'
 	          ),
 	          '  or  ',
 	          React.createElement(
 	            Link,
-	            { to: '/signup' },
-	            'Sign Up'
+	            { className: 'signup', to: '/signup' },
+	            'Get Started for FREE'
 	          )
 	        )
 	      );
@@ -25276,7 +25276,11 @@
 	      React.createElement(
 	        'div',
 	        { className: 'pretty' },
-	        'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+	        React.createElement(
+	          'div',
+	          { className: 'below-header' },
+	          'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+	        )
 	      ),
 	      React.createElement(
 	        'footer',
@@ -32285,34 +32289,51 @@
 	      React.createElement(
 	        'form',
 	        { className: 'login-form', onSubmit: this.onSubmit },
+	        React.createElement(
+	          'h1',
+	          { className: 'form-heading' },
+	          'Log In'
+	        ),
 	        this.fieldErrors("base"),
 	        React.createElement(
-	          'label',
-	          null,
-	          ' Username:',
-	          this.fieldErrors("username"),
-	          React.createElement('input', {
-	            type: 'text',
-	            className: 'username',
-	            value: this.state.username,
-	            onChange: this.usernameChange })
-	        ),
-	        React.createElement('br', null),
-	        React.createElement(
-	          'label',
-	          { className: 'login-field' },
-	          ' Password:',
-	          this.fieldErrors("password"),
-	          React.createElement('input', {
-	            className: 'password',
-	            type: 'password',
-	            value: this.state.password,
-	            onChange: this.passwordChange })
+	          'div',
+	          { className: 'form-fields' },
+	          React.createElement(
+	            'label',
+	            null,
+	            React.createElement(
+	              'span',
+	              { className: 'field' },
+	              'Username:'
+	            ),
+	            this.fieldErrors("username"),
+	            React.createElement('input', {
+	              type: 'text',
+	              className: 'username',
+	              value: this.state.username,
+	              onChange: this.usernameChange })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            React.createElement(
+	              'span',
+	              { className: 'field' },
+	              'Password:'
+	            ),
+	            this.fieldErrors("password"),
+	            React.createElement('input', {
+	              className: 'password',
+	              type: 'password',
+	              value: this.state.password,
+	              onChange: this.passwordChange })
+	          )
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'button',
-	          { type: 'submit' },
+	          { className: 'log-submit', type: 'submit' },
 	          this.formType()
 	        )
 	      )
@@ -32426,8 +32447,7 @@
 	module.exports = ErrorActions;
 
 /***/ },
-/* 250 */,
-/* 251 */
+/* 250 */
 /***/ function(module, exports) {
 
 	var TasksApiUtil = {

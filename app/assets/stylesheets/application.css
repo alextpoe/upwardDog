@@ -22,7 +22,7 @@
    padding: 0;
    border: 0;
    outline: 0;
-   font: inherit;
+   font-family: "haptik","Helvetica Neue",Arial,sans-serif;
    color: inherit;
    text-align: inherit;
    text-decoration: inherit;
@@ -75,27 +75,79 @@
  }
 
  .log-in{
+   top: 50%;
+   transform: translateY(50%);
    float: right;
  }
 
- .page-header{
-   background: black;
-   display: block;
-   height: 50px;
+ .login-link{
+   width: 70px;
+   position: relative;
+   text-align: center;
+   color: #696969;
+   display: inline-block;
+   height: 20px;
+   font-size: 16px;
+   padding:  5px 5px;
+   background-color: #fff;
+   border: 1px solid #6a67ce;
+   border-radius: 3px;
+   text-align: center;
+   top: 50%;
+   right: 20px;
+   bottom: 5px;
+   transition: all 0.5s ease;
+   transition-property: -webkit-box-shadow, background-color, color, border;
+ }
+
+ .login-link:hover{
+   background-color: #696969;
+   color: #fff;
+   -webkit-box-shadow: 0 0 0 2px #4d4d4d;
+   border: 0px;
+ }
+
+ .signup{
+   position: relative;
+   text-align: center;
+   color: #fff;
+   display: inline-block;
+   height: 20px;
+   font-size: 16px;
+   padding:  5px 5px;
+   background-color: #6a67ce;
+   border: 1px solid #6a67ce;
+   border-radius: 3px;
+   text-align: center;
+   top: 50%;
+   right: 25px;
+   bottom: 5px;
+   transition: all 0.5s ease;
+   transition-property: background-color, -webkit-box-shadow;
+ }
+
+ .signup:hover{
+   background-color: #7d26cd;
+   -webkit-box-shadow: 0 0 0 2px #9b30FF;
  }
 
  .pretty{
    text-align: center;
    color: white;
    font-size: 40px;
-   height: 700px;
+   height: 400px;
    width: 100%;
        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffc019+0,ff7b9c+40,fc7279+73 */
     background: rgb(255,192,25); /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover, rgba(255,192,25,1) 0%, rgba(255,123,156,1) 40%, rgba(252,114,121,1) 73%); /* FF3.6-15 */
     background: -webkit-radial-gradient(center, ellipse cover, rgba(255,192,25,1) 0%,rgba(255,123,156,1) 40%,rgba(252,114,121,1) 73%); /* Chrome10-25,Safari5.1-6 */
-    background: radial-gradient(ellipse at center, rgba(255,192,25,1) 0%,rgba(255,123,156,1) 40%,rgba(252,114,121,1) 73%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: radial-gradient(ellipse at center, rgba(255,185,0,.6) 0%,rgba(252,99,107,.7) 40%,rgba(252,109,146,1) 70%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc019', endColorstr='#fc7279',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+ }
+
+ .below-header{
+   padding:50px;
+   display: block;
  }
 
  .footer{
@@ -107,6 +159,7 @@
    width: 100%;
    bottom: 0px;
  }
+
  .login{
    position: absolute;
    top: 0px;
@@ -117,15 +170,39 @@
    background: rgba(0, 0, 0, 0.4);
  }
 
+ .login-header{
+
+ }
+
  .login-form{
+
    position: absolute;
-   padding: 90px;
+   padding: 80px;
    height: 300px;
    width: 300px;
-   background: white;
+   background: rgba(255, 255, 255, 0.9);
    left: 50%;
    top: 50%;
    transform: translateY(-50%) translateX(-50%);
+ }
+
+ .form-heading{
+   position: relative;
+   text-align: center;
+   font-size: 40px;
+   font-weight: 400;
+ }
+
+ .field{
+   color: #898e95;
+   font-size: 12px;
+   font-weight: 200;
+   padding: 10px;
+ }
+
+ .form-fields{
+  position: relative;
+  top: 50px
  }
 
  .username, .password{
@@ -134,11 +211,26 @@
    border-radius: 3px;
    color: #1B2432;
    height: 40px;
-   margin: 0;
-   padding: 0 0 0 10px;
+   margin: 5px;
    width: 100%;
  }
 
- .login-field{
-   top: 50px;
+ .log-submit{
+   position: relative;
+   color: #fff;
+   background-color: #1AAFD0;
+   float: right;
+   text-align: center;
+   width: 40.5%;
+   height: 39px;
+   border-radius: 3px;
+   top: 90px;
+   left: 15px;
+   transition: all 0.3s ease;
+   transition-property: background, -webkit-box-shadow;
+ }
+
+ .log-submit:hover{
+   background: #02CEFF;
+   -webkit-box-shadow: 0 0 0 3px #80E6FF;
  }
