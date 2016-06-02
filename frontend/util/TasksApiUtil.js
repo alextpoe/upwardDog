@@ -1,3 +1,5 @@
+var TasksActions = require('../actions/TasksActions');
+
 var TasksApiUtil = {
   receiveAllTasks: function (tasks) {
     $.ajax({
@@ -6,7 +8,7 @@ var TasksApiUtil = {
       dataType: "json",
       data: {tasks: tasks},
       success: function (data) {
-        console.log("success");
+        TasksActions.receiveAllTasks(data);
       }
     });
   },

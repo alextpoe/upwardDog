@@ -25217,6 +25217,7 @@
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
+	var TasksIndex = __webpack_require__(251);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -25235,7 +25236,6 @@
 	
 	  header: function () {
 	    if (SessionStore.isUserLoggedIn()) {
-	      debugger;
 	      return React.createElement('input', {
 	        type: 'submit',
 	        value: 'Log Out',
@@ -25269,6 +25269,10 @@
 	  },
 	
 	  render: function () {
+	    var tasks = React.createElement('div', null);
+	    if (SessionStore.isUserLoggedIn()) {
+	      tasks = React.createElement(TasksIndex, null);
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'container' },
@@ -25280,7 +25284,8 @@
 	          'div',
 	          { className: 'below-header' },
 	          'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-	        )
+	        ),
+	        tasks
 	      ),
 	      React.createElement(
 	        'footer',
@@ -32449,8 +32454,10 @@
 
 /***/ },
 /* 250 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var TasksActions = __webpack_require__(256);
+	
 	var TasksApiUtil = {
 	  receiveAllTasks: function (tasks) {
 	    $.ajax({
@@ -32459,7 +32466,7 @@
 	      dataType: "json",
 	      data: { tasks: tasks },
 	      success: function (data) {
-	        console.log("success");
+	        TasksActions.receiveAllTasks(data);
 	      }
 	    });
 	  },
@@ -32511,6 +32518,208 @@
 	};
 	
 	module.exports = TasksApiUtil;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(252);
+	var TasksStore = __webpack_require__(253);
+	var ClientActions = __webpack_require__(255);
+	
+	var TasksIndex = React.createClass({
+	  displayName: 'TasksIndex',
+	
+	
+	  getInitialState: function () {
+	    return { tasks: TasksStore.all() };
+	  },
+	
+	  onChange: function () {
+	    this.setState({ tasks: TasksStore.all() });
+	  },
+	
+	  componentDidMount: function () {
+	    this.tasksListener = TasksStore.addListener(this.onChange);
+	    ClientActions.receiveAllTasks();
+	  },
+	
+	  render: function () {
+	    var tasks = this.state.tasks;
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Tasks'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        tasks.map(function (task) {
+	          return React.createElement(TasksIndexItem, { task: task, key: task.id });
+	        })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TasksIndex;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(252);
+	
+	var TasksIndexItem = React.createClass({
+	  displayName: 'TasksIndexItem',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      this.props.task.description
+	    );
+	  }
+	
+	});
+	
+	module.exports = TasksIndexItem;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(222).Store;
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(254);
+	var SessionStore = __webpack_require__(221);
+	
+	var TasksStore = new Store(AppDispatcher);
+	
+	window._tasks = {};
+	var _currentUser = {};
+	
+	var _resetTasks = function (tasks) {
+	  _tasks = {};
+	  _currentUser = {};
+	  var userTasks = [];
+	
+	  _currentUser = SessionStore.currentUser();
+	  tasks.forEach(function (task) {
+	    if (task.assignee_id === _currentUser.id) {
+	      userTasks.push(task);
+	    }
+	  });
+	  userTasks.forEach(function (task) {
+	    _tasks[task.id] = task;
+	  });
+	};
+	
+	var _setTask = function (task) {
+	  _tasks[task.id] = task;
+	};
+	
+	var _removeTask = function (task) {
+	  delete _tasks[task.id];
+	};
+	
+	TasksStore.all = function () {
+	  var tasks = Object.keys(_tasks).map(function (id) {
+	    return _tasks[id];
+	  });
+	
+	  return tasks;
+	};
+	
+	TasksStore.find = function (id) {
+	  return _tasks[id];
+	};
+	
+	TasksStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TasksConstants.TASKS_RECEIVED:
+	      _resetTasks(payload.tasks);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_RECEIVED:
+	      _setTask(payload.task);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_REMOVED:
+	      _removeTask(payload.task);
+	      TaskStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = TasksStore;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports) {
+
+	var TasksConstants = {
+	  TASKS_RECEIVED: "TASKS_RECEIVED",
+	  TASK_RECEIVED: "TASK_RECEIVED",
+	  TASK_REMOVED: "TASK_REMOVED"
+	};
+	
+	module.exports = TasksConstants;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksApiUtil = __webpack_require__(250);
+	
+	var ClientActions = {
+	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
+	
+	  createTask: TasksApiUtil.createTask
+	};
+	
+	module.exports = ClientActions;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(254);
+	
+	var TasksActions = {
+	  receiveAllTasks: function (tasks) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASKS_RECEIVED,
+	      tasks: tasks
+	    });
+	  },
+	
+	  receiveTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_RECEIVED,
+	      task: task
+	    });
+	  },
+	
+	  removeTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_REMOVED,
+	      task: task
+	    });
+	  }
+	};
+	
+	module.exports = TasksActions;
 
 /***/ }
 /******/ ]);

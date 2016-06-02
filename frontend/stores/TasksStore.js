@@ -1,15 +1,26 @@
 var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher.js');
 var TasksConstants = require('../constants/TasksConstants');
+var SessionStore = require('./SessionStore');
 
 var TasksStore = new Store(AppDispatcher);
 
-var _tasks = {};
+window._tasks = {};
+var _currentUser = {};
 
 var _resetTasks = function (tasks) {
   _tasks = {};
+  _currentUser = {};
+  var userTasks = [];
 
+
+  _currentUser = SessionStore.currentUser();
   tasks.forEach(function (task) {
+    if (task.assignee_id === _currentUser.id){
+      userTasks.push(task);
+    }
+  });
+  userTasks.forEach(function (task) {
     _tasks[task.id] = task;
   });
 };

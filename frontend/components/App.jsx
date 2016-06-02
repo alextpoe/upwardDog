@@ -2,6 +2,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var SessionStore = require('../stores/SessionStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
+var TasksIndex = require('./TasksIndex');
 
 var App = React.createClass({
   contextTypes: {
@@ -18,7 +19,6 @@ var App = React.createClass({
 
   header: function () {
     if (SessionStore.isUserLoggedIn()) {
-      debugger
       return (
         <input
           type="submit"
@@ -44,6 +44,10 @@ var App = React.createClass({
   },
 
   render: function () {
+    var tasks = <div></div>;
+    if (SessionStore.isUserLoggedIn()){
+      tasks = <TasksIndex/>
+    }
     return(
       <div className="container">
         { this.header() }
@@ -51,6 +55,7 @@ var App = React.createClass({
           <div className="below-header">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit.
           </div>
+          {tasks}
         </div>
         <footer className="footer">
           Here's more writing that will be filled with something clever.
