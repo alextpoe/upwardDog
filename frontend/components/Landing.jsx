@@ -1,6 +1,7 @@
 var React = require('react');
 var Link = require('react-router').Link;
 var SessionStore = require('../stores/SessionStore');
+var SessionApiUtil = require('../util/SessionApiUtil');
 var TasksIndex = require('./TasksIndex');
 
 var Landing = React.createClass({
@@ -9,7 +10,7 @@ var Landing = React.createClass({
     router: React.PropTypes.object.isRequired
   },
 
-  componentDidMount: function () {
+  redirectIfNotLoggedIn: function () {
     if (!SessionStore.isUserLoggedIn()) {
       this.context.router.push("/hello")
     } else {
@@ -17,10 +18,27 @@ var Landing = React.createClass({
     }
   },
 
+  componentDidMount: function () {
+    SessionStore.addListener(this.redirectIfNotLoggedIn)
+    SessionApiUtil.fetchCurrentUser();
+  },
+
+  logout: function () {
+    if (SessionStore.isUserLoggedIn()) {
+      return (
+        <input
+          type="submit"
+          value="Log Out"
+          onClick={ SessionApiUtil.logout } />
+      );
+    }
+  },
+
   render: function () {
 
     return (
       <div>
+        { this.logout() }
         {this.props.children}
       </div>
     )

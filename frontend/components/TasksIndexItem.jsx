@@ -1,14 +1,19 @@
 var React = require('react');
 var Link = require('react-router').Link;
-var TasksIndexItem = require('./TasksIndexItem');
+var ClientActions = require('../actions/ClientActions');
 
 
 var TasksIndexItem = React.createClass({
+  clickHandler: function (event) {
+    event.preventDefault();
+    ClientActions.deleteTask(this.props.task.id);
+  },
 
   render: function () {
     return (
-      <li>
+      <li className="empty">
         {this.props.task.description}
+        <button type="submit" onClick={this.clickHandler}>Delete</button>
       </li>
     )
   }

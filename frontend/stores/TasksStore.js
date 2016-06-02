@@ -57,7 +57,7 @@ TasksStore.__onDispatch = function (payload) {
       break;
     case TasksConstants.TASK_REMOVED:
       _removeTask(payload.task);
-      TaskStore.__emitChange();
+      TasksStore.__emitChange();
       break;
   }
 };

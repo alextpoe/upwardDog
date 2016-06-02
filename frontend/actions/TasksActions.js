@@ -19,6 +19,7 @@ var TasksActions = {
   },
 
   removeTask: function (task) {
+    debugger
     AppDispatcher.dispatch({
       actionType: TasksConstants.TASK_REMOVED,
       task: task

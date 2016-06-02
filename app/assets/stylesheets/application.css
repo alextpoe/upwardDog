@@ -240,3 +240,8 @@
    background: #02CEFF;
    -webkit-box-shadow: 0 0 0 3px #80E6FF;
  }
+
+ .empty{
+   height: 15px;
+   background: #eee;
+ }

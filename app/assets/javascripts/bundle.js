@@ -57,6 +57,7 @@
 	var App = __webpack_require__(251);
 	var LoginForm = __webpack_require__(255);
 	var TasksIndex = __webpack_require__(244);
+	var TasksEdit = __webpack_require__(259);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(252);
@@ -71,9 +72,14 @@
 	    React.createElement(Route, { path: '/hello/login', component: LoginForm }),
 	    React.createElement(Route, { path: '/hello/signup', component: LoginForm })
 	  ),
-	  React.createElement(Route, {
-	    path: '/user/tasks',
-	    component: TasksIndex })
+	  React.createElement(
+	    Route,
+	    {
+	      path: '/user/tasks',
+	      component: TasksIndex },
+	    '// ',
+	    React.createElement(Route, { path: '/user/tasks/new', component: TasksEdit })
+	  )
 	);
 	
 	function _ensureLoggedIn(nextState, replace, asyncDoneCallback) {
@@ -25225,6 +25231,7 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
+	var SessionApiUtil = __webpack_require__(252);
 	var TasksIndex = __webpack_require__(244);
 	
 	var Landing = React.createClass({
@@ -25235,11 +25242,25 @@
 	    router: React.PropTypes.object.isRequired
 	  },
 	
-	  componentDidMount: function () {
+	  redirectIfNotLoggedIn: function () {
 	    if (!SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/hello");
 	    } else {
 	      this.context.router.push("/user/tasks");
+	    }
+	  },
+	
+	  componentDidMount: function () {
+	    SessionStore.addListener(this.redirectIfNotLoggedIn);
+	    SessionApiUtil.fetchCurrentUser();
+	  },
+	
+	  logout: function () {
+	    if (SessionStore.isUserLoggedIn()) {
+	      return React.createElement('input', {
+	        type: 'submit',
+	        value: 'Log Out',
+	        onClick: SessionApiUtil.logout });
 	    }
 	  },
 	
@@ -25248,6 +25269,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      this.logout(),
 	      this.props.children
 	    );
 	  }
@@ -25275,7 +25297,7 @@
 	
 	var _logout = function () {
 	  _currentUser = {};
-	  _currentUserHasBeenFetched = true;
+	  _currentUserHasBeenFetched = false;
 	};
 	
 	SessionStore.__onDispatch = function (payload) {
@@ -32086,6 +32108,10 @@
 	var TasksIndexItem = __webpack_require__(245);
 	var TasksStore = __webpack_require__(246);
 	var ClientActions = __webpack_require__(248);
+	var TasksForm = __webpack_require__(258);
+	var SessionStore = __webpack_require__(221);
+	var SessionApiUtil = __webpack_require__(252);
+	var TasksEdit = __webpack_require__(259);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32101,7 +32127,28 @@
 	
 	  componentDidMount: function () {
 	    this.tasksListener = TasksStore.addListener(this.onChange);
+	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
+	    SessionApiUtil.fetchCurrentUser();
 	    ClientActions.receiveAllTasks();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionListener.remove();
+	    this.tasksListener.remove();
+	  },
+	
+	  clickHandler: function (event) {
+	    if (event.target.if === "") {
+	      this.context.router.push("/user/tasks/new");
+	    } else {
+	      this.context.router.push("/user/tasks/" + event.target.id + "edit");
+	    }
+	  },
+	
+	  newTask: function () {
+	    if (["new"].indexOf(this.props.location.pathname) !== -1) {
+	      return React.createElement(TasksEdit, null);
+	    }
 	  },
 	
 	  render: function () {
@@ -32120,8 +32167,11 @@
 	        null,
 	        tasks.map(function (task) {
 	          return React.createElement(TasksIndexItem, { task: task, key: task.id });
-	        })
-	      )
+	        }),
+	        React.createElement(TasksForm, null),
+	        this.newTask()
+	      ),
+	      this.props.children
 	    );
 	  }
 	});
@@ -32134,17 +32184,26 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(245);
+	var ClientActions = __webpack_require__(248);
 	
 	var TasksIndexItem = React.createClass({
 	  displayName: 'TasksIndexItem',
 	
+	  clickHandler: function (event) {
+	    event.preventDefault();
+	    ClientActions.deleteTask(this.props.task.id);
+	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'li',
-	      null,
-	      this.props.task.description
+	      { className: 'empty' },
+	      this.props.task.description,
+	      React.createElement(
+	        'button',
+	        { type: 'submit', onClick: this.clickHandler },
+	        'Delete'
+	      )
 	    );
 	  }
 	
@@ -32214,7 +32273,7 @@
 	      break;
 	    case TasksConstants.TASK_REMOVED:
 	      _removeTask(payload.task);
-	      TaskStore.__emitChange();
+	      TasksStore.__emitChange();
 	      break;
 	  }
 	};
@@ -32242,7 +32301,11 @@
 	var ClientActions = {
 	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
 	
-	  createTask: TasksApiUtil.createTask
+	  createTask: TasksApiUtil.createTask,
+	
+	  updateTask: TasksApiUtil.editTask,
+	
+	  deleteTask: TasksApiUtil.deleteTask
 	};
 	
 	module.exports = ClientActions;
@@ -32265,7 +32328,6 @@
 	      }
 	    });
 	  },
-	
 	  createTask: function (task) {
 	    $.ajax({
 	      type: "POST",
@@ -32273,7 +32335,7 @@
 	      dataType: "json",
 	      data: { task: task },
 	      success: function () {
-	        console.log("success");
+	        TasksActions.receiveTask();
 	      }
 	    });
 	  },
@@ -32296,17 +32358,19 @@
 	      dataType: "json",
 	      data: { task: task },
 	      success: function () {
-	        console.log("success");
+	        TasksActions.receiveTask();
 	      }
 	    });
 	  },
 	
 	  deleteTask: function (id) {
+	    debugger;
 	    $.ajax({
 	      type: "DELETE",
 	      url: "api/user/tasks/" + id,
-	      success: function () {
-	        console.log("success");
+	      success: function (id) {
+	        console.log(data);
+	        TasksActions.removeTask(id);
 	      }
 	    });
 	  }
@@ -32337,6 +32401,7 @@
 	  },
 	
 	  removeTask: function (task) {
+	    debugger;
 	    AppDispatcher.dispatch({
 	      actionType: TasksConstants.TASK_REMOVED,
 	      task: task
@@ -32364,7 +32429,11 @@
 	  },
 	
 	  componentDidMount: function () {
-	    SessionStore.addListener(this.forceUpdate.bind(this));
+	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionListener.remove();
 	  },
 	
 	  clickHandle: function (event) {
@@ -32372,12 +32441,9 @@
 	  },
 	
 	  header: function () {
-	    if (SessionStore.isUserLoggedIn()) {
-	      return React.createElement('input', {
-	        type: 'submit',
-	        value: 'Log Out',
-	        onClick: SessionApiUtil.logout });
-	    } else if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
+	
+	    // } else
+	    if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
 	      return React.createElement(
 	        'nav',
 	        { className: 'top-header' },
@@ -32763,6 +32829,110 @@
 	};
 	
 	module.exports = UserApiUtil;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(245);
+	var TasksStore = __webpack_require__(246);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(248);
+	
+	var TasksForm = React.createClass({
+	  displayName: 'TasksForm',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
+	  },
+	
+	  keyHandler: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  clickHandler: function (event) {
+	    event.preventDefault();
+	    this.context.router.push("/user/tasks/new");
+	  },
+	
+	  blurHandler: function (event) {
+	    debugger;
+	    ClientActions.updateTask(this.state);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement('input', {
+	        value: this.state.title,
+	        onClick: this.clickHandler,
+	        onChange: this.keyHandler
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = TasksForm;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(245);
+	var TasksStore = __webpack_require__(246);
+	var SessionStore = __webpack_require__(221);
+	
+	var TasksEdit = React.createClass({
+	  displayName: 'TasksEdit',
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
+	        null,
+	        'New Task: ',
+	        React.createElement('input', { value: this.state.title })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        'Description: ',
+	        React.createElement('input', { value: this.state.description })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TasksEdit;
 
 /***/ }
 /******/ ]);

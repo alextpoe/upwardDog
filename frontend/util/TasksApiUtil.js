@@ -12,7 +12,6 @@ var TasksApiUtil = {
       }
     });
   },
-
   createTask: function (task) {
     $.ajax({
       type: "POST",
@@ -20,7 +19,7 @@ var TasksApiUtil = {
       dataType: "json",
       data: { task: task },
       success: function () {
-        console.log("success");
+        TasksActions.receiveTask();
       }
     });
   },
@@ -43,17 +42,19 @@ var TasksApiUtil = {
       dataType: "json",
       data: {task: task},
       success: function () {
-        console.log("success");
+        TasksActions.receiveTask();
       }
     });
   },
 
   deleteTask: function (id) {
+    debugger
     $.ajax({
       type: "DELETE",
       url: "api/user/tasks/" + id,
-      success: function () {
-        console.log("success");
+      success: function (id) {
+        console.log(data)
+        TasksActions.removeTask(id);
       }
     });
   }

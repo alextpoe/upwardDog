@@ -1,5 +1,5 @@
 class Task < ActiveRecord::Base
-  validates :description, :manager_id, :assignee_id, :project_id, presence: true
+  validates :assignee_id, presence: true
   validates :completed, inclusion: { in: [true, false] }
 
   belongs_to(

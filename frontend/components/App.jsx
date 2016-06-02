@@ -10,7 +10,11 @@ var App = React.createClass({
   },
 
   componentDidMount: function () {
-    SessionStore.addListener(this.forceUpdate.bind(this));
+    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
+  },
+
+  componentWillUnmount: function () {
+    this.sessionListener.remove()
   },
 
   clickHandle: function (event){
@@ -18,14 +22,9 @@ var App = React.createClass({
   },
 
   header: function () {
-    if (SessionStore.isUserLoggedIn()) {
-      return (
-        <input
-          type="submit"
-          value="Log Out"
-          onClick={ SessionApiUtil.logout } />
-      );
-    } else if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
+    
+    // } else
+    if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
       return (
         <nav className="top-header">
           <div className="placeholder">

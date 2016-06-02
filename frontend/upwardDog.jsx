@@ -11,6 +11,7 @@ var Landing = require('./components/Landing');
 var App = require('./components/App');
 var LoginForm = require('./components/LoginForm');
 var TasksIndex = require('./components/TasksIndex');
+var TasksEdit = require('./components/TasksEdit');
 
 var SessionStore = require('./stores/SessionStore');
 var SessionApiUtil = require('./util/SessionApiUtil');
@@ -25,6 +26,7 @@ var routes = (
     <Route
       path="/user/tasks"
       component={TasksIndex}>
+      // <Route path="/user/tasks/new" component={ TasksEdit }/>
     </Route>
   </Route>
 );

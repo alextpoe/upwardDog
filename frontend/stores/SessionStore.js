@@ -14,7 +14,7 @@ var _login = function (currentUser) {
 
 var _logout = function () {
   _currentUser = {};
-  _currentUserHasBeenFetched = true;
+  _currentUserHasBeenFetched = false;
 };
 
 
