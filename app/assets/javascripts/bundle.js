@@ -53,18 +53,27 @@
 	var hashHistory = ReactRouter.hashHistory;
 	var IndexRoute = ReactRouter.IndexRoute;
 	
-	var App = __webpack_require__(220);
-	var LoginForm = __webpack_require__(246);
+	var Landing = __webpack_require__(220);
+	var App = __webpack_require__(251);
+	var LoginForm = __webpack_require__(255);
+	var TasksIndex = __webpack_require__(244);
 	
 	var SessionStore = __webpack_require__(221);
-	var SessionApiUtil = __webpack_require__(244);
-	var TasksApiUtil = __webpack_require__(250);
+	var SessionApiUtil = __webpack_require__(252);
+	var TasksApiUtil = __webpack_require__(249);
 	
 	var routes = React.createElement(
 	  Route,
-	  { path: '/', component: App, history: hashHistory },
-	  React.createElement(Route, { path: '/login', component: LoginForm }),
-	  React.createElement(Route, { path: '/signup', component: LoginForm })
+	  { path: '/', component: Landing },
+	  React.createElement(
+	    Route,
+	    { path: '/hello', component: App },
+	    React.createElement(Route, { path: '/hello/login', component: LoginForm }),
+	    React.createElement(Route, { path: '/hello/signup', component: LoginForm })
+	  ),
+	  React.createElement(Route, {
+	    path: '/user/tasks',
+	    component: TasksIndex })
 	);
 	
 	function _ensureLoggedIn(nextState, replace, asyncDoneCallback) {
@@ -76,7 +85,7 @@
 	
 	  function redirectIfNotLoggedIn() {
 	    if (!SessionStore.isUserLoggedIn()) {
-	      replace('/login');
+	      replace('/hello/login');
 	    }
 	  }
 	}
@@ -25216,88 +25225,35 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
-	var SessionApiUtil = __webpack_require__(244);
-	var TasksIndex = __webpack_require__(251);
+	var TasksIndex = __webpack_require__(244);
 	
-	var App = React.createClass({
-	  displayName: 'App',
+	var Landing = React.createClass({
+	  displayName: 'Landing',
+	
 	
 	  contextTypes: {
 	    router: React.PropTypes.object.isRequired
 	  },
 	
 	  componentDidMount: function () {
-	    SessionStore.addListener(this.forceUpdate.bind(this));
-	  },
-	
-	  clickHandle: function (event) {
-	    this.context.router.push("/login");
-	  },
-	
-	  header: function () {
-	    if (SessionStore.isUserLoggedIn()) {
-	      return React.createElement('input', {
-	        type: 'submit',
-	        value: 'Log Out',
-	        onClick: SessionApiUtil.logout });
-	    } else if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
-	      return React.createElement(
-	        'nav',
-	        { className: 'top-header' },
-	        React.createElement(
-	          'div',
-	          { className: 'placeholder' },
-	          React.createElement('img', { src: window.logo_url })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'log-in' },
-	          React.createElement(
-	            Link,
-	            { className: 'login-link', to: '/login', onClick: this.clickHandle },
-	            'Log In'
-	          ),
-	          '  or  ',
-	          React.createElement(
-	            Link,
-	            { className: 'signup', to: '/signup' },
-	            'Get Started for FREE'
-	          )
-	        )
-	      );
+	    if (!SessionStore.isUserLoggedIn()) {
+	      this.context.router.push("/hello");
+	    } else {
+	      this.context.router.push("/user/tasks");
 	    }
 	  },
 	
 	  render: function () {
-	    var tasks = React.createElement('div', null);
-	    if (SessionStore.isUserLoggedIn()) {
-	      tasks = React.createElement(TasksIndex, null);
-	    }
+	
 	    return React.createElement(
 	      'div',
-	      { className: 'container' },
-	      this.header(),
-	      React.createElement(
-	        'div',
-	        { className: 'pretty' },
-	        React.createElement(
-	          'div',
-	          { className: 'below-header' },
-	          'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
-	        ),
-	        tasks
-	      ),
-	      React.createElement(
-	        'footer',
-	        { className: 'footer' },
-	        'Here\'s more writing that will be filled with something clever.'
-	      ),
+	      null,
 	      this.props.children
 	    );
 	  }
 	});
 	
-	module.exports = App;
+	module.exports = Landing;
 
 /***/ },
 /* 221 */
@@ -32125,8 +32081,363 @@
 /* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionActions = __webpack_require__(245);
-	var ErrorActions = __webpack_require__(249);
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(245);
+	var TasksStore = __webpack_require__(246);
+	var ClientActions = __webpack_require__(248);
+	
+	var TasksIndex = React.createClass({
+	  displayName: 'TasksIndex',
+	
+	
+	  getInitialState: function () {
+	    return { tasks: TasksStore.all() };
+	  },
+	
+	  onChange: function () {
+	    this.setState({ tasks: TasksStore.all() });
+	  },
+	
+	  componentDidMount: function () {
+	    this.tasksListener = TasksStore.addListener(this.onChange);
+	    ClientActions.receiveAllTasks();
+	  },
+	
+	  render: function () {
+	    var tasks = this.state.tasks;
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Tasks'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        tasks.map(function (task) {
+	          return React.createElement(TasksIndexItem, { task: task, key: task.id });
+	        })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TasksIndex;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(245);
+	
+	var TasksIndexItem = React.createClass({
+	  displayName: 'TasksIndexItem',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      this.props.task.description
+	    );
+	  }
+	
+	});
+	
+	module.exports = TasksIndexItem;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(222).Store;
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(247);
+	var SessionStore = __webpack_require__(221);
+	
+	var TasksStore = new Store(AppDispatcher);
+	
+	window._tasks = {};
+	var _currentUser = {};
+	
+	var _resetTasks = function (tasks) {
+	  _tasks = {};
+	  _currentUser = {};
+	  var userTasks = [];
+	
+	  _currentUser = SessionStore.currentUser();
+	  tasks.forEach(function (task) {
+	    if (task.assignee_id === _currentUser.id) {
+	      userTasks.push(task);
+	    }
+	  });
+	  userTasks.forEach(function (task) {
+	    _tasks[task.id] = task;
+	  });
+	};
+	
+	var _setTask = function (task) {
+	  _tasks[task.id] = task;
+	};
+	
+	var _removeTask = function (task) {
+	  delete _tasks[task.id];
+	};
+	
+	TasksStore.all = function () {
+	  var tasks = Object.keys(_tasks).map(function (id) {
+	    return _tasks[id];
+	  });
+	
+	  return tasks;
+	};
+	
+	TasksStore.find = function (id) {
+	  return _tasks[id];
+	};
+	
+	TasksStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TasksConstants.TASKS_RECEIVED:
+	      _resetTasks(payload.tasks);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_RECEIVED:
+	      _setTask(payload.task);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_REMOVED:
+	      _removeTask(payload.task);
+	      TaskStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = TasksStore;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	var TasksConstants = {
+	  TASKS_RECEIVED: "TASKS_RECEIVED",
+	  TASK_RECEIVED: "TASK_RECEIVED",
+	  TASK_REMOVED: "TASK_REMOVED"
+	};
+	
+	module.exports = TasksConstants;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksApiUtil = __webpack_require__(249);
+	
+	var ClientActions = {
+	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
+	
+	  createTask: TasksApiUtil.createTask
+	};
+	
+	module.exports = ClientActions;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksActions = __webpack_require__(250);
+	
+	var TasksApiUtil = {
+	  receiveAllTasks: function (tasks) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { tasks: tasks },
+	      success: function (data) {
+	        TasksActions.receiveAllTasks(data);
+	      }
+	    });
+	  },
+	
+	  createTask: function (task) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { task: task },
+	      success: function () {
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  getTask: function (id) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      success: function () {
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  editTask: function (task, id) {
+	    $.ajax({
+	      type: "PATCH",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      data: { task: task },
+	      success: function () {
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  deleteTask: function (id) {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "api/user/tasks/" + id,
+	      success: function () {
+	        console.log("success");
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = TasksApiUtil;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(247);
+	
+	var TasksActions = {
+	  receiveAllTasks: function (tasks) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASKS_RECEIVED,
+	      tasks: tasks
+	    });
+	  },
+	
+	  receiveTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_RECEIVED,
+	      task: task
+	    });
+	  },
+	
+	  removeTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_REMOVED,
+	      task: task
+	    });
+	  }
+	};
+	
+	module.exports = TasksActions;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var SessionStore = __webpack_require__(221);
+	var SessionApiUtil = __webpack_require__(252);
+	var TasksIndex = __webpack_require__(244);
+	
+	var App = React.createClass({
+	  displayName: 'App',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  componentDidMount: function () {
+	    SessionStore.addListener(this.forceUpdate.bind(this));
+	  },
+	
+	  clickHandle: function (event) {
+	    this.context.router.push("/hello/login");
+	  },
+	
+	  header: function () {
+	    if (SessionStore.isUserLoggedIn()) {
+	      return React.createElement('input', {
+	        type: 'submit',
+	        value: 'Log Out',
+	        onClick: SessionApiUtil.logout });
+	    } else if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
+	      return React.createElement(
+	        'nav',
+	        { className: 'top-header' },
+	        React.createElement(
+	          'div',
+	          { className: 'placeholder' },
+	          React.createElement('img', { src: window.logo_url })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'log-in' },
+	          React.createElement(
+	            Link,
+	            { className: 'login-link', to: '/hello/login', onClick: this.clickHandle },
+	            'Log In'
+	          ),
+	          '  or  ',
+	          React.createElement(
+	            Link,
+	            { className: 'signup', to: '/hello/signup' },
+	            'Get Started for FREE'
+	          )
+	        )
+	      );
+	    }
+	  },
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      this.header(),
+	      React.createElement(
+	        'div',
+	        { className: 'pretty' },
+	        React.createElement(
+	          'div',
+	          { className: 'below-header' },
+	          'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+	        )
+	      ),
+	      React.createElement(
+	        'footer',
+	        { className: 'footer' },
+	        'Here\'s more writing that will be filled with something clever.'
+	      ),
+	      this.props.children
+	    );
+	  }
+	});
+	
+	module.exports = App;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var SessionActions = __webpack_require__(253);
+	var ErrorActions = __webpack_require__(254);
 	
 	var SessionApiUtil = {
 	  login: function (credentials) {
@@ -32174,7 +32485,7 @@
 	module.exports = SessionApiUtil;
 
 /***/ },
-/* 245 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(240);
@@ -32198,14 +32509,39 @@
 	module.exports = SessionActions;
 
 /***/ },
-/* 246 */
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var ErrorConstants = __webpack_require__(243);
+	
+	var ErrorActions = {
+	  setErrors: function (form, errors) {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.SET_ERRORS,
+	      form: form,
+	      errors: errors
+	    });
+	  },
+	
+	  clearErrors: function () {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.CLEAR_ERRORS
+	    });
+	  }
+	};
+	
+	module.exports = ErrorActions;
+
+/***/ },
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(221);
-	var ErrorStore = __webpack_require__(247);
-	var SessionApiUtil = __webpack_require__(244);
-	var UserApiUtil = __webpack_require__(248);
+	var ErrorStore = __webpack_require__(256);
+	var SessionApiUtil = __webpack_require__(252);
+	var UserApiUtil = __webpack_require__(257);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -32229,8 +32565,9 @@
 	  },
 	
 	  redirectIfLoggedIn: function () {
+	    // debugger
 	    if (SessionStore.isUserLoggedIn()) {
-	      this.context.router.push("/");
+	      this.context.router.push("/user/tasks");
 	    }
 	  },
 	
@@ -32256,7 +32593,7 @@
 	  },
 	
 	  bgClick: function () {
-	    this.context.router.push("/");
+	    this.context.router.push("/hello");
 	  },
 	
 	  onSubmit: function (event) {
@@ -32267,7 +32604,7 @@
 	      password: this.state.password
 	    };
 	
-	    if (this.props.location.pathname === "/login") {
+	    if (this.props.location.pathname === "/hello/login") {
 	      SessionApiUtil.login(loginData);
 	    } else {
 	      UserApiUtil.signup(loginData);
@@ -32285,7 +32622,7 @@
 	  },
 	
 	  formType: function () {
-	    return this.props.location.pathname.slice(1);
+	    return this.props.location.pathname.slice(7);
 	  },
 	
 	  render: function () {
@@ -32351,7 +32688,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 247 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
@@ -32401,11 +32738,11 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 248 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionActions = __webpack_require__(245);
-	var ErrorActions = __webpack_require__(249);
+	var SessionActions = __webpack_require__(253);
+	var ErrorActions = __webpack_require__(254);
 	
 	var UserApiUtil = {
 	  signup: function (formData) {
@@ -32426,300 +32763,6 @@
 	};
 	
 	module.exports = UserApiUtil;
-
-/***/ },
-/* 249 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(240);
-	var ErrorConstants = __webpack_require__(243);
-	
-	var ErrorActions = {
-	  setErrors: function (form, errors) {
-	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.SET_ERRORS,
-	      form: form,
-	      errors: errors
-	    });
-	  },
-	
-	  clearErrors: function () {
-	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.CLEAR_ERRORS
-	    });
-	  }
-	};
-	
-	module.exports = ErrorActions;
-
-/***/ },
-/* 250 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var TasksActions = __webpack_require__(256);
-	
-	var TasksApiUtil = {
-	  receiveAllTasks: function (tasks) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { tasks: tasks },
-	      success: function (data) {
-	        TasksActions.receiveAllTasks(data);
-	      }
-	    });
-	  },
-	
-	  createTask: function (task) {
-	    $.ajax({
-	      type: "POST",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { task: task },
-	      success: function () {
-	        console.log("success");
-	      }
-	    });
-	  },
-	
-	  getTask: function (id) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      success: function () {
-	        console.log("success");
-	      }
-	    });
-	  },
-	
-	  editTask: function (task, id) {
-	    $.ajax({
-	      type: "PATCH",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      data: { task: task },
-	      success: function () {
-	        console.log("success");
-	      }
-	    });
-	  },
-	
-	  deleteTask: function (id) {
-	    $.ajax({
-	      type: "DELETE",
-	      url: "api/user/tasks/" + id,
-	      success: function () {
-	        console.log("success");
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = TasksApiUtil;
-
-/***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(252);
-	var TasksStore = __webpack_require__(253);
-	var ClientActions = __webpack_require__(255);
-	
-	var TasksIndex = React.createClass({
-	  displayName: 'TasksIndex',
-	
-	
-	  getInitialState: function () {
-	    return { tasks: TasksStore.all() };
-	  },
-	
-	  onChange: function () {
-	    this.setState({ tasks: TasksStore.all() });
-	  },
-	
-	  componentDidMount: function () {
-	    this.tasksListener = TasksStore.addListener(this.onChange);
-	    ClientActions.receiveAllTasks();
-	  },
-	
-	  render: function () {
-	    var tasks = this.state.tasks;
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Tasks'
-	      ),
-	      React.createElement(
-	        'ul',
-	        null,
-	        tasks.map(function (task) {
-	          return React.createElement(TasksIndexItem, { task: task, key: task.id });
-	        })
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksIndex;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(252);
-	
-	var TasksIndexItem = React.createClass({
-	  displayName: 'TasksIndexItem',
-	
-	
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      null,
-	      this.props.task.description
-	    );
-	  }
-	
-	});
-	
-	module.exports = TasksIndexItem;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(222).Store;
-	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(254);
-	var SessionStore = __webpack_require__(221);
-	
-	var TasksStore = new Store(AppDispatcher);
-	
-	window._tasks = {};
-	var _currentUser = {};
-	
-	var _resetTasks = function (tasks) {
-	  _tasks = {};
-	  _currentUser = {};
-	  var userTasks = [];
-	
-	  _currentUser = SessionStore.currentUser();
-	  tasks.forEach(function (task) {
-	    if (task.assignee_id === _currentUser.id) {
-	      userTasks.push(task);
-	    }
-	  });
-	  userTasks.forEach(function (task) {
-	    _tasks[task.id] = task;
-	  });
-	};
-	
-	var _setTask = function (task) {
-	  _tasks[task.id] = task;
-	};
-	
-	var _removeTask = function (task) {
-	  delete _tasks[task.id];
-	};
-	
-	TasksStore.all = function () {
-	  var tasks = Object.keys(_tasks).map(function (id) {
-	    return _tasks[id];
-	  });
-	
-	  return tasks;
-	};
-	
-	TasksStore.find = function (id) {
-	  return _tasks[id];
-	};
-	
-	TasksStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case TasksConstants.TASKS_RECEIVED:
-	      _resetTasks(payload.tasks);
-	      TasksStore.__emitChange();
-	      break;
-	    case TasksConstants.TASK_RECEIVED:
-	      _setTask(payload.task);
-	      TasksStore.__emitChange();
-	      break;
-	    case TasksConstants.TASK_REMOVED:
-	      _removeTask(payload.task);
-	      TaskStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = TasksStore;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports) {
-
-	var TasksConstants = {
-	  TASKS_RECEIVED: "TASKS_RECEIVED",
-	  TASK_RECEIVED: "TASK_RECEIVED",
-	  TASK_REMOVED: "TASK_REMOVED"
-	};
-	
-	module.exports = TasksConstants;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var TasksApiUtil = __webpack_require__(250);
-	
-	var ClientActions = {
-	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
-	
-	  createTask: TasksApiUtil.createTask
-	};
-	
-	module.exports = ClientActions;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(254);
-	
-	var TasksActions = {
-	  receiveAllTasks: function (tasks) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASKS_RECEIVED,
-	      tasks: tasks
-	    });
-	  },
-	
-	  receiveTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_RECEIVED,
-	      task: task
-	    });
-	  },
-	
-	  removeTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_REMOVED,
-	      task: task
-	    });
-	  }
-	};
-	
-	module.exports = TasksActions;
 
 /***/ }
 /******/ ]);

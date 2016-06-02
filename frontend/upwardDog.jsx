@@ -7,17 +7,25 @@ var Route = ReactRouter.Route;
 var hashHistory = ReactRouter.hashHistory;
 var IndexRoute = ReactRouter.IndexRoute;
 
+var Landing = require('./components/Landing');
 var App = require('./components/App');
 var LoginForm = require('./components/LoginForm');
+var TasksIndex = require('./components/TasksIndex');
 
 var SessionStore = require('./stores/SessionStore');
 var SessionApiUtil = require('./util/SessionApiUtil');
 var TasksApiUtil = require('./util/TasksApiUtil');
 
 var routes = (
-  <Route path="/" component={App} history={hashHistory}>
-    <Route path="/login" component={ LoginForm } />
-    <Route path="/signup" component={ LoginForm } />
+  <Route path="/" component={Landing}>
+    <Route path="/hello" component={App} >
+      <Route path="/hello/login" component={ LoginForm } />
+      <Route path="/hello/signup" component={ LoginForm } />
+    </Route>
+    <Route
+      path="/user/tasks"
+      component={TasksIndex}>
+    </Route>
   </Route>
 );
 
@@ -31,7 +39,7 @@ function _ensureLoggedIn(nextState, replace, asyncDoneCallback) {
 
   function redirectIfNotLoggedIn() {
     if (!SessionStore.isUserLoggedIn()) {
-      replace('/login');
+      replace('/hello/login');
     }
   }
 }

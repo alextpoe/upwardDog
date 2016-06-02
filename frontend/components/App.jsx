@@ -14,7 +14,7 @@ var App = React.createClass({
   },
 
   clickHandle: function (event){
-    this.context.router.push("/login")
+    this.context.router.push("/hello/login")
   },
 
   header: function () {
@@ -32,11 +32,11 @@ var App = React.createClass({
             <img src={window.logo_url} />
           </div>
           <div className="log-in">
-            <Link className="login-link" to="/login" onClick={this.clickHandle}>Log In</Link>
+            <Link className="login-link" to="/hello/login" onClick={this.clickHandle}>Log In</Link>
             &nbsp;
             or
             &nbsp;
-            <Link className="signup" to="/signup">Get Started for FREE</Link>
+            <Link className="signup" to="/hello/signup">Get Started for FREE</Link>
           </div>
         </nav>
       );
@@ -44,10 +44,7 @@ var App = React.createClass({
   },
 
   render: function () {
-    var tasks = <div></div>;
-    if (SessionStore.isUserLoggedIn()){
-      tasks = <TasksIndex/>
-    }
+
     return(
       <div className="container">
         { this.header() }
@@ -55,7 +52,6 @@ var App = React.createClass({
           <div className="below-header">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit.
           </div>
-          {tasks}
         </div>
         <footer className="footer">
           Here's more writing that will be filled with something clever.

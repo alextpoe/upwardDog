@@ -25,8 +25,9 @@ var LoginForm = React.createClass({
   },
 
   redirectIfLoggedIn: function () {
+    // debugger
     if (SessionStore.isUserLoggedIn()) {
-      this.context.router.push("/");
+      this.context.router.push("/user/tasks");
     }
   },
 
@@ -42,7 +43,7 @@ var LoginForm = React.createClass({
   },
 
   bgClick: function (){
-    this.context.router.push("/");
+    this.context.router.push("/hello");
   },
 
   onSubmit: function(event) {
@@ -53,7 +54,7 @@ var LoginForm = React.createClass({
       password: this.state.password
     };
 
-    if (this.props.location.pathname ==="/login") {
+    if (this.props.location.pathname ==="/hello/login") {
       SessionApiUtil.login(loginData);
     } else {
       UserApiUtil.signup(loginData);
@@ -71,7 +72,7 @@ var LoginForm = React.createClass({
   },
 
   formType: function () {
-    return this.props.location.pathname.slice(1);
+    return this.props.location.pathname.slice(7);
   },
 
   render: function () {
