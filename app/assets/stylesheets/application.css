@@ -135,7 +135,7 @@
    text-align: center;
    color: white;
    font-size: 40px;
-   height: 475px;
+   height: 600px;
    width: 100%;
        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffc019+0,ff7b9c+40,fc7279+73 */
     background: rgb(255,192,25); /* Old browsers */
@@ -183,6 +183,7 @@
    height: 300px;
    width: 300px;
    background: rgba(255, 255, 255, 0.9);
+   border-radius: 4px;
    left: 50%;
    top: 50%;
    transform: translateY(-50%) translateX(-50%);

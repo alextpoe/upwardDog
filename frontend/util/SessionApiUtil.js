@@ -1,4 +1,5 @@
 var SessionActions = require('../actions/SessionActions');
+var ErrorActions = require('../actions/ErrorActions');
 
 var SessionApiUtil = {
   login: function (credentials) {
@@ -8,6 +9,7 @@ var SessionApiUtil = {
       dataType: "json",
       data: { user: credentials },
       success: function (currentUser) {
+        console.log("success?");
         SessionActions.receiveCurrentUser(currentUser);
       },
       error: function (xhr) {
@@ -39,7 +41,7 @@ var SessionApiUtil = {
         SessionActions.receiveCurrentUser(currentUser);
       },
       error: function (){
-        
+
       },
       complete: complete
     });

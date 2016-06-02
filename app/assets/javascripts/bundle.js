@@ -32121,6 +32121,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionActions = __webpack_require__(245);
+	var ErrorActions = __webpack_require__(249);
 	
 	var SessionApiUtil = {
 	  login: function (credentials) {
@@ -32130,6 +32131,7 @@
 	      dataType: "json",
 	      data: { user: credentials },
 	      success: function (currentUser) {
+	        console.log("success?");
 	        SessionActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (xhr) {
@@ -32369,7 +32371,6 @@
 	    errors = _errors[field];
 	    result[field] = errors.slice();
 	  });
-	
 	  return result;
 	};
 	

@@ -20,7 +20,6 @@ ErrorStore.formErrors = function (form) {
     errors = _errors[field];
     result[field] = errors.slice();
   });
-
   return result;
 
 };

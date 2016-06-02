@@ -12,7 +12,8 @@ class Api::SessionsController < ApplicationController
       render(
         json: {
           base: ["Incorrect username/password"]
-        }
+        },
+        status: 401
       )
     end
   end
