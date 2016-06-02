@@ -135,7 +135,7 @@
    text-align: center;
    color: white;
    font-size: 40px;
-   height: 400px;
+   height: 475px;
    width: 100%;
        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffc019+0,ff7b9c+40,fc7279+73 */
     background: rgb(255,192,25); /* Old browsers */
@@ -146,6 +146,8 @@
  }
 
  .below-header{
+   position: relative;
+   top: 75px;
    padding:50px;
    display: block;
  }
@@ -202,7 +204,8 @@
 
  .form-fields{
   position: relative;
-  top: 50px
+  top: 50px;
+  right: 15px;
  }
 
  .username, .password{
@@ -212,7 +215,9 @@
    color: #1B2432;
    height: 40px;
    margin: 5px;
+   padding: 0 10px;
    width: 100%;
+   font-size: 20px;
  }
 
  .log-submit{
