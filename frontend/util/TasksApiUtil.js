@@ -48,13 +48,11 @@ var TasksApiUtil = {
   },
 
   deleteTask: function (id) {
-    debugger
     $.ajax({
       type: "DELETE",
       url: "api/user/tasks/" + id,
-      success: function (id) {
-        console.log(data)
-        TasksActions.removeTask(id);
+      success: function (task) {
+        TasksActions.removeTask(task);
       }
     });
   }

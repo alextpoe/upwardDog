@@ -31,7 +31,7 @@ class Api::TasksController < ApplicationController
   def destroy
     @task = Task.find(params[:id])
     if(@task.destroy)
-      render :index
+      render :show
     end
   end
 
