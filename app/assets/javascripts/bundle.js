@@ -54,14 +54,14 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	
 	var Landing = __webpack_require__(220);
-	var App = __webpack_require__(251);
-	var LoginForm = __webpack_require__(255);
-	var TasksIndex = __webpack_require__(244);
-	var TasksEdit = __webpack_require__(259);
+	var App = __webpack_require__(256);
+	var LoginForm = __webpack_require__(257);
+	var TasksIndex = __webpack_require__(247);
+	var TasksEdit = __webpack_require__(255);
 	
 	var SessionStore = __webpack_require__(221);
-	var SessionApiUtil = __webpack_require__(252);
-	var TasksApiUtil = __webpack_require__(249);
+	var SessionApiUtil = __webpack_require__(244);
+	var TasksApiUtil = __webpack_require__(250);
 	
 	var routes = React.createElement(
 	  Route,
@@ -25231,8 +25231,8 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
-	var SessionApiUtil = __webpack_require__(252);
-	var TasksIndex = __webpack_require__(244);
+	var SessionApiUtil = __webpack_require__(244);
+	var TasksIndex = __webpack_require__(247);
 	
 	var Landing = React.createClass({
 	  displayName: 'Landing',
@@ -32103,15 +32103,116 @@
 /* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var SessionActions = __webpack_require__(245);
+	var ErrorActions = __webpack_require__(246);
+	
+	var SessionApiUtil = {
+	  login: function (credentials) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/session",
+	      dataType: "json",
+	      data: { user: credentials },
+	      success: function (currentUser) {
+	        console.log("success?");
+	        SessionActions.receiveCurrentUser(currentUser);
+	      },
+	      error: function (xhr) {
+	        var errors = xhr.responseJSON;
+	        ErrorActions.setErrors("login", errors);
+	      }
+	    });
+	  },
+	
+	  logout: function () {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "api/session",
+	      dataType: "json",
+	      success: function () {
+	        SessionActions.removeCurrentUser();
+	      },
+	      error: function () {}
+	    });
+	  },
+	
+	  fetchCurrentUser: function (complete) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/session",
+	      success: function (currentUser) {
+	        SessionActions.receiveCurrentUser(currentUser);
+	      },
+	      error: function () {},
+	      complete: complete
+	    });
+	  }
+	};
+	
+	module.exports = SessionApiUtil;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var SessionConstants = __webpack_require__(243);
+	
+	var SessionActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    AppDispatcher.dispatch({
+	      actionType: SessionConstants.LOGIN,
+	      currentUser: currentUser
+	    });
+	  },
+	
+	  removeCurrentUser: function () {
+	    AppDispatcher.dispatch({
+	      actionType: SessionConstants.LOGOUT
+	    });
+	  }
+	};
+	
+	module.exports = SessionActions;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var ErrorConstants = __webpack_require__(243);
+	
+	var ErrorActions = {
+	  setErrors: function (form, errors) {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.SET_ERRORS,
+	      form: form,
+	      errors: errors
+	    });
+	  },
+	
+	  clearErrors: function () {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.CLEAR_ERRORS
+	    });
+	  }
+	};
+	
+	module.exports = ErrorActions;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(245);
-	var TasksStore = __webpack_require__(246);
-	var ClientActions = __webpack_require__(248);
-	var TasksForm = __webpack_require__(258);
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var ClientActions = __webpack_require__(249);
+	var TasksForm = __webpack_require__(254);
 	var SessionStore = __webpack_require__(221);
-	var SessionApiUtil = __webpack_require__(252);
-	var TasksEdit = __webpack_require__(259);
+	var SessionApiUtil = __webpack_require__(244);
+	var TasksEdit = __webpack_require__(255);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32179,12 +32280,12 @@
 	module.exports = TasksIndex;
 
 /***/ },
-/* 245 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var ClientActions = __webpack_require__(248);
+	var ClientActions = __webpack_require__(249);
 	
 	var TasksIndexItem = React.createClass({
 	  displayName: 'TasksIndexItem',
@@ -32212,12 +32313,140 @@
 	module.exports = TasksIndexItem;
 
 /***/ },
-/* 246 */
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksApiUtil = __webpack_require__(250);
+	
+	var ClientActions = {
+	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
+	
+	  createTask: TasksApiUtil.createTask,
+	
+	  updateTask: TasksApiUtil.editTask,
+	
+	  deleteTask: TasksApiUtil.deleteTask
+	};
+	
+	module.exports = ClientActions;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksActions = __webpack_require__(251);
+	
+	var TasksApiUtil = {
+	  receiveAllTasks: function (tasks) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { tasks: tasks },
+	      success: function (data) {
+	        TasksActions.receiveAllTasks(data);
+	      }
+	    });
+	  },
+	  createTask: function (task) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { task: task },
+	      success: function () {
+	        TasksActions.receiveTask();
+	      }
+	    });
+	  },
+	
+	  getTask: function (id) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      success: function () {
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  editTask: function (task, id) {
+	    $.ajax({
+	      type: "PATCH",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      data: { task: task },
+	      success: function () {
+	        TasksActions.receiveTask();
+	      }
+	    });
+	  },
+	
+	  deleteTask: function (id) {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "api/user/tasks/" + id,
+	      success: function (task) {
+	        TasksActions.removeTask(task);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = TasksApiUtil;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(252);
+	
+	var TasksActions = {
+	  receiveAllTasks: function (tasks) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASKS_RECEIVED,
+	      tasks: tasks
+	    });
+	  },
+	
+	  receiveTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_RECEIVED,
+	      task: task
+	    });
+	  },
+	
+	  removeTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_REMOVED,
+	      task: task
+	    });
+	  }
+	};
+	
+	module.exports = TasksActions;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports) {
+
+	var TasksConstants = {
+	  TASKS_RECEIVED: "TASKS_RECEIVED",
+	  TASK_RECEIVED: "TASK_RECEIVED",
+	  TASK_REMOVED: "TASK_REMOVED"
+	};
+	
+	module.exports = TasksConstants;
+
+/***/ },
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
 	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(247);
+	var TasksConstants = __webpack_require__(252);
 	var SessionStore = __webpack_require__(221);
 	
 	var TasksStore = new Store(AppDispatcher);
@@ -32281,142 +32510,142 @@
 	module.exports = TasksStore;
 
 /***/ },
-/* 247 */
-/***/ function(module, exports) {
-
-	var TasksConstants = {
-	  TASKS_RECEIVED: "TASKS_RECEIVED",
-	  TASK_RECEIVED: "TASK_RECEIVED",
-	  TASK_REMOVED: "TASK_REMOVED"
-	};
-	
-	module.exports = TasksConstants;
-
-/***/ },
-/* 248 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var TasksApiUtil = __webpack_require__(249);
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(249);
 	
-	var ClientActions = {
-	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
+	var TasksForm = React.createClass({
+	  displayName: 'TasksForm',
 	
-	  createTask: TasksApiUtil.createTask,
-	
-	  updateTask: TasksApiUtil.editTask,
-	
-	  deleteTask: TasksApiUtil.deleteTask
-	};
-	
-	module.exports = ClientActions;
-
-/***/ },
-/* 249 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var TasksActions = __webpack_require__(250);
-	
-	var TasksApiUtil = {
-	  receiveAllTasks: function (tasks) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { tasks: tasks },
-	      success: function (data) {
-	        TasksActions.receiveAllTasks(data);
-	      }
-	    });
-	  },
-	  createTask: function (task) {
-	    $.ajax({
-	      type: "POST",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { task: task },
-	      success: function () {
-	        TasksActions.receiveTask();
-	      }
-	    });
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
 	  },
 	
-	  getTask: function (id) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      success: function () {
-	        console.log("success");
-	      }
-	    });
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
 	  },
 	
-	  editTask: function (task, id) {
-	    $.ajax({
-	      type: "PATCH",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      data: { task: task },
-	      success: function () {
-	        TasksActions.receiveTask();
-	      }
-	    });
+	  keyHandler: function (event) {
+	    this.setState({ title: event.target.value });
 	  },
 	
-	  deleteTask: function (id) {
-	    $.ajax({
-	      type: "DELETE",
-	      url: "api/user/tasks/" + id,
-	      success: function (task) {
-	        TasksActions.removeTask(task);
-	      }
-	    });
+	  clickHandler: function (event) {
+	    event.preventDefault();
+	    this.context.router.push("/user/tasks/new");
+	  },
+	
+	  blurHandler: function (event) {
+	    debugger;
+	    ClientActions.updateTask(this.state);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement('input', {
+	        value: this.state.title,
+	        onClick: this.clickHandler,
+	        onChange: this.keyHandler
+	      })
+	    );
 	  }
-	};
+	});
 	
-	module.exports = TasksApiUtil;
+	module.exports = TasksForm;
 
 /***/ },
-/* 250 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(247);
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(249);
 	
-	var TasksActions = {
-	  receiveAllTasks: function (tasks) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASKS_RECEIVED,
-	      tasks: tasks
-	    });
+	var TasksEdit = React.createClass({
+	  displayName: 'TasksEdit',
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
 	  },
 	
-	  receiveTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_RECEIVED,
-	      task: task
-	    });
+	  titleChange: function (event) {
+	    this.setState({ title: event.target.value });
 	  },
 	
-	  removeTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_REMOVED,
-	      task: task
-	    });
+	  descriptionChange: function (event) {
+	    this.setState({ description: event.target.value });
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	    debugger;
+	    ClientActions.createTask(this.state);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
+	        null,
+	        'Title: ',
+	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        'Description: ',
+	        React.createElement('input', { value: this.state.description, onChange: this.descriptionChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.onSubmit },
+	          'Submit'
+	        )
+	      )
+	    );
 	  }
-	};
+	});
 	
-	module.exports = TasksActions;
+	module.exports = TasksEdit;
 
 /***/ },
-/* 251 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
-	var SessionApiUtil = __webpack_require__(252);
-	var TasksIndex = __webpack_require__(244);
+	var SessionApiUtil = __webpack_require__(244);
+	var TasksIndex = __webpack_require__(247);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -32496,115 +32725,14 @@
 	module.exports = App;
 
 /***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var SessionActions = __webpack_require__(253);
-	var ErrorActions = __webpack_require__(254);
-	
-	var SessionApiUtil = {
-	  login: function (credentials) {
-	    $.ajax({
-	      type: "POST",
-	      url: "api/session",
-	      dataType: "json",
-	      data: { user: credentials },
-	      success: function (currentUser) {
-	        console.log("success?");
-	        SessionActions.receiveCurrentUser(currentUser);
-	      },
-	      error: function (xhr) {
-	        var errors = xhr.responseJSON;
-	        ErrorActions.setErrors("login", errors);
-	      }
-	    });
-	  },
-	
-	  logout: function () {
-	    $.ajax({
-	      type: "DELETE",
-	      url: "api/session",
-	      dataType: "json",
-	      success: function () {
-	        SessionActions.removeCurrentUser();
-	      },
-	      error: function () {}
-	    });
-	  },
-	
-	  fetchCurrentUser: function (complete) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/session",
-	      success: function (currentUser) {
-	        SessionActions.receiveCurrentUser(currentUser);
-	      },
-	      error: function () {},
-	      complete: complete
-	    });
-	  }
-	};
-	
-	module.exports = SessionApiUtil;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(240);
-	var SessionConstants = __webpack_require__(243);
-	
-	var SessionActions = {
-	  receiveCurrentUser: function (currentUser) {
-	    AppDispatcher.dispatch({
-	      actionType: SessionConstants.LOGIN,
-	      currentUser: currentUser
-	    });
-	  },
-	
-	  removeCurrentUser: function () {
-	    AppDispatcher.dispatch({
-	      actionType: SessionConstants.LOGOUT
-	    });
-	  }
-	};
-	
-	module.exports = SessionActions;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(240);
-	var ErrorConstants = __webpack_require__(243);
-	
-	var ErrorActions = {
-	  setErrors: function (form, errors) {
-	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.SET_ERRORS,
-	      form: form,
-	      errors: errors
-	    });
-	  },
-	
-	  clearErrors: function () {
-	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.CLEAR_ERRORS
-	    });
-	  }
-	};
-	
-	module.exports = ErrorActions;
-
-/***/ },
-/* 255 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(221);
-	var ErrorStore = __webpack_require__(256);
-	var SessionApiUtil = __webpack_require__(252);
-	var UserApiUtil = __webpack_require__(257);
+	var ErrorStore = __webpack_require__(258);
+	var SessionApiUtil = __webpack_require__(244);
+	var UserApiUtil = __webpack_require__(259);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -32751,7 +32879,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 256 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
@@ -32801,11 +32929,11 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 257 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SessionActions = __webpack_require__(253);
-	var ErrorActions = __webpack_require__(254);
+	var SessionActions = __webpack_require__(245);
+	var ErrorActions = __webpack_require__(246);
 	
 	var UserApiUtil = {
 	  signup: function (formData) {
@@ -32826,110 +32954,6 @@
 	};
 	
 	module.exports = UserApiUtil;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(245);
-	var TasksStore = __webpack_require__(246);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(248);
-	
-	var TasksForm = React.createClass({
-	  displayName: 'TasksForm',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      title: "",
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    };
-	  },
-	
-	  keyHandler: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  clickHandler: function (event) {
-	    event.preventDefault();
-	    this.context.router.push("/user/tasks/new");
-	  },
-	
-	  blurHandler: function (event) {
-	    debugger;
-	    ClientActions.updateTask(this.state);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      null,
-	      React.createElement('input', {
-	        value: this.state.title,
-	        onClick: this.clickHandler,
-	        onChange: this.keyHandler
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = TasksForm;
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(245);
-	var TasksStore = __webpack_require__(246);
-	var SessionStore = __webpack_require__(221);
-	
-	var TasksEdit = React.createClass({
-	  displayName: 'TasksEdit',
-	
-	  getInitialState: function () {
-	    return {
-	      title: "",
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    };
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      null,
-	      React.createElement(
-	        'li',
-	        null,
-	        'New Task: ',
-	        React.createElement('input', { value: this.state.title })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        'Description: ',
-	        React.createElement('input', { value: this.state.description })
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksEdit;
 
 /***/ }
 /******/ ]);

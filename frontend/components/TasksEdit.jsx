@@ -3,6 +3,7 @@ var Link = require('react-router').Link;
 var TasksIndexItem = require('./TasksIndexItem');
 var TasksStore = require('../stores/TasksStore');
 var SessionStore = require('../stores/SessionStore');
+var ClientActions = require('../actions/ClientActions');
 
 
 var TasksEdit = React.createClass({
@@ -17,13 +18,28 @@ var TasksEdit = React.createClass({
     }
   },
 
+  titleChange: function (event) {
+    this.setState({ title: event.target.value})
+  },
+
+  descriptionChange: function (event) {
+    this.setState({ description: event.target.value })
+  },
+
+  onSubmit: function (event) {
+    event.preventDefault();
+    debugger
+    ClientActions.createTask(this.state);
+  },
+
   render: function () {
-    return(
+    return (
       <ul>
-        <li>New Task: <input value={this.state.title} /></li>
-        <li>Description: <input value={this.state.description}/></li>
+        <li>Title: <input value={this.state.title} onChange={this.titleChange}/></li>
+        <li>Description: <input value={this.state.description} onChange={this.descriptionChange}/></li>
+        <li><button type="submit" onClick={this.onSubmit}>Submit</button></li>
       </ul>
-    )
+    );
   }
 });
 
