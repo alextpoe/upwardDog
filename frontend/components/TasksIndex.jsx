@@ -80,7 +80,7 @@ var TasksIndex = React.createClass({
     return (
       <div className="whole-page">
         <div className="sidebar">
-          Your Name Here
+          <img src={window.logo_url} />
         </div>
         <div className="upward-dog-main">
           <nav className="task-header">

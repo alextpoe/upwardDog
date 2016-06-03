@@ -274,8 +274,9 @@
    display: block;
    height: 60px;
    text-align: center;
-   border-bottom: 1px solid #2E3C54;
-
+   font-family: "proxima-nova","Helvetica Neue",Arial,sans-serif;
+   -webkit-box-orient: horizontal;
+   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
  }
 
  .task-container{
@@ -289,8 +290,9 @@
    float: left;
    position: relative;
    background: #fff;
-   border: 1px solid #2E3C54;
-   border-radius: 5px;
+   font-family: "proxima-nova","Helvetica Neue",Arial,sans-serif;
+   border-radius: 3px;
+   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
    width: calc(50% - 15px);
    text-align: center;
@@ -307,8 +309,9 @@
    position: relative;
    right: 15px;
    background: #fff;
-   border: 1px solid #2E3C54;
-   border-radius: 5px;
+   font-family: "proxima-nova","Helvetica Neue",Arial,sans-serif;
+   border-radius: 3px;
+   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
    width: calc(50% - 30px);
    height: 100%;

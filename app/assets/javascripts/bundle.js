@@ -32289,7 +32289,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'sidebar' },
-	        'Your Name Here'
+	        React.createElement('img', { src: window.logo_url })
 	      ),
 	      React.createElement(
 	        'div',
@@ -32353,7 +32353,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'li',
-	      { className: 'empty' },
+	      { className: 'task-list-items' },
 	      React.createElement(
 	        Link,
 	        { to: "/user/tasks/" + this.props.task.id + "/edit" },
@@ -32431,6 +32431,7 @@
 	  },
 	
 	  editTask: function (task, id) {
+	    debugger;
 	    $.ajax({
 	      type: "PATCH",
 	      url: "api/user/tasks/" + id,
@@ -32603,13 +32604,23 @@
 	
 	  clickHandler: function (event) {
 	    event.preventDefault();
+	    // ClientActions.createTask(
+	    //   {
+	    //     title: "",
+	    //     description: "",
+	    //     manager_id: "",
+	    //     assignee_id: SessionStore.currentUser().id,
+	    //     project_id: "",
+	    //     completed: false
+	    //   }
+	    // );
+	    // debugger
 	    this.context.router.push("/user/tasks/new");
 	  },
 	
-	  blurHandler: function (event) {
-	    debugger;
-	    ClientActions.updateTask(this.state);
-	  },
+	  // blurHandler: function (event) {
+	  //   ClientActions.updateTask()
+	  // },
 	
 	  render: function () {
 	    return React.createElement(

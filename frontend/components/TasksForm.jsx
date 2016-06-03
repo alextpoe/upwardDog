@@ -28,13 +28,23 @@ var TasksForm = React.createClass({
 
   clickHandler: function (event) {
     event.preventDefault();
+    // ClientActions.createTask(
+    //   {
+    //     title: "",
+    //     description: "",
+    //     manager_id: "",
+    //     assignee_id: SessionStore.currentUser().id,
+    //     project_id: "",
+    //     completed: false
+    //   }
+    // );
+    // debugger
     this.context.router.push("/user/tasks/new");
   },
 
-  blurHandler: function (event) {
-    debugger
-    ClientActions.updateTask(this.state)
-  },
+  // blurHandler: function (event) {
+  //   ClientActions.updateTask()
+  // },
 
   render: function () {
     return (

@@ -10,11 +10,11 @@ var TasksIndexItem = React.createClass({
     ClientActions.deleteTask(this.props.task.id);
   },
 
-  
+
 
   render: function () {
     return (
-      <li className="empty">
+      <li className="task-list-items">
         <Link to={"/user/tasks/" + this.props.task.id + "/edit"}>{this.props.task.title}</Link>
         <button type="submit" onClick={this.clickHandler}>Delete</button>
       </li>
