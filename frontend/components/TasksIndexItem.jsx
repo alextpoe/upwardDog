@@ -13,7 +13,7 @@ var TasksIndexItem = React.createClass({
   checkOff: function (event) {
     event.preventDefault();
     var task = this.props.task;
-    
+
     ClientActions.updateTask(
       {
         title: task.title,
@@ -34,7 +34,7 @@ var TasksIndexItem = React.createClass({
           ✓
         </div>
         <Link to={"/user/tasks/" + this.props.task.id + "/edit"}>{this.props.task.title}</Link>
-        <button type="submit" onClick={this.clickHandler}>Delete</button>
+        <button className="delete" type="submit" onClick={this.clickHandler}>Delete</button>
       </li>
     )
   }

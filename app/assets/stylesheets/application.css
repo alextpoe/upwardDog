@@ -354,3 +354,28 @@
    -webkit-box-shadow: 0 0 0 3px #3BE8B0;
    border: 1px solid #fff;
  }
+
+ .delete{
+   float: right;
+ }
+
+ .add-task{
+   display: block;
+   clear: both;
+   color: #fff;
+   background-color: #1AAFD0;
+   float: left;
+   text-align: center;
+   width: 40px;
+   height: 30px;
+   border-radius: 3px;
+   top: 2px;
+   left: 2px;
+   transition: all 0.3s ease;
+   transition-property: background, -webkit-box-shadow;
+ }
+
+ .add-task:hover{
+   background: #02CEFF;
+   -webkit-box-shadow: 0 0 0 3px #80E6FF;
+ }

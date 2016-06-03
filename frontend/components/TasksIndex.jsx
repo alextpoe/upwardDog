@@ -48,12 +48,9 @@ var TasksIndex = React.createClass({
   //   debugger
   // },
 
-  newTask: function () {
-    if (["new"].indexOf(this.props.location.pathname) !== -1) {
-      return (
-        <TasksCreate/>
-      )
-    }
+  newTask: function (event) {
+    event.preventDefault();
+    this.context.router.push("/user/tasks/new")
   },
 
   logout: function () {
@@ -74,12 +71,12 @@ var TasksIndex = React.createClass({
       return !task.completed
     });
 
-    var editTask = '';
-    if (this.props.location.pathname ==="/user/tasks/new"){
-      editTask = <TasksCreate/>;
-    } else if (this.props.location.pathname ==="/user/tasks/" + this.props.params.id + "/edit"){
-      editTask = <TasksEdit id={this.props.params.id}/>
-    }
+    // var editTask = '';
+    // if (this.props.location.pathname ==="/user/tasks/new"){
+    //   editTask = <TasksCreate/>;
+    // } else if (this.props.location.pathname ==="/user/tasks/" + this.props.params.id + "/edit"){
+    //   editTask = <TasksEdit id={this.props.params.id}/>
+    // }
 
     return (
       <div className="whole-page">
@@ -103,11 +100,10 @@ var TasksIndex = React.createClass({
               </ul>
             </div>
             <div className="task-form">
-              {editTask}
+              {this.props.children}
             </div>
           </div>
         </div>
-        {this.props.children}
       </div>
     )
   }

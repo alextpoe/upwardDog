@@ -32259,10 +32259,9 @@
 	  //   debugger
 	  // },
 	
-	  newTask: function () {
-	    if (["new"].indexOf(this.props.location.pathname) !== -1) {
-	      return React.createElement(TasksCreate, null);
-	    }
+	  newTask: function (event) {
+	    event.preventDefault();
+	    this.context.router.push("/user/tasks/new");
 	  },
 	
 	  logout: function () {
@@ -32280,12 +32279,12 @@
 	      return !task.completed;
 	    });
 	
-	    var editTask = '';
-	    if (this.props.location.pathname === "/user/tasks/new") {
-	      editTask = React.createElement(TasksCreate, null);
-	    } else if (this.props.location.pathname === "/user/tasks/" + this.props.params.id + "/edit") {
-	      editTask = React.createElement(TasksEdit, { id: this.props.params.id });
-	    }
+	    // var editTask = '';
+	    // if (this.props.location.pathname ==="/user/tasks/new"){
+	    //   editTask = <TasksCreate/>;
+	    // } else if (this.props.location.pathname ==="/user/tasks/" + this.props.params.id + "/edit"){
+	    //   editTask = <TasksEdit id={this.props.params.id}/>
+	    // }
 	
 	    return React.createElement(
 	      'div',
@@ -32326,11 +32325,10 @@
 	          React.createElement(
 	            'div',
 	            { className: 'task-form' },
-	            editTask
+	            this.props.children
 	          )
 	        )
-	      ),
-	      this.props.children
+	      )
 	    );
 	  }
 	});
@@ -32384,7 +32382,7 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        { type: 'submit', onClick: this.clickHandler },
+	        { className: 'delete', type: 'submit', onClick: this.clickHandler },
 	        'Delete'
 	      )
 	    );
@@ -33070,8 +33068,7 @@
 	  displayName: 'TasksEdit',
 	
 	  getInitialState: function () {
-	
-	    var possibleTask = TasksStore.find(this.props.id);
+	    var possibleTask = TasksStore.find(this.props.params.id);
 	    var task = possibleTask ? possibleTask : false;
 	    if (task) {
 	      return {
@@ -33095,7 +33092,7 @@
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
-	    var possibleTask = TasksStore.find(newProps.id);
+	    var possibleTask = TasksStore.find(newProps.params.id);
 	    var task = possibleTask ? possibleTask : false;
 	    if (task) {
 	      this.setState({
@@ -33131,7 +33128,7 @@
 	
 	  onSubmit: function (event) {
 	    event.preventDefault();
-	    ClientActions.updateTask(this.state, this.props.id);
+	    ClientActions.updateTask(this.state, this.props.params.id);
 	  },
 	
 	  render: function () {
