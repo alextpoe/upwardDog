@@ -20,15 +20,15 @@ var TasksIndex = React.createClass({
   },
 
   onChange: function () {
-    this.setState({ tasks: TasksStore.all() })
-    this.context.router.push("/user/tasks")
+    this.setState({ tasks: TasksStore.all() });
+    this.context.router.push("/user/tasks");
   },
 
   componentDidMount: function () {
-    this.tasksListener = TasksStore.addListener(this.onChange)
-    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this))
+    this.tasksListener = TasksStore.addListener(this.onChange);
+    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
     SessionApiUtil.fetchCurrentUser();
-    ClientActions.receiveAllTasks()
+    ClientActions.receiveAllTasks();
   },
 
   componentWillUnmount: function () {
@@ -50,7 +50,7 @@ var TasksIndex = React.createClass({
 
   newTask: function (event) {
     event.preventDefault();
-    this.context.router.push("/user/tasks/new")
+    this.context.router.push("/user/tasks/new");
   },
 
   logout: function () {
@@ -68,7 +68,7 @@ var TasksIndex = React.createClass({
   render: function () {
     var tasks = this.state.tasks;
     var incompleteTasks = tasks.filter(function (task) {
-      return !task.completed
+      return !task.completed;
     });
 
     // var editTask = '';
@@ -105,7 +105,7 @@ var TasksIndex = React.createClass({
           </div>
         </div>
       </div>
-    )
+    );
   }
 });
 

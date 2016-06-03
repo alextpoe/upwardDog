@@ -19,11 +19,11 @@ var TasksForm = React.createClass({
       assignee_id: SessionStore.currentUser().id,
       project_id: "",
       completed: false
-    }
+    };
   },
 
   keyHandler: function (event) {
-    this.setState({ title: event.target.value })
+    this.setState({ title: event.target.value });
   },
 
   clickHandler: function (event) {
@@ -45,7 +45,7 @@ var TasksForm = React.createClass({
         completed: false
       }
     );
-    this.setState({title: ""})
+    this.setState({title: ""});
   },
 
   render: function () {
@@ -59,7 +59,7 @@ var TasksForm = React.createClass({
           onBlur={this.blurHandler}
           />
       </li>
-    )
+    );
   }
 });
 

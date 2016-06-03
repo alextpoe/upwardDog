@@ -54,11 +54,11 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	
 	var Landing = __webpack_require__(220);
-	var App = __webpack_require__(256);
-	var LoginForm = __webpack_require__(257);
+	var App = __webpack_require__(257);
+	var LoginForm = __webpack_require__(258);
 	var TasksIndex = __webpack_require__(247);
 	var TasksCreate = __webpack_require__(255);
-	var TasksEdit = __webpack_require__(260);
+	var TasksEdit = __webpack_require__(256);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
@@ -32216,7 +32216,7 @@
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	var TasksCreate = __webpack_require__(255);
-	var TasksEdit = __webpack_require__(260);
+	var TasksEdit = __webpack_require__(256);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32735,6 +32735,189 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(249);
+	
+	var TasksEdit = React.createClass({
+	  displayName: 'TasksEdit',
+	
+	  getInitialState: function () {
+	    var possibleTask = TasksStore.find(this.props.params.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      return {
+	        title: task.title,
+	        description: task.description,
+	        manager_id: task.manager_id,
+	        assignee_id: task.assignee_id,
+	        project_id: task.project_id,
+	        completed: task.completed,
+	        clicked: false
+	      };
+	    } else {
+	      return {
+	        title: "",
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false,
+	        clicked: false
+	      };
+	    }
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    var possibleTask = TasksStore.find(newProps.params.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      this.setState({
+	        title: task.title,
+	        description: task.description,
+	        manager_id: task.manager_id,
+	        assignee_id: task.assignee_id,
+	        project_id: task.project_id,
+	        completed: task.completed,
+	        clicked: false
+	      });
+	    }
+	  },
+	
+	  titleChange: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  descriptionChange: function (event) {
+	    this.setState({ description: event.target.value });
+	  },
+	
+	  managerChange: function (event) {
+	    this.setState({ manager_id: event.target.value });
+	  },
+	
+	  assigneeChange: function (event) {
+	    this.setState({ assignee_id: event.target.value });
+	  },
+	
+	  projectChange: function (event) {
+	    this.setState({ project_id: event.target.value });
+	  },
+	
+	  projectClick: function (event) {
+	    event.preventDefault();
+	    this.setState({
+	      clicked: true
+	    });
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	    ClientActions.updateTask(this.state, this.props.params.id);
+	  },
+	
+	  render: function () {
+	    var task = this.state;
+	
+	    if (task.clicked) {
+	      return React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          null,
+	          'Title: ',
+	          React.createElement('input', { value: task.title, onChange: this.titleChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'Description: ',
+	          React.createElement('input', { value: task.description, onChange: this.descriptionChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'Manager ID: ',
+	          React.createElement('input', { value: task.manager_id, onChange: this.managerChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'Assignee ID: ',
+	          React.createElement('input', { value: task.assignee_id, onChange: this.assigneeChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement('input', { value: task.project_id, type: 'text', onClick: this.projectClick, onChange: this.projectChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { type: 'submit', onClick: this.onSubmit },
+	            'Submit'
+	          )
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          null,
+	          'Title: ',
+	          React.createElement('input', { value: task.title, onChange: this.titleChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'Description: ',
+	          React.createElement('input', { value: task.description, onChange: this.descriptionChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'Manager ID: ',
+	          React.createElement('input', { value: task.manager_id, onChange: this.managerChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement('input', { value: 'No Project', type: 'submit', onClick: this.projectClick, onChange: this.projectChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          'Assignee ID: ',
+	          React.createElement('input', { value: task.assignee_id, onChange: this.assigneeChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { type: 'submit', onClick: this.onSubmit },
+	            'Submit'
+	          )
+	        )
+	      );
+	    }
+	  }
+	});
+	
+	module.exports = TasksEdit;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	var TasksIndex = __webpack_require__(247);
@@ -32821,14 +33004,14 @@
 	module.exports = App;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(221);
-	var ErrorStore = __webpack_require__(258);
+	var ErrorStore = __webpack_require__(259);
 	var SessionApiUtil = __webpack_require__(244);
-	var UserApiUtil = __webpack_require__(259);
+	var UserApiUtil = __webpack_require__(260);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -32978,7 +33161,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
@@ -33028,7 +33211,7 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionActions = __webpack_require__(245);
@@ -33053,147 +33236,6 @@
 	};
 	
 	module.exports = UserApiUtil;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(249);
-	
-	var TasksEdit = React.createClass({
-	  displayName: 'TasksEdit',
-	
-	  getInitialState: function () {
-	    var possibleTask = TasksStore.find(this.props.params.id);
-	    var task = possibleTask ? possibleTask : false;
-	    if (task) {
-	      return {
-	        title: task.title,
-	        description: task.description,
-	        manager_id: task.manager_id,
-	        assignee_id: task.assignee_id,
-	        project_id: task.project_id,
-	        completed: task.completed
-	      };
-	    } else {
-	      return {
-	        title: "",
-	        description: "",
-	        manager_id: "",
-	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
-	        completed: false
-	      };
-	    }
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    var possibleTask = TasksStore.find(newProps.params.id);
-	    var task = possibleTask ? possibleTask : false;
-	    if (task) {
-	      this.setState({
-	        title: task.title,
-	        description: task.description,
-	        manager_id: task.manager_id,
-	        assignee_id: task.assignee_id,
-	        project_id: task.project_id,
-	        completed: task.completed
-	      });
-	    }
-	  },
-	
-	  titleChange: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  descriptionChange: function (event) {
-	    this.setState({ description: event.target.value });
-	  },
-	
-	  managerChange: function (event) {
-	    this.setState({ manager_id: event.target.value });
-	  },
-	
-	  assigneeChange: function (event) {
-	    this.setState({ assignee_id: event.target.value });
-	  },
-	
-	  projectChange: function (event) {
-	    this.setState({ project_id: event.target.value });
-	  },
-	
-	  projectClick: function (event) {
-	    event.preventDefault();
-	    this.projectClicked = true;
-	    this.inputType = "button";
-	    // if (this.projectClicked) {
-	    //   this.inputType = "text";
-	    // }
-	  },
-	
-	  onSubmit: function (event) {
-	    event.preventDefault();
-	    ClientActions.updateTask(this.state, this.props.params.id);
-	  },
-	
-	  render: function () {
-	    var project;
-	    if (!this.state.project_id) {
-	      project = "No Project";
-	    } else {
-	      project = this.state.project_id;
-	    }
-	    return React.createElement(
-	      'ul',
-	      null,
-	      React.createElement(
-	        'li',
-	        null,
-	        'Title: ',
-	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        'Description: ',
-	        React.createElement('input', { value: this.state.description, onChange: this.descriptionChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        'Manager ID: ',
-	        React.createElement('input', { value: this.state.manager_id, onChange: this.managerChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        'Assignee ID: ',
-	        React.createElement('input', { value: this.state.assignee_id, onChange: this.assigneeChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.onSubmit },
-	          'Submit'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksEdit;
 
 /***/ }
 /******/ ]);
