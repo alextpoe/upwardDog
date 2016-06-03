@@ -32624,23 +32624,23 @@
 	
 	  clickHandler: function (event) {
 	    event.preventDefault();
-	    // ClientActions.createTask(
-	    //   {
-	    //     title: "",
-	    //     description: "",
-	    //     manager_id: "",
-	    //     assignee_id: SessionStore.currentUser().id,
-	    //     project_id: "",
-	    //     completed: false
-	    //   }
-	    // );
+	
 	    // debugger
 	    this.context.router.push("/user/tasks/new");
 	  },
 	
-	  // blurHandler: function (event) {
-	  //   ClientActions.updateTask()
-	  // },
+	  blurHandler: function (event) {
+	    event.preventDefault();
+	    ClientActions.createTask({
+	      title: this.state.title,
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    });
+	    this.setState({ title: "" });
+	  },
 	
 	  render: function () {
 	    return React.createElement(
@@ -32650,7 +32650,8 @@
 	        className: 'new-task',
 	        value: this.state.title,
 	        onClick: this.clickHandler,
-	        onChange: this.keyHandler
+	        onChange: this.keyHandler,
+	        onBlur: this.blurHandler
 	      })
 	    );
 	  }
@@ -33126,12 +33127,27 @@
 	    this.setState({ project_id: event.target.value });
 	  },
 	
+	  projectClick: function (event) {
+	    event.preventDefault();
+	    this.projectClicked = true;
+	    this.inputType = "button";
+	    // if (this.projectClicked) {
+	    //   this.inputType = "text";
+	    // }
+	  },
+	
 	  onSubmit: function (event) {
 	    event.preventDefault();
 	    ClientActions.updateTask(this.state, this.props.params.id);
 	  },
 	
 	  render: function () {
+	    var project;
+	    if (!this.state.project_id) {
+	      project = "No Project";
+	    } else {
+	      project = this.state.project_id;
+	    }
 	    return React.createElement(
 	      'ul',
 	      null,
@@ -33162,8 +33178,7 @@
 	      React.createElement(
 	        'li',
 	        null,
-	        'Project ID: ',
-	        React.createElement('input', { value: this.state.project_id, onChange: this.projectChange })
+	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
 	      ),
 	      React.createElement(
 	        'li',

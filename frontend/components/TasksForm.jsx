@@ -28,23 +28,25 @@ var TasksForm = React.createClass({
 
   clickHandler: function (event) {
     event.preventDefault();
-    // ClientActions.createTask(
-    //   {
-    //     title: "",
-    //     description: "",
-    //     manager_id: "",
-    //     assignee_id: SessionStore.currentUser().id,
-    //     project_id: "",
-    //     completed: false
-    //   }
-    // );
+
     // debugger
     this.context.router.push("/user/tasks/new");
   },
 
-  // blurHandler: function (event) {
-  //   ClientActions.updateTask()
-  // },
+  blurHandler: function (event) {
+    event.preventDefault();
+    ClientActions.createTask(
+      {
+        title: this.state.title,
+        description: "",
+        manager_id: "",
+        assignee_id: SessionStore.currentUser().id,
+        project_id: "",
+        completed: false
+      }
+    );
+    this.setState({title: ""})
+  },
 
   render: function () {
     return (
@@ -54,6 +56,7 @@ var TasksForm = React.createClass({
           value={this.state.title}
           onClick={this.clickHandler}
           onChange={this.keyHandler}
+          onBlur={this.blurHandler}
           />
       </li>
     )

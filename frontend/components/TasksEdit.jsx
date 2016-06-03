@@ -66,19 +66,34 @@ var TasksEdit = React.createClass({
     this.setState({ project_id: event.target.value })
   },
 
+  projectClick: function (event) {
+    event.preventDefault();
+    this.projectClicked = true;
+    this.inputType = "button";
+    // if (this.projectClicked) {
+    //   this.inputType = "text";
+    // }
+  },
+
   onSubmit: function (event) {
     event.preventDefault();
     ClientActions.updateTask(this.state, this.props.params.id);
   },
 
   render: function () {
+    var project;
+    if (!this.state.project_id) {
+      project = "No Project";
+    } else {
+      project = this.state.project_id;
+    }
     return (
       <ul>
         <li>Title: <input value={this.state.title} onChange={this.titleChange}/></li>
         <li>Description: <input value={this.state.description} onChange={this.descriptionChange}/></li>
         <li>Manager ID: <input value={this.state.manager_id} onChange={this.managerChange}/></li>
         <li>Assignee ID: <input value={this.state.assignee_id} onChange={this.assigneeChange}/></li>
-        <li>Project ID: <input value={this.state.project_id} onChange={this.projectChange}/></li>
+        <li><input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/></li>
         <li><button type="submit" onClick={this.onSubmit}>Submit</button></li>
       </ul>
     );
