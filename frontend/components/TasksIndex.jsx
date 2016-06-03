@@ -51,21 +51,44 @@ var TasksIndex = React.createClass({
     }
   },
 
+  logout: function () {
+    if (SessionStore.isUserLoggedIn()) {
+      return (
+        <input
+          type="submit"
+          value="Log Out"
+          onClick={ SessionApiUtil.logout } />
+      );
+    }
+  },
+
   render: function () {
     var tasks = this.state.tasks;
 
     return (
-      <div>
-        <h1>Tasks</h1>
-        <ul>
-          {
-            tasks.map(function (task) {
-              return <TasksIndexItem task={task} key={task.id} />;
-            })
-          }
-          <TasksForm/>
-          {this.newTask()}
-        </ul>
+      <div className="whole-page">
+        <div className="sidebar">
+          Your Name Here
+        </div>
+        <div className="upward-dog-main">
+          <nav className="task-header">
+            {this.logout()}
+            <h1>Tasks</h1>
+          </nav>
+          <div className="task-container">
+            <div className="task-main">
+              <ul>
+                {
+                  tasks.map(function (task) {
+                    return <TasksIndexItem task={task} key={task.id} />;
+                  })
+                }
+                <TasksForm/>
+                {this.newTask()}
+              </ul>
+            </div>
+          </div>
+        </div>
         {this.props.children}
       </div>
     )

@@ -245,3 +245,47 @@
    height: 15px;
    background: #eee;
  }
+
+ .whole-page{
+
+ }
+
+ .sidebar{
+   background-color: #2E3C54;
+   -webkit-box-sizing: content-box;
+   display: flex;
+   -webkit-box-orient: vertical;
+   flex: 1 1 auto;
+   flex-direction: column;
+   flex-shrink: 0;
+   overflow: hidden;
+   padding: 0 2px;
+   position: relative;
+   width: 240px;
+   z-index: 0;
+ }
+
+ /*top: 0;
+ left: 0;
+ bottom: 0;
+ float: left;
+ width: 240px;
+ background-color: #2E3C54;
+ color: #fff;
+ text-align: center;
+ padding: 0 2px;
+ height: 100%;
+ position: absolute;*/
+
+ .upward-dog-main {
+   overflow: hidden;
+   position: absolute;
+   left: 244px;
+   width: 100%;
+ }
+
+ .task-header{
+   display: block;
+   height: 100px;
+   text-align: center;
+ }

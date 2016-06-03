@@ -8,12 +8,14 @@
 
 UpwardDog is a web application inspired by Asana that will be build using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
 
-- [ ] New account creation, login, and guest/demo login
-- [ ] Smooth, bug-free navigation
-- [ ] Adequate seed data to demonstrate the site's features
-- [ ] The minimally necessary features for an Asana inspired site: Task creation, saving, editing, organized by project and by team member
 - [ ] Hosting on Heroku
+- [ ] New account creation, login, and guest/demo login
+- [ ] Create, read, edit, and delete tasks (MVP)
+- [ ] Organize tasks by Projects (MVP)
+- [ ] Assign team members to tasks and projects (MVP)
+- [ ] Adequate seed data to demonstrate the site's features
 - [ ] CSS styling that is satisfactorily visually appealing
+- [ ] Smooth, bug-free navigation
 - [ ] A production README
 
 ## Product Goals and Priorities
