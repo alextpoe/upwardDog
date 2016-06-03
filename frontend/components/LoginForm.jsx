@@ -6,6 +6,9 @@ var UserApiUtil = require('../util/UserApiUtil');
 
 var LoginForm = React.createClass({
   getInitialState: function () {
+    if (this.props.route.path === "/hello/login/guest") {
+      return { username: "Guest", password: "password" }
+    }
     return { username: "", password: "" };
   },
 

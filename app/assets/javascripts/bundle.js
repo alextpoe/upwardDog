@@ -71,7 +71,8 @@
 	    Route,
 	    { path: '/hello', component: App },
 	    React.createElement(Route, { path: '/hello/login', component: LoginForm }),
-	    React.createElement(Route, { path: '/hello/signup', component: LoginForm })
+	    React.createElement(Route, { path: '/hello/signup', component: LoginForm }),
+	    React.createElement(Route, { path: '/hello/login/guest', component: LoginForm })
 	  ),
 	  React.createElement(
 	    Route,
@@ -32726,11 +32727,15 @@
 	            { className: 'login-link', to: '/hello/login', onClick: this.clickHandle },
 	            'Log In'
 	          ),
-	          '  or  ',
 	          React.createElement(
 	            Link,
 	            { className: 'signup', to: '/hello/signup' },
 	            'Get Started for FREE'
+	          ),
+	          React.createElement(
+	            Link,
+	            { className: 'signup', to: '/hello/login/guest' },
+	            'Sign In As Guest'
 	          )
 	        )
 	      );
@@ -32778,6 +32783,9 @@
 	  displayName: 'LoginForm',
 	
 	  getInitialState: function () {
+	    if (this.props.route.path === "/hello/login/guest") {
+	      return { username: "Guest", password: "password" };
+	    }
 	    return { username: "", password: "" };
 	  },
 	

@@ -94,7 +94,7 @@
    border-radius: 3px;
    text-align: center;
    top: 50%;
-   right: 20px;
+   right: 25px;
    bottom: 5px;
    transition: all 0.5s ease;
    transition-property: -webkit-box-shadow, background-color, color, border;
@@ -122,6 +122,7 @@
    top: 50%;
    right: 25px;
    bottom: 5px;
+   margin-left: 25px;
    transition: all 0.5s ease;
    transition-property: background-color, -webkit-box-shadow;
  }
@@ -252,15 +253,12 @@
 
  .sidebar{
    background-color: #2E3C54;
-   -webkit-box-sizing: content-box;
-   display: flex;
-   -webkit-box-orient: vertical;
-   flex: 1 1 auto;
-   flex-direction: column;
-   flex-shrink: 0;
-   overflow: hidden;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   position: absolute;
    padding: 0 2px;
-   position: relative;
+   height: 100%;
    width: 240px;
    z-index: 0;
  }
@@ -279,13 +277,17 @@
 
  .upward-dog-main {
    overflow: hidden;
-   position: absolute;
+   position: relative;
    left: 244px;
-   width: 100%;
+   width: calc(100% - 244px);
  }
 
  .task-header{
    display: block;
    height: 100px;
+   text-align: center;
+ }
+
+ .task-main{
    text-align: center;
  }

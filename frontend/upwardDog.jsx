@@ -23,6 +23,7 @@ var routes = (
     <Route path="/hello" component={App} >
       <Route path="/hello/login" component={ LoginForm } />
       <Route path="/hello/signup" component={ LoginForm } />
+      <Route path="/hello/login/guest" component={ LoginForm } />
     </Route>
     <Route
       path="/user/tasks"

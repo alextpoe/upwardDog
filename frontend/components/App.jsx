@@ -22,7 +22,7 @@ var App = React.createClass({
   },
 
   header: function () {
-    
+
     // } else
     if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
       return (
@@ -32,10 +32,8 @@ var App = React.createClass({
           </div>
           <div className="log-in">
             <Link className="login-link" to="/hello/login" onClick={this.clickHandle}>Log In</Link>
-            &nbsp;
-            or
-            &nbsp;
             <Link className="signup" to="/hello/signup">Get Started for FREE</Link>
+            <Link className="signup" to="/hello/login/guest">Sign In As Guest</Link>
           </div>
         </nav>
       );
