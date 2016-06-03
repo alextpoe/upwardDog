@@ -32353,7 +32353,12 @@
 	  render: function () {
 	    return React.createElement(
 	      'li',
-	      { className: 'task-list-items' },
+	      { className: 'task-list-item' },
+	      React.createElement(
+	        'div',
+	        { className: 'checkmark' },
+	        '✓'
+	      ),
 	      React.createElement(
 	        Link,
 	        { to: "/user/tasks/" + this.props.task.id + "/edit" },

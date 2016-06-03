@@ -328,3 +328,29 @@
    width: 75%;
    font-size: 20px;
  }
+
+ .task-list-item{
+   padding: 10px;
+   border-bottom: 1px solid #CDCFD2;
+   position: relative;
+
+ }
+
+ .checkmark{
+   font-size: 13px;
+   position: absolute;
+   float: left;
+   color: #CDCFD2;
+   border: 1px solid #CDCFD2;
+   border-radius: 50%;
+   padding: 3px 6px;
+   bottom: 6px;
+   transition: all 0.3s ease;
+   transition-property: color, -webkit-box-shadow, border;
+ }
+
+ .checkmark:hover{
+   color: #3BE8B0;
+   -webkit-box-shadow: 0 0 0 3px #3BE8B0;
+   border: 1px solid #fff;
+ }
