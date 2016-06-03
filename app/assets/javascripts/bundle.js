@@ -32276,6 +32276,10 @@
 	
 	  render: function () {
 	    var tasks = this.state.tasks;
+	    var incompleteTasks = tasks.filter(function (task) {
+	      return !task.completed;
+	    });
+	
 	    var editTask = '';
 	    if (this.props.location.pathname === "/user/tasks/new") {
 	      editTask = React.createElement(TasksCreate, null);
@@ -32313,7 +32317,7 @@
 	            React.createElement(
 	              'ul',
 	              { className: 'task-list' },
-	              tasks.map(function (task) {
+	              incompleteTasks.map(function (task) {
 	                return React.createElement(TasksIndexItem, { task: task, key: task.id });
 	              }),
 	              React.createElement(TasksForm, null)
@@ -32350,13 +32354,27 @@
 	    ClientActions.deleteTask(this.props.task.id);
 	  },
 	
+	  checkOff: function (event) {
+	    event.preventDefault();
+	    var task = this.props.task;
+	
+	    ClientActions.updateTask({
+	      title: task.title,
+	      description: task.description,
+	      manager_id: task.manager_id,
+	      assignee_id: task.assignee_id,
+	      project_id: task.project_id,
+	      completed: true
+	    }, task.id);
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'li',
 	      { className: 'task-list-item' },
 	      React.createElement(
 	        'div',
-	        { className: 'checkmark' },
+	        { className: 'checkmark', onClick: this.checkOff },
 	        '✓'
 	      ),
 	      React.createElement(
@@ -32436,7 +32454,6 @@
 	  },
 	
 	  editTask: function (task, id) {
-	    debugger;
 	    $.ajax({
 	      type: "PATCH",
 	      url: "api/user/tasks/" + id,

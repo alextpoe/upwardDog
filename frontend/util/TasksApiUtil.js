@@ -36,7 +36,6 @@ var TasksApiUtil = {
   },
 
   editTask: function (task, id) {
-    debugger
     $.ajax({
       type: "PATCH",
       url: "api/user/tasks/" + id,

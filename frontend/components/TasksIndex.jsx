@@ -70,6 +70,10 @@ var TasksIndex = React.createClass({
 
   render: function () {
     var tasks = this.state.tasks;
+    var incompleteTasks = tasks.filter(function (task) {
+      return !task.completed
+    });
+
     var editTask = '';
     if (this.props.location.pathname ==="/user/tasks/new"){
       editTask = <TasksCreate/>;
@@ -91,7 +95,7 @@ var TasksIndex = React.createClass({
             <div className="task-main">
               <ul className="task-list">
                 {
-                  tasks.map(function (task) {
+                  incompleteTasks.map(function (task) {
                     return <TasksIndexItem task={task} key={task.id} />;
                   })
                 }

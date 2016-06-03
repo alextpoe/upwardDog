@@ -10,12 +10,27 @@ var TasksIndexItem = React.createClass({
     ClientActions.deleteTask(this.props.task.id);
   },
 
-
+  checkOff: function (event) {
+    event.preventDefault();
+    var task = this.props.task;
+    
+    ClientActions.updateTask(
+      {
+        title: task.title,
+        description: task.description,
+        manager_id: task.manager_id,
+        assignee_id: task.assignee_id,
+        project_id: task.project_id,
+        completed: true
+      },
+      task.id
+    )
+  },
 
   render: function () {
     return (
       <li className="task-list-item">
-        <div className="checkmark">
+        <div className="checkmark" onClick={this.checkOff}>
           ✓
         </div>
         <Link to={"/user/tasks/" + this.props.task.id + "/edit"}>{this.props.task.title}</Link>
