@@ -32843,7 +32843,7 @@
 	      password: this.state.password
 	    };
 	
-	    if (this.props.location.pathname === "/hello/login") {
+	    if (this.props.location.pathname === "/hello/login" || this.props.location.pathname === "/hello/login/guest") {
 	      SessionApiUtil.login(loginData);
 	    } else {
 	      UserApiUtil.signup(loginData);
