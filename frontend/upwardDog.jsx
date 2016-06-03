@@ -11,6 +11,7 @@ var Landing = require('./components/Landing');
 var App = require('./components/App');
 var LoginForm = require('./components/LoginForm');
 var TasksIndex = require('./components/TasksIndex');
+var TasksCreate = require('./components/TasksCreate');
 var TasksEdit = require('./components/TasksEdit');
 
 var SessionStore = require('./stores/SessionStore');
@@ -26,7 +27,8 @@ var routes = (
     <Route
       path="/user/tasks"
       component={TasksIndex}>
-      // <Route path="/user/tasks/new" component={ TasksEdit }/>
+      <Route path="/user/tasks/new" component={ TasksCreate }/>
+      <Route path="/user/tasks/:id/edit" component={ TasksEdit }/>
     </Route>
   </Route>
 );

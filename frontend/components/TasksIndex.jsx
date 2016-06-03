@@ -6,9 +6,13 @@ var ClientActions = require('../actions/ClientActions');
 var TasksForm = require('./TasksForm');
 var SessionStore = require('../stores/SessionStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
-var TasksEdit = require('./TasksEdit');
+var TasksCreate = require('./TasksCreate');
 
 var TasksIndex = React.createClass({
+
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
 
   getInitialState: function () {
     return { tasks: TasksStore.all() };
@@ -16,6 +20,7 @@ var TasksIndex = React.createClass({
 
   onChange: function () {
     this.setState({ tasks: TasksStore.all() })
+    this.context.router.push("/user/tasks")
   },
 
   componentDidMount: function () {
@@ -30,18 +35,18 @@ var TasksIndex = React.createClass({
     this.tasksListener.remove();
   },
 
-  clickHandler: function (event) {
-    if (event.target.if === "") {
-      this.context.router.push("/user/tasks/new")
-    } else {
-      this.context.router.push("/user/tasks/" + event.target.id + "edit")
-    }
-  },
+  // clickHandler: function (event) {
+  //   if (event.target.if === "") {
+  //     this.context.router.push("/user/tasks/new")
+  //   } else {
+  //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
+  //   }
+  // },
 
   newTask: function () {
     if (["new"].indexOf(this.props.location.pathname) !== -1) {
       return (
-        <TasksEdit/>
+        <TasksCreate/>
       )
     }
   },

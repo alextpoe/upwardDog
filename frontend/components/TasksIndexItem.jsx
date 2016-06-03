@@ -12,7 +12,7 @@ var TasksIndexItem = React.createClass({
   render: function () {
     return (
       <li className="empty">
-        {this.props.task.description}
+        <Link to={"/user/tasks/" + this.props.task.id + "/edit"}>{this.props.task.description}</Link>
         <button type="submit" onClick={this.clickHandler}>Delete</button>
       </li>
     )

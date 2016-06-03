@@ -18,8 +18,8 @@ var TasksApiUtil = {
       url: "api/user/tasks",
       dataType: "json",
       data: { task: task },
-      success: function () {
-        TasksActions.receiveTask();
+      success: function (task) {
+        TasksActions.receiveTask(task);
       }
     });
   },
@@ -41,8 +41,8 @@ var TasksApiUtil = {
       url: "api/user/tasks/" + id,
       dataType: "json",
       data: {task: task},
-      success: function () {
-        TasksActions.receiveTask();
+      success: function (task) {
+        TasksActions.receiveTask(task);
       }
     });
   },
