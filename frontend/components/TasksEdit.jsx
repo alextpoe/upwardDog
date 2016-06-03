@@ -8,7 +8,8 @@ var ClientActions = require('../actions/ClientActions');
 
 var TasksEdit = React.createClass({
   getInitialState: function () {
-    var possibleTask = TasksStore.find(this.props.params.id)
+
+    var possibleTask = TasksStore.find(this.props.id)
     var task = possibleTask ? possibleTask : false
     if (task){
       return {
@@ -53,7 +54,7 @@ var TasksEdit = React.createClass({
 
   onSubmit: function (event) {
     event.preventDefault();
-    ClientActions.updateTask(this.state, this.props.params.id);
+    ClientActions.updateTask(this.state, this.props.id);
   },
 
   render: function () {

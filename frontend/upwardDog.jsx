@@ -25,6 +25,7 @@ var routes = (
       <Route path="/hello/signup" component={ LoginForm } />
       <Route path="/hello/login/guest" component={ LoginForm } />
     </Route>
+    <IndexRoute component={TasksIndex} />
     <Route
       path="/user/tasks"
       component={TasksIndex}>

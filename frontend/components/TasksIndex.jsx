@@ -7,6 +7,7 @@ var TasksForm = require('./TasksForm');
 var SessionStore = require('../stores/SessionStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
 var TasksCreate = require('./TasksCreate');
+var TasksEdit = require('./TasksEdit');
 
 var TasksIndex = React.createClass({
 
@@ -62,8 +63,15 @@ var TasksIndex = React.createClass({
     }
   },
 
+
   render: function () {
     var tasks = this.state.tasks;
+    var editTask = '';
+    if (this.props.location.pathname ==="/user/tasks/new"){
+      editTask = <TasksCreate/>;
+    } else if (this.props.location.pathname ==="/user/tasks/" + this.props.params.id + "/edit"){
+      editTask = <TasksEdit id={this.props.params.id}/>
+    }
 
     return (
       <div className="whole-page">
@@ -75,17 +83,19 @@ var TasksIndex = React.createClass({
             {this.logout()}
             <h1>Tasks</h1>
           </nav>
-          <div className="task-container">
+          <div className="task-container group">
             <div className="task-main">
-              <ul>
+              <ul className="task-list">
                 {
                   tasks.map(function (task) {
                     return <TasksIndexItem task={task} key={task.id} />;
                   })
                 }
-                <TasksForm/>
-                {this.newTask()}
+                <TasksForm onClick={this.renderCreate}/>
               </ul>
+            </div>
+            <div className="task-form">
+              {editTask}
             </div>
           </div>
         </div>

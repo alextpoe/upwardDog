@@ -40,6 +40,7 @@ var TasksForm = React.createClass({
     return (
       <li>
         <input
+          className="new-task"
           value={this.state.title}
           onClick={this.clickHandler}
           onChange={this.keyHandler}

@@ -244,7 +244,7 @@
 
  .empty{
    height: 15px;
-   background: #eee;
+   background: #fff;
  }
 
  .whole-page{
@@ -263,18 +263,6 @@
    z-index: 0;
  }
 
- /*top: 0;
- left: 0;
- bottom: 0;
- float: left;
- width: 240px;
- background-color: #2E3C54;
- color: #fff;
- text-align: center;
- padding: 0 2px;
- height: 100%;
- position: absolute;*/
-
  .upward-dog-main {
    overflow: hidden;
    position: relative;
@@ -284,10 +272,47 @@
 
  .task-header{
    display: block;
-   height: 100px;
+   height: 60px;
    text-align: center;
  }
 
+ .task-container{
+   padding: 15px;
+   background: #eee;
+   height: 300px;
+   display: block;
+   position: relative;
+ }
  .task-main{
+   float: left;
+   position: relative;
+   background: #fff;
+   width: calc(50% - 15px);
    text-align: center;
+   height: 100%;
+   bottom: 0;
+ }
+
+ .task-list{
+   background: #fff;
+ }
+
+ .task-form{
+   float: right;
+   position: absolute;
+   right: 15px;
+   background: #fff;
+   width: calc(50% - 30px);
+   height: 50px;
+ }
+
+ .new-task{
+   background-color: #fff;
+   border: 1px solid #CDCFD2;
+   border-radius: 3px;
+   color: #1B2432;
+   height: 30px;
+   margin-top: 10px;
+   width: 75%;
+   font-size: 20px;
  }

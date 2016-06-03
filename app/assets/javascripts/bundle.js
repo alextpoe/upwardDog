@@ -74,6 +74,7 @@
 	    React.createElement(Route, { path: '/hello/signup', component: LoginForm }),
 	    React.createElement(Route, { path: '/hello/login/guest', component: LoginForm })
 	  ),
+	  React.createElement(IndexRoute, { component: TasksIndex }),
 	  React.createElement(
 	    Route,
 	    {
@@ -32215,6 +32216,7 @@
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	var TasksCreate = __webpack_require__(255);
+	var TasksEdit = __webpack_require__(260);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32270,6 +32272,12 @@
 	
 	  render: function () {
 	    var tasks = this.state.tasks;
+	    var editTask = '';
+	    if (this.props.location.pathname === "/user/tasks/new") {
+	      editTask = React.createElement(TasksCreate, null);
+	    } else if (this.props.location.pathname === "/user/tasks/" + this.props.params.id + "/edit") {
+	      editTask = React.createElement(TasksEdit, { id: this.props.params.id });
+	    }
 	
 	    return React.createElement(
 	      'div',
@@ -32294,19 +32302,23 @@
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'task-container' },
+	          { className: 'task-container group' },
 	          React.createElement(
 	            'div',
 	            { className: 'task-main' },
 	            React.createElement(
 	              'ul',
-	              null,
+	              { className: 'task-list' },
 	              tasks.map(function (task) {
 	                return React.createElement(TasksIndexItem, { task: task, key: task.id });
 	              }),
-	              React.createElement(TasksForm, null),
-	              this.newTask()
+	              React.createElement(TasksForm, { onClick: this.renderCreate })
 	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'task-form' },
+	            editTask
 	          )
 	        )
 	      ),
@@ -32340,7 +32352,7 @@
 	      React.createElement(
 	        Link,
 	        { to: "/user/tasks/" + this.props.task.id + "/edit" },
-	        this.props.task.description
+	        this.props.task.title
 	      ),
 	      React.createElement(
 	        'button',
@@ -32599,6 +32611,7 @@
 	      'li',
 	      null,
 	      React.createElement('input', {
+	        className: 'new-task',
 	        value: this.state.title,
 	        onClick: this.clickHandler,
 	        onChange: this.keyHandler
@@ -33018,7 +33031,8 @@
 	  displayName: 'TasksEdit',
 	
 	  getInitialState: function () {
-	    var possibleTask = TasksStore.find(this.props.params.id);
+	
+	    var possibleTask = TasksStore.find(this.props.id);
 	    var task = possibleTask ? possibleTask : false;
 	    if (task) {
 	      return {
@@ -33063,7 +33077,7 @@
 	
 	  onSubmit: function (event) {
 	    event.preventDefault();
-	    ClientActions.updateTask(this.state, this.props.params.id);
+	    ClientActions.updateTask(this.state, this.props.id);
 	  },
 	
 	  render: function () {
