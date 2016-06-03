@@ -4,6 +4,7 @@ var TasksIndexItem = require('./TasksIndexItem');
 var TasksStore = require('../stores/TasksStore');
 var SessionStore = require('../stores/SessionStore');
 var ClientActions = require('../actions/ClientActions');
+var TasksForm = require('./TasksForm');
 
 
 var TasksCreate = React.createClass({

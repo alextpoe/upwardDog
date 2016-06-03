@@ -32,6 +32,21 @@ var TasksEdit = React.createClass({
     }
   },
 
+  componentWillReceiveProps: function (newProps) {
+    var possibleTask = TasksStore.find(newProps.id)
+    var task = possibleTask ? possibleTask : false
+    if (task){
+      this.setState({
+        title: task.title,
+        description: task.description,
+        manager_id: task.manager_id,
+        assignee_id: task.assignee_id,
+        project_id: task.project_id,
+        completed: task.completed
+      })
+    }
+  },
+
   titleChange: function (event) {
     this.setState({ title: event.target.value})
   },

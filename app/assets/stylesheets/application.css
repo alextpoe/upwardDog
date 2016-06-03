@@ -274,12 +274,14 @@
    display: block;
    height: 60px;
    text-align: center;
+   border-bottom: 1px solid #2E3C54;
+
  }
 
  .task-container{
    padding: 15px;
    background: #eee;
-   height: 300px;
+   height: 500px;
    display: block;
    position: relative;
  }
@@ -287,6 +289,9 @@
    float: left;
    position: relative;
    background: #fff;
+   border: 1px solid #2E3C54;
+   border-radius: 5px;
+   padding: 2px;
    width: calc(50% - 15px);
    text-align: center;
    height: 100%;
@@ -299,11 +304,15 @@
 
  .task-form{
    float: right;
-   position: absolute;
+   position: relative;
    right: 15px;
    background: #fff;
+   border: 1px solid #2E3C54;
+   border-radius: 5px;
+   padding: 2px;
    width: calc(50% - 30px);
-   height: 50px;
+   height: 100%;
+   bottom: 0;
  }
 
  .new-task{

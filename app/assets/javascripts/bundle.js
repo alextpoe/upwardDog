@@ -32254,6 +32254,10 @@
 	  //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
 	  //   }
 	  // },
+	  //
+	  // componentWillReceiveProps: function () {
+	  //   debugger
+	  // },
 	
 	  newTask: function () {
 	    if (["new"].indexOf(this.props.location.pathname) !== -1) {
@@ -32312,7 +32316,7 @@
 	              tasks.map(function (task) {
 	                return React.createElement(TasksIndexItem, { task: task, key: task.id });
 	              }),
-	              React.createElement(TasksForm, { onClick: this.renderCreate })
+	              React.createElement(TasksForm, null)
 	            )
 	          ),
 	          React.createElement(
@@ -32336,6 +32340,7 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var ClientActions = __webpack_require__(249);
+	var TasksStore = __webpack_require__(253);
 	
 	var TasksIndexItem = React.createClass({
 	  displayName: 'TasksIndexItem',
@@ -32632,6 +32637,7 @@
 	var TasksStore = __webpack_require__(253);
 	var SessionStore = __webpack_require__(221);
 	var ClientActions = __webpack_require__(249);
+	var TasksForm = __webpack_require__(254);
 	
 	var TasksCreate = React.createClass({
 	  displayName: 'TasksCreate',
@@ -33052,6 +33058,21 @@
 	        project_id: "",
 	        completed: false
 	      };
+	    }
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    var possibleTask = TasksStore.find(newProps.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      this.setState({
+	        title: task.title,
+	        description: task.description,
+	        manager_id: task.manager_id,
+	        assignee_id: task.assignee_id,
+	        project_id: task.project_id,
+	        completed: task.completed
+	      });
 	    }
 	  },
 	

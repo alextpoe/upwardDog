@@ -43,6 +43,10 @@ var TasksIndex = React.createClass({
   //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
   //   }
   // },
+  //
+  // componentWillReceiveProps: function () {
+  //   debugger
+  // },
 
   newTask: function () {
     if (["new"].indexOf(this.props.location.pathname) !== -1) {
@@ -91,7 +95,7 @@ var TasksIndex = React.createClass({
                     return <TasksIndexItem task={task} key={task.id} />;
                   })
                 }
-                <TasksForm onClick={this.renderCreate}/>
+                <TasksForm/>
               </ul>
             </div>
             <div className="task-form">
