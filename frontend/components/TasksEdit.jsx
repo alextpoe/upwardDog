@@ -66,14 +66,14 @@ var TasksEdit = React.createClass({
     this.setState({ project_id: event.target.value })
   },
 
-  projectClick: function (event) {
-    event.preventDefault();
-    this.projectClicked = true;
-    this.inputType = "button";
-    // if (this.projectClicked) {
-    //   this.inputType = "text";
-    // }
-  },
+  // projectClick: function (event) {
+  //   event.preventDefault();
+  //   this.projectClicked = true;
+  //   this.inputType = "button";
+  //   // if (this.projectClicked) {
+  //   //   this.inputType = "text";
+  //   // }
+  // },
 
   onSubmit: function (event) {
     event.preventDefault();

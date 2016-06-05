@@ -16,7 +16,8 @@ var TasksIndex = React.createClass({
   },
 
   getInitialState: function () {
-    return { tasks: TasksStore.all() };
+    return { tasks: TasksStore.all(),
+             edited: false };
   },
 
   onChange: function () {
@@ -64,6 +65,14 @@ var TasksIndex = React.createClass({
     }
   },
 
+  clicked: function () {
+    this.setState({ edited: true })
+  },
+
+
+  unClicked: function () {
+    this.setState({ edited: false })
+  },
 
   render: function () {
     var tasks = this.state.tasks;
@@ -78,34 +87,67 @@ var TasksIndex = React.createClass({
     //   editTask = <TasksEdit id={this.props.params.id}/>
     // }
 
-    return (
-      <div className="whole-page">
-        <div className="sidebar">
-          <img src={window.logo_url} />
-        </div>
-        <div className="upward-dog-main">
-          <nav className="task-header">
-            {this.logout()}
-            <h1>Tasks</h1>
-          </nav>
-          <div className="task-container group">
-            <div className="task-main">
-              <ul className="task-list">
-                {
-                  incompleteTasks.map(function (task) {
-                    return <TasksIndexItem task={task} key={task.id} />;
-                  })
-                }
-                <TasksForm/>
-              </ul>
-            </div>
-            <div className="task-form">
-              {this.props.children}
+    if (this.state.edited && this.props.children) {
+
+      return (
+        <div className="whole-page">
+          <div className="sidebar">
+            <img src={window.logo_url} />
+          </div>
+          <div className="upward-dog-main">
+            <nav className="task-header">
+              {this.logout()}
+              <h1>Tasks</h1>
+            </nav>
+            <div className="task-container group">
+              <div className="task-main">
+                <ul className="task-list" onClick={this.clicked}>
+                  {
+                    incompleteTasks.map(function (task) {
+                      return <TasksIndexItem task={task} key={task.id} />;
+                    })
+                  }
+                </ul>
+                <div onClick={this.unClicked}>
+                  <TasksForm/>
+                </div>
+              </div>
+              <div className="task-form">
+                {this.props.children}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    } else {
+      return (
+        <div className="whole-page">
+          <div className="sidebar">
+            <img src={window.logo_url} />
+          </div>
+          <div className="upward-dog-main">
+            <nav className="task-header">
+              {this.logout()}
+              <h1>Tasks</h1>
+            </nav>
+            <div className="task-container group">
+              <div className="task-main">
+                <ul className="task-list" onClick={this.clicked}>
+                  {
+                    incompleteTasks.map(function (task) {
+                      return <TasksIndexItem task={task} key={task.id} />;
+                    })
+                  }
+                </ul>
+                <div>
+                  <TasksForm />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
   }
 });
 

@@ -32227,7 +32227,8 @@
 	  },
 	
 	  getInitialState: function () {
-	    return { tasks: TasksStore.all() };
+	    return { tasks: TasksStore.all(),
+	      edited: false };
 	  },
 	
 	  onChange: function () {
@@ -32273,6 +32274,14 @@
 	    }
 	  },
 	
+	  clicked: function () {
+	    this.setState({ edited: true });
+	  },
+	
+	  unClicked: function () {
+	    this.setState({ edited: false });
+	  },
+	
 	  render: function () {
 	    var tasks = this.state.tasks;
 	    var incompleteTasks = tasks.filter(function (task) {
@@ -32286,50 +32295,101 @@
 	    //   editTask = <TasksEdit id={this.props.params.id}/>
 	    // }
 	
-	    return React.createElement(
-	      'div',
-	      { className: 'whole-page' },
-	      React.createElement(
+	    if (this.state.edited && this.props.children) {
+	
+	      return React.createElement(
 	        'div',
-	        { className: 'sidebar' },
-	        React.createElement('img', { src: window.logo_url })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'upward-dog-main' },
+	        { className: 'whole-page' },
 	        React.createElement(
-	          'nav',
-	          { className: 'task-header' },
-	          this.logout(),
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Tasks'
-	          )
+	          'div',
+	          { className: 'sidebar' },
+	          React.createElement('img', { src: window.logo_url })
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'task-container group' },
+	          { className: 'upward-dog-main' },
 	          React.createElement(
-	            'div',
-	            { className: 'task-main' },
+	            'nav',
+	            { className: 'task-header' },
+	            this.logout(),
 	            React.createElement(
-	              'ul',
-	              { className: 'task-list' },
-	              incompleteTasks.map(function (task) {
-	                return React.createElement(TasksIndexItem, { task: task, key: task.id });
-	              }),
-	              React.createElement(TasksForm, null)
+	              'h1',
+	              null,
+	              'Tasks'
 	            )
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'task-form' },
-	            this.props.children
+	            { className: 'task-container group' },
+	            React.createElement(
+	              'div',
+	              { className: 'task-main' },
+	              React.createElement(
+	                'ul',
+	                { className: 'task-list', onClick: this.clicked },
+	                incompleteTasks.map(function (task) {
+	                  return React.createElement(TasksIndexItem, { task: task, key: task.id });
+	                })
+	              ),
+	              React.createElement(
+	                'div',
+	                { onClick: this.unClicked },
+	                React.createElement(TasksForm, null)
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'task-form' },
+	              this.props.children
+	            )
 	          )
 	        )
-	      )
-	    );
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'whole-page' },
+	        React.createElement(
+	          'div',
+	          { className: 'sidebar' },
+	          React.createElement('img', { src: window.logo_url })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'upward-dog-main' },
+	          React.createElement(
+	            'nav',
+	            { className: 'task-header' },
+	            this.logout(),
+	            React.createElement(
+	              'h1',
+	              null,
+	              'Tasks'
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'task-container group' },
+	            React.createElement(
+	              'div',
+	              { className: 'task-main' },
+	              React.createElement(
+	                'ul',
+	                { className: 'task-list', onClick: this.clicked },
+	                incompleteTasks.map(function (task) {
+	                  return React.createElement(TasksIndexItem, { task: task, key: task.id });
+	                })
+	              ),
+	              React.createElement(
+	                'div',
+	                null,
+	                React.createElement(TasksForm, null)
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
 	  }
 	});
 	
@@ -32622,25 +32682,46 @@
 	    this.setState({ title: event.target.value });
 	  },
 	
-	  clickHandler: function (event) {
-	    event.preventDefault();
-	
-	    // debugger
-	    this.context.router.push("/user/tasks/new");
-	  },
+	  // clickHandler: function (event) {
+	  //   event.preventDefault();
+	  //
+	  //   // debugger
+	  //   this.context.router.push("/user/tasks/new");
+	  // },
 	
 	  blurHandler: function (event) {
 	    event.preventDefault();
-	    ClientActions.createTask({
-	      title: this.state.title,
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    });
-	    this.setState({ title: "" });
+	    if (event.target.value.length > 1) {
+	      ClientActions.createTask({
+	        title: this.state.title,
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      });
+	      this.setState({ title: "" });
+	    }
 	  },
+	
+	  enterHandler: function (event) {
+	    if (event.keyCode == 13) {
+	      ClientActions.createTask({
+	        title: this.state.title,
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      });
+	      this.setState({ title: "" });
+	    }
+	  },
+	
+	  // focusHandler: function () {
+	  //   this.context.router.push("/user/tasks")
+	  //   this.refs.form.focus();
+	  // },
 	
 	  render: function () {
 	    return React.createElement(
@@ -32648,10 +32729,12 @@
 	      null,
 	      React.createElement('input', {
 	        className: 'new-task',
+	        ref: 'form',
 	        value: this.state.title,
-	        onClick: this.clickHandler,
 	        onChange: this.keyHandler,
-	        onBlur: this.blurHandler
+	        onBlur: this.blurHandler,
+	        onFocus: this.focusHandler,
+	        onKeyDown: this.enterHandler
 	      })
 	    );
 	  }
@@ -33127,14 +33210,14 @@
 	    this.setState({ project_id: event.target.value });
 	  },
 	
-	  projectClick: function (event) {
-	    event.preventDefault();
-	    this.projectClicked = true;
-	    this.inputType = "button";
-	    // if (this.projectClicked) {
-	    //   this.inputType = "text";
-	    // }
-	  },
+	  // projectClick: function (event) {
+	  //   event.preventDefault();
+	  //   this.projectClicked = true;
+	  //   this.inputType = "button";
+	  //   // if (this.projectClicked) {
+	  //   //   this.inputType = "text";
+	  //   // }
+	  // },
 	
 	  onSubmit: function (event) {
 	    event.preventDefault();
