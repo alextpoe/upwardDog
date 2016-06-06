@@ -54,15 +54,15 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	
 	var Landing = __webpack_require__(220);
-	var App = __webpack_require__(257);
-	var LoginForm = __webpack_require__(258);
+	var App = __webpack_require__(248);
+	var LoginForm = __webpack_require__(249);
 	var TasksIndex = __webpack_require__(247);
-	var TasksCreate = __webpack_require__(255);
-	var TasksEdit = __webpack_require__(256);
+	var TasksCreate = __webpack_require__(252);
+	var TasksEdit = __webpack_require__(260);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var TasksApiUtil = __webpack_require__(250);
+	var TasksApiUtil = __webpack_require__(255);
 	
 	var routes = React.createElement(
 	  Route,
@@ -32209,14 +32209,14 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
-	var ClientActions = __webpack_require__(249);
-	var TasksForm = __webpack_require__(254);
+	var TasksIndexItem = __webpack_require__(253);
+	var TasksStore = __webpack_require__(258);
+	var ClientActions = __webpack_require__(254);
+	var TasksForm = __webpack_require__(259);
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var TasksCreate = __webpack_require__(255);
-	var TasksEdit = __webpack_require__(256);
+	var TasksCreate = __webpack_require__(252);
+	var TasksEdit = __webpack_require__(260);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32416,563 +32416,6 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var ClientActions = __webpack_require__(249);
-	var TasksStore = __webpack_require__(253);
-	
-	var TasksIndexItem = React.createClass({
-	  displayName: 'TasksIndexItem',
-	
-	  clickHandler: function (event) {
-	    event.preventDefault();
-	    ClientActions.deleteTask(this.props.task.id);
-	  },
-	
-	  checkOff: function (event) {
-	    event.preventDefault();
-	    var task = this.props.task;
-	
-	    ClientActions.updateTask({
-	      completed: true
-	    }, task.id);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'task-list-item' },
-	      React.createElement(
-	        'div',
-	        { className: 'checkmark', onClick: this.checkOff },
-	        '✓'
-	      ),
-	      React.createElement(
-	        Link,
-	        { to: "/user/tasks/" + this.props.task.id + "/edit" },
-	        this.props.task.title
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'delete', type: 'submit', onClick: this.clickHandler },
-	        'Delete'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = TasksIndexItem;
-
-/***/ },
-/* 249 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var TasksApiUtil = __webpack_require__(250);
-	
-	var ClientActions = {
-	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
-	
-	  createTask: TasksApiUtil.createTask,
-	
-	  updateTask: TasksApiUtil.editTask,
-	
-	  deleteTask: TasksApiUtil.deleteTask
-	};
-	
-	module.exports = ClientActions;
-
-/***/ },
-/* 250 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var TasksActions = __webpack_require__(251);
-	
-	var TasksApiUtil = {
-	  receiveAllTasks: function (tasks) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { tasks: tasks },
-	      success: function (data) {
-	        TasksActions.receiveAllTasks(data);
-	      }
-	    });
-	  },
-	  createTask: function (task) {
-	    $.ajax({
-	      type: "POST",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { task: task },
-	      success: function (task) {
-	        TasksActions.receiveTask(task);
-	      }
-	    });
-	  },
-	
-	  getTask: function (id) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      success: function () {
-	        console.log("success");
-	      }
-	    });
-	  },
-	
-	  editTask: function (task, id) {
-	    $.ajax({
-	      type: "PATCH",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      data: { task: task },
-	      success: function (task) {
-	        TasksActions.receiveTask(task);
-	      }
-	    });
-	  },
-	
-	  deleteTask: function (id) {
-	    $.ajax({
-	      type: "DELETE",
-	      url: "api/user/tasks/" + id,
-	      success: function (task) {
-	        TasksActions.removeTask(task);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = TasksApiUtil;
-
-/***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(252);
-	
-	var TasksActions = {
-	  receiveAllTasks: function (tasks) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASKS_RECEIVED,
-	      tasks: tasks
-	    });
-	  },
-	
-	  receiveTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_RECEIVED,
-	      task: task
-	    });
-	  },
-	
-	  removeTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_REMOVED,
-	      task: task
-	    });
-	  }
-	};
-	
-	module.exports = TasksActions;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports) {
-
-	var TasksConstants = {
-	  TASKS_RECEIVED: "TASKS_RECEIVED",
-	  TASK_RECEIVED: "TASK_RECEIVED",
-	  TASK_REMOVED: "TASK_REMOVED"
-	};
-	
-	module.exports = TasksConstants;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(222).Store;
-	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(252);
-	var SessionStore = __webpack_require__(221);
-	
-	var TasksStore = new Store(AppDispatcher);
-	
-	window._tasks = {};
-	var _currentUser = {};
-	
-	var _resetTasks = function (tasks) {
-	  _tasks = {};
-	  _currentUser = {};
-	  var userTasks = [];
-	
-	  _currentUser = SessionStore.currentUser();
-	  tasks.forEach(function (task) {
-	    if (task.assignee_id === _currentUser.id) {
-	      userTasks.push(task);
-	    }
-	  });
-	  userTasks.forEach(function (task) {
-	    _tasks[task.id] = task;
-	  });
-	};
-	
-	var _setTask = function (task) {
-	  _tasks[task.id] = task;
-	};
-	
-	var _removeTask = function (task) {
-	  delete _tasks[task.id];
-	};
-	
-	TasksStore.all = function () {
-	  var tasks = Object.keys(_tasks).map(function (id) {
-	    return _tasks[id];
-	  });
-	
-	  return tasks;
-	};
-	
-	TasksStore.find = function (id) {
-	  return _tasks[id];
-	};
-	
-	TasksStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case TasksConstants.TASKS_RECEIVED:
-	      _resetTasks(payload.tasks);
-	      TasksStore.__emitChange();
-	      break;
-	    case TasksConstants.TASK_RECEIVED:
-	      _setTask(payload.task);
-	      TasksStore.__emitChange();
-	      break;
-	    case TasksConstants.TASK_REMOVED:
-	      _removeTask(payload.task);
-	      TasksStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = TasksStore;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(249);
-	
-	var TasksForm = React.createClass({
-	  displayName: 'TasksForm',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      title: "",
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    };
-	  },
-	
-	  keyHandler: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  // clickHandler: function (event) {
-	  //   event.preventDefault();
-	  //
-	  //   // debugger
-	  //   this.context.router.push("/user/tasks/new");
-	  // },
-	
-	  blurHandler: function (event) {
-	    event.preventDefault();
-	    if (event.target.value.length > 1) {
-	      ClientActions.createTask({
-	        title: this.state.title,
-	        description: "",
-	        manager_id: "",
-	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
-	        completed: false
-	      });
-	      this.setState({ title: "" });
-	    }
-	  },
-	
-	  enterHandler: function (event) {
-	    if (event.keyCode == 13) {
-	      ClientActions.createTask({
-	        title: this.state.title,
-	        description: "",
-	        manager_id: "",
-	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
-	        completed: false
-	      });
-	      this.setState({ title: "" });
-	    }
-	  },
-	
-	  // focusHandler: function () {
-	  //   this.context.router.push("/user/tasks")
-	  //   this.refs.form.focus();
-	  // },
-	
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'new-task-list' },
-	      React.createElement('input', {
-	        className: 'new-task',
-	        ref: 'form',
-	        placeholder: 'New Task Here: [Enter] to submit!',
-	        value: this.state.title,
-	        onChange: this.keyHandler,
-	        onBlur: this.blurHandler,
-	        onFocus: this.focusHandler,
-	        onKeyDown: this.enterHandler
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = TasksForm;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(249);
-	var TasksForm = __webpack_require__(254);
-	
-	var TasksCreate = React.createClass({
-	  displayName: 'TasksCreate',
-	
-	  getInitialState: function () {
-	    return {
-	      title: "",
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    };
-	  },
-	
-	  titleChange: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  descriptionChange: function (event) {
-	    this.setState({ description: event.target.value });
-	  },
-	
-	  onSubmit: function (event) {
-	    event.preventDefault();
-	    ClientActions.createTask(this.state);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      null,
-	      React.createElement(
-	        'li',
-	        null,
-	        'Title: ',
-	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        'Description: ',
-	        React.createElement('input', { value: this.state.description, onChange: this.descriptionChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.onSubmit },
-	          'Submit'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksCreate;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var OnUnload = __webpack_require__(261).OnUnload;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(249);
-	
-	var TasksEdit = React.createClass({
-	  displayName: 'TasksEdit',
-	
-	  mixins: [OnUnload],
-	
-	  getInitialState: function () {
-	    var possibleTask = TasksStore.find(this.props.params.id);
-	    var task = possibleTask ? possibleTask : false;
-	    if (task) {
-	      return {
-	        title: task.title,
-	        description: task.description,
-	        manager_id: task.manager_id,
-	        assignee_id: task.assignee_id,
-	        project_id: task.project_id,
-	        completed: task.completed
-	      };
-	    } else {
-	      return {
-	        title: "",
-	        description: "",
-	        manager_id: "",
-	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
-	        completed: false
-	      };
-	    }
-	  },
-	
-	  onBeforeUnload: function () {
-	    var task = this.state;
-	    ClientActions.updateTask({
-	      task: task
-	    }, this.props.params.id);
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    var possibleTask = TasksStore.find(newProps.params.id);
-	    var task = possibleTask ? possibleTask : false;
-	    if (task) {
-	      this.setState({
-	        title: task.title,
-	        description: task.description,
-	        manager_id: task.manager_id,
-	        assignee_id: task.assignee_id,
-	        project_id: task.project_id,
-	        completed: task.completed
-	      });
-	    }
-	  },
-	
-	  titleChange: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  descriptionChange: function (event) {
-	    this.setState({ description: event.target.value });
-	  },
-	
-	  managerChange: function (event) {
-	    this.setState({ manager_id: event.target.value });
-	  },
-	
-	  assigneeChange: function (event) {
-	    this.setState({ assignee_id: event.target.value });
-	  },
-	
-	  projectChange: function (event) {
-	    this.setState({ project_id: event.target.value });
-	  },
-	
-	  checkOff: function (event) {
-	    event.preventDefault();
-	    debugger;
-	    var task = this.state;
-	
-	    ClientActions.updateTask({
-	      completed: true
-	    }, this.props.params.id);
-	  },
-	
-	  onSubmit: function (event) {
-	    event.preventDefault();
-	    ClientActions.updateTask(this.state, this.props.params.id);
-	  },
-	
-	  render: function () {
-	    var checkmark = React.createElement(
-	      'div',
-	      { className: 'checkmark-edit', onClick: this.checkOff },
-	      ' ✓ '
-	    );
-	    var project;
-	    if (!this.state.project_id) {
-	      project = "No Project";
-	    } else {
-	      project = this.state.project_id;
-	    }
-	    return React.createElement(
-	      'ul',
-	      { className: 'edit-list' },
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'title' },
-	        checkmark,
-	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'description group' },
-	        React.createElement('textarea', { wrap: 'soft', placeholder: 'Description', value: this.state.description, onChange: this.descriptionChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.onSubmit },
-	          'Submit'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksEdit;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	var TasksIndex = __webpack_require__(247);
@@ -32994,6 +32437,15 @@
 	
 	  clickHandle: function (event) {
 	    this.context.router.push("/hello/login");
+	  },
+	
+	  signUp: function (event) {
+	    event.preventDefault();
+	    var loginData = {
+	      username: "Guest",
+	      password: "password"
+	    };
+	    SessionApiUtil.login(loginData);
 	  },
 	
 	  header: function () {
@@ -33022,8 +32474,8 @@
 	            'Get Started for FREE'
 	          ),
 	          React.createElement(
-	            Link,
-	            { className: 'signup', to: '/hello/login/guest' },
+	            'button',
+	            { className: 'signup', onClick: this.signUp, to: '/hello/login/guest' },
 	            'Sign In As Guest'
 	          )
 	        )
@@ -33059,14 +32511,14 @@
 	module.exports = App;
 
 /***/ },
-/* 258 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(221);
-	var ErrorStore = __webpack_require__(259);
+	var ErrorStore = __webpack_require__(250);
 	var SessionApiUtil = __webpack_require__(244);
-	var UserApiUtil = __webpack_require__(260);
+	var UserApiUtil = __webpack_require__(251);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -33216,7 +32668,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 259 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
@@ -33266,7 +32718,7 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 260 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionActions = __webpack_require__(245);
@@ -33291,6 +32743,563 @@
 	};
 	
 	module.exports = UserApiUtil;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(253);
+	var TasksStore = __webpack_require__(258);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(254);
+	var TasksForm = __webpack_require__(259);
+	
+	var TasksCreate = React.createClass({
+	  displayName: 'TasksCreate',
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
+	  },
+	
+	  titleChange: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  descriptionChange: function (event) {
+	    this.setState({ description: event.target.value });
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	    ClientActions.createTask(this.state);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
+	        null,
+	        'Title: ',
+	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        'Description: ',
+	        React.createElement('input', { value: this.state.description, onChange: this.descriptionChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.onSubmit },
+	          'Submit'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TasksCreate;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var ClientActions = __webpack_require__(254);
+	var TasksStore = __webpack_require__(258);
+	
+	var TasksIndexItem = React.createClass({
+	  displayName: 'TasksIndexItem',
+	
+	  clickHandler: function (event) {
+	    event.preventDefault();
+	    ClientActions.deleteTask(this.props.task.id);
+	  },
+	
+	  checkOff: function (event) {
+	    event.preventDefault();
+	    var task = this.props.task;
+	
+	    ClientActions.updateTask({
+	      completed: true
+	    }, task.id);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'task-list-item' },
+	      React.createElement(
+	        'div',
+	        { className: 'checkmark', onClick: this.checkOff },
+	        '✓'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: "/user/tasks/" + this.props.task.id + "/edit" },
+	        this.props.task.title
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'delete', type: 'submit', onClick: this.clickHandler },
+	        'Delete'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = TasksIndexItem;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksApiUtil = __webpack_require__(255);
+	
+	var ClientActions = {
+	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
+	
+	  createTask: TasksApiUtil.createTask,
+	
+	  updateTask: TasksApiUtil.editTask,
+	
+	  deleteTask: TasksApiUtil.deleteTask
+	};
+	
+	module.exports = ClientActions;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksActions = __webpack_require__(256);
+	
+	var TasksApiUtil = {
+	  receiveAllTasks: function (tasks) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { tasks: tasks },
+	      success: function (data) {
+	        TasksActions.receiveAllTasks(data);
+	      }
+	    });
+	  },
+	  createTask: function (task) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { task: task },
+	      success: function (task) {
+	        TasksActions.receiveTask(task);
+	      }
+	    });
+	  },
+	
+	  getTask: function (id) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      success: function () {
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  editTask: function (task, id) {
+	    $.ajax({
+	      type: "PATCH",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      data: { task: task },
+	      success: function (task) {
+	        TasksActions.receiveTask(task);
+	      }
+	    });
+	  },
+	
+	  deleteTask: function (id) {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "api/user/tasks/" + id,
+	      success: function (task) {
+	        TasksActions.removeTask(task);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = TasksApiUtil;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(257);
+	
+	var TasksActions = {
+	  receiveAllTasks: function (tasks) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASKS_RECEIVED,
+	      tasks: tasks
+	    });
+	  },
+	
+	  receiveTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_RECEIVED,
+	      task: task
+	    });
+	  },
+	
+	  removeTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_REMOVED,
+	      task: task
+	    });
+	  }
+	};
+	
+	module.exports = TasksActions;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports) {
+
+	var TasksConstants = {
+	  TASKS_RECEIVED: "TASKS_RECEIVED",
+	  TASK_RECEIVED: "TASK_RECEIVED",
+	  TASK_REMOVED: "TASK_REMOVED"
+	};
+	
+	module.exports = TasksConstants;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(222).Store;
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(257);
+	var SessionStore = __webpack_require__(221);
+	
+	var TasksStore = new Store(AppDispatcher);
+	
+	window._tasks = {};
+	var _currentUser = {};
+	
+	var _resetTasks = function (tasks) {
+	  _tasks = {};
+	  _currentUser = {};
+	  var userTasks = [];
+	
+	  _currentUser = SessionStore.currentUser();
+	  tasks.forEach(function (task) {
+	    if (task.assignee_id === _currentUser.id) {
+	      userTasks.push(task);
+	    }
+	  });
+	  userTasks.forEach(function (task) {
+	    _tasks[task.id] = task;
+	  });
+	};
+	
+	var _setTask = function (task) {
+	  _tasks[task.id] = task;
+	};
+	
+	var _removeTask = function (task) {
+	  delete _tasks[task.id];
+	};
+	
+	TasksStore.all = function () {
+	  var tasks = Object.keys(_tasks).map(function (id) {
+	    return _tasks[id];
+	  });
+	
+	  return tasks;
+	};
+	
+	TasksStore.find = function (id) {
+	  return _tasks[id];
+	};
+	
+	TasksStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TasksConstants.TASKS_RECEIVED:
+	      _resetTasks(payload.tasks);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_RECEIVED:
+	      _setTask(payload.task);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_REMOVED:
+	      _removeTask(payload.task);
+	      TasksStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = TasksStore;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(253);
+	var TasksStore = __webpack_require__(258);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(254);
+	
+	var TasksForm = React.createClass({
+	  displayName: 'TasksForm',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
+	  },
+	
+	  keyHandler: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  // clickHandler: function (event) {
+	  //   event.preventDefault();
+	  //
+	  //   // debugger
+	  //   this.context.router.push("/user/tasks/new");
+	  // },
+	
+	  blurHandler: function (event) {
+	    event.preventDefault();
+	    if (event.target.value.length > 1) {
+	      ClientActions.createTask({
+	        title: this.state.title,
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      });
+	      this.setState({ title: "" });
+	    }
+	  },
+	
+	  enterHandler: function (event) {
+	    if (event.keyCode == 13) {
+	      ClientActions.createTask({
+	        title: this.state.title,
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      });
+	      this.setState({ title: "" });
+	    }
+	  },
+	
+	  // focusHandler: function () {
+	  //   this.context.router.push("/user/tasks")
+	  //   this.refs.form.focus();
+	  // },
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'new-task-list' },
+	      React.createElement('input', {
+	        className: 'new-task',
+	        ref: 'form',
+	        placeholder: 'New Task Here: [Enter] to submit!',
+	        value: this.state.title,
+	        onChange: this.keyHandler,
+	        onBlur: this.blurHandler,
+	        onFocus: this.focusHandler,
+	        onKeyDown: this.enterHandler
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = TasksForm;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var OnUnload = __webpack_require__(261).OnUnload;
+	var TasksIndexItem = __webpack_require__(253);
+	var TasksStore = __webpack_require__(258);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(254);
+	
+	var TasksEdit = React.createClass({
+	  displayName: 'TasksEdit',
+	
+	  mixins: [OnUnload],
+	
+	  getInitialState: function () {
+	    var possibleTask = TasksStore.find(this.props.params.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      return {
+	        title: task.title,
+	        description: task.description,
+	        manager_id: task.manager_id,
+	        assignee_id: task.assignee_id,
+	        project_id: task.project_id,
+	        completed: task.completed
+	      };
+	    } else {
+	      return {
+	        title: "",
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      };
+	    }
+	  },
+	
+	  onBeforeUnload: function () {
+	    var task = this.state;
+	    ClientActions.updateTask({
+	      task: task
+	    }, this.props.params.id);
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    var possibleTask = TasksStore.find(newProps.params.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      this.setState({
+	        title: task.title,
+	        description: task.description,
+	        manager_id: task.manager_id,
+	        assignee_id: task.assignee_id,
+	        project_id: task.project_id,
+	        completed: task.completed
+	      });
+	    }
+	  },
+	
+	  titleChange: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  descriptionChange: function (event) {
+	    this.setState({ description: event.target.value });
+	  },
+	
+	  managerChange: function (event) {
+	    this.setState({ manager_id: event.target.value });
+	  },
+	
+	  assigneeChange: function (event) {
+	    this.setState({ assignee_id: event.target.value });
+	  },
+	
+	  projectChange: function (event) {
+	    this.setState({ project_id: event.target.value });
+	  },
+	
+	  checkOff: function (event) {
+	    event.preventDefault();
+	
+	    var task = this.state;
+	
+	    ClientActions.updateTask({
+	      completed: true
+	    }, this.props.params.id);
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	    ClientActions.updateTask(this.state, this.props.params.id);
+	  },
+	
+	  render: function () {
+	    var checkmark = React.createElement(
+	      'div',
+	      { className: 'checkmark-edit', onClick: this.checkOff },
+	      ' ✓ '
+	    );
+	    var project;
+	    if (!this.state.project_id) {
+	      project = "No Project";
+	    } else {
+	      project = this.state.project_id;
+	    }
+	    return React.createElement(
+	      'ul',
+	      { className: 'edit-list' },
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'title' },
+	        checkmark,
+	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'description group' },
+	        React.createElement('textarea', { wrap: 'soft', placeholder: 'Description', value: this.state.description, onChange: this.descriptionChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.onSubmit },
+	          'Submit'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TasksEdit;
 
 /***/ },
 /* 261 */

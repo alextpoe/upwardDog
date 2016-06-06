@@ -78,7 +78,7 @@ var TasksEdit = React.createClass({
 
   checkOff: function (event) {
     event.preventDefault();
-    debugger
+
     var task = this.state;
 
     ClientActions.updateTask(

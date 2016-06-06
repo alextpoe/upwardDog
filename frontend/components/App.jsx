@@ -21,6 +21,15 @@ var App = React.createClass({
     this.context.router.push("/hello/login")
   },
 
+  signUp: function (event){
+    event.preventDefault();
+    var loginData = {
+      username: "Guest",
+      password: "password"
+    };
+    SessionApiUtil.login(loginData);
+  },
+
   header: function () {
 
     // } else
@@ -33,7 +42,7 @@ var App = React.createClass({
           <div className="log-in">
             <Link className="login-link" to="/hello/login" onClick={this.clickHandle}>Log In</Link>
             <Link className="signup" to="/hello/signup">Get Started for FREE</Link>
-            <Link className="signup" to="/hello/login/guest">Sign In As Guest</Link>
+            <button className="signup" onClick={ this.signUp } to="/hello/login/guest">Sign In As Guest</button>
           </div>
         </nav>
       );
