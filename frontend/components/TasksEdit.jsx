@@ -1,5 +1,6 @@
 var React = require('react');
 var Link = require('react-router').Link;
+var OnUnload = require('react-window-mixins').OnUnload;
 var TasksIndexItem = require('./TasksIndexItem');
 var TasksStore = require('../stores/TasksStore');
 var SessionStore = require('../stores/SessionStore');
@@ -7,6 +8,8 @@ var ClientActions = require('../actions/ClientActions');
 
 
 var TasksEdit = React.createClass({
+  mixins: [ OnUnload ],
+
   getInitialState: function () {
     var possibleTask = TasksStore.find(this.props.params.id)
     var task = possibleTask ? possibleTask : false
@@ -29,6 +32,13 @@ var TasksEdit = React.createClass({
         completed: false
       }
     }
+  },
+
+  onBeforeUnload: function () {
+    var task = this.state;
+    ClientActions.updateTask({
+      task: task
+    }, this.props.params.id)
   },
 
   componentWillReceiveProps: function (newProps) {
@@ -66,14 +76,18 @@ var TasksEdit = React.createClass({
     this.setState({ project_id: event.target.value })
   },
 
-  // projectClick: function (event) {
-  //   event.preventDefault();
-  //   this.projectClicked = true;
-  //   this.inputType = "button";
-  //   // if (this.projectClicked) {
-  //   //   this.inputType = "text";
-  //   // }
-  // },
+  checkOff: function (event) {
+    event.preventDefault();
+    debugger
+    var task = this.state;
+
+    ClientActions.updateTask(
+      {
+        completed: true
+      },
+      this.props.params.id
+    )
+  },
 
   onSubmit: function (event) {
     event.preventDefault();
@@ -81,6 +95,7 @@ var TasksEdit = React.createClass({
   },
 
   render: function () {
+    var checkmark = (<div className="checkmark-edit" onClick={this.checkOff}> ✓ </div>);
     var project;
     if (!this.state.project_id) {
       project = "No Project";
@@ -88,12 +103,13 @@ var TasksEdit = React.createClass({
       project = this.state.project_id;
     }
     return (
-      <ul>
-        <li>Title: <input value={this.state.title} onChange={this.titleChange}/></li>
-        <li>Description: <input value={this.state.description} onChange={this.descriptionChange}/></li>
-        <li>Manager ID: <input value={this.state.manager_id} onChange={this.managerChange}/></li>
-        <li>Assignee ID: <input value={this.state.assignee_id} onChange={this.assigneeChange}/></li>
+      <ul className="edit-list">
         <li><input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/></li>
+        <li className="title">
+          {checkmark}
+          <input value={this.state.title} onChange={this.titleChange}/>
+        </li>
+        <li className="description group"><textarea wrap="soft" placeholder="Description" value={ this.state.description } onChange={this.descriptionChange}/></li>
         <li><button type="submit" onClick={this.onSubmit}>Submit</button></li>
       </ul>
     );

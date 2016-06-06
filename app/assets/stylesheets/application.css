@@ -22,7 +22,7 @@
    padding: 0;
    border: 0;
    outline: 0;
-   font-family: "haptik","Helvetica Neue",Arial,sans-serif;
+   font-family: 'Montserrat', sans-serif;
    color: inherit;
    text-align: inherit;
    text-decoration: inherit;
@@ -252,6 +252,7 @@
  }
 
  .sidebar{
+   float: left;
    background-color: #2E3C54;
    top: 0;
    left: 0;
@@ -264,6 +265,7 @@
  }
 
  .upward-dog-main {
+   float: left;
    overflow: hidden;
    position: relative;
    left: 244px;
@@ -274,9 +276,21 @@
    display: block;
    height: 60px;
    text-align: center;
-   font-family: "proxima-nova","Helvetica Neue",Arial,sans-serif;
+   font-family: 'Montserrat', sans-serif;
    -webkit-box-orient: horizontal;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+ }
+
+ .user-logo{
+   background: #fc91ad;
+   border-radius: 50%;
+   font-weight: bold;
+   font-size: 12px;
+   text-transform: uppercase;
+   width: 24px;
+   padding: 8px 8px;
+   margin-right: 10px;
+   color: #fff;
  }
 
  .task-container{
@@ -286,11 +300,24 @@
    display: block;
    position: relative;
  }
- .task-main{
+
+ .task-main-unclicked{
    float: left;
    position: relative;
    background: #fff;
-   font-family: "proxima-nova","Helvetica Neue",Arial,sans-serif;
+   border-radius: 3px;
+   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+   padding: 2px;
+   width: calc(100%);
+   text-align: center;
+   height: 100%;
+   bottom: 0;
+ }
+
+ .task-main-clicked{
+   float: left;
+   position: relative;
+   background: #fff;
    border-radius: 3px;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
@@ -302,6 +329,7 @@
 
  .task-list{
    background: #fff;
+   padding: 0 20px;
  }
 
  .task-form{
@@ -309,7 +337,6 @@
    position: relative;
    right: 15px;
    background: #fff;
-   font-family: "proxima-nova","Helvetica Neue",Arial,sans-serif;
    border-radius: 3px;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
@@ -318,22 +345,33 @@
    bottom: 0;
  }
 
- .new-task{
-   background-color: #fff;
-   border: 1px solid #CDCFD2;
-   border-radius: 3px;
-   color: #1B2432;
-   height: 30px;
-   margin-top: 10px;
-   width: 75%;
-   font-size: 20px;
+ .new-task-list{
+  list-style: none;
+  padding: 10px 20px;
  }
 
+ .new-task{
+   float: left;
+   background-color: #fff;
+   border-bottom: 1px solid #CDCFD2;
+   color: #1B2432;
+   height: 30px;
+   width: calc(100% - 20px);
+   font-size: 15px;
+   text-align: left;
+   padding-left: 20px;
+}
+
+
  .task-list-item{
-   padding: 10px;
+   height: 30px;
+   padding: 5px;
    border-bottom: 1px solid #CDCFD2;
    position: relative;
+ }
 
+ .task-list-item > Link {
+   display: block;
  }
 
  .checkmark{
@@ -359,23 +397,70 @@
    float: right;
  }
 
- .add-task{
-   display: block;
-   clear: both;
-   color: #fff;
-   background-color: #1AAFD0;
-   float: left;
-   text-align: center;
-   width: 40px;
-   height: 30px;
-   border-radius: 3px;
-   top: 2px;
-   left: 2px;
-   transition: all 0.3s ease;
-   transition-property: background, -webkit-box-shadow;
+ .edit-list{
+   padding: 20px;
  }
 
- .add-task:hover{
-   background: #02CEFF;
-   -webkit-box-shadow: 0 0 0 3px #80E6FF;
+ .edit-header{
+   border-bottom: 1px solid #ccc;
+   padding: 20px;
+ }
+ .edit-list > li {
+   float: left;
+   width: 75%;
+   padding: 10px 0;
+ }
+
+ .edit-list > li > input{
+   float: left;
+   position:relative;
+   padding: 5px 10px 5px 5px;
+   width: 100%;
+   margin: auto;
+ }
+
+ .edit-list > li> input:hover,
+ .edit-list > li> textarea:hover{
+   border: 1px solid #ccc;
+   border-radius: 3px;
+ }
+
+ .edit-list > li > input:focus
+ .edit-list > li> textarea:hover{
+   border: 1px solid #ccc;
+   border-radius: 3px;
+ }
+
+ .title > input{
+   font-size: 24px;
+   left: 30px;
+ }
+
+ .checkmark-edit {
+   font-size: 18px;
+   position: absolute;
+   float: left;
+   color: #CDCFD2;
+   border: 1px solid #CDCFD2;
+   border-radius: 50%;
+   padding: 3px 6px;
+   bottom: 15px;
+   transition: all 0.3s ease;
+   transition-property: color, -webkit-box-shadow, border;
+ }
+
+ .checkmark-edit:hover{
+   color: #3BE8B0;
+   -webkit-box-shadow: 0 0 0 3px #3BE8B0;
+   border: 1px solid #fff;
+ }
+
+ .title{
+   position: relative;
+ }
+ .description > textarea{
+   padding: 5px 10px 5px 5px;
+   height: 40px;
+   width: 100%;
+   font-size: 14px;
  }

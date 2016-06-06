@@ -79,28 +79,30 @@ var TasksIndex = React.createClass({
     var incompleteTasks = tasks.filter(function (task) {
       return !task.completed
     });
+    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
+    var user = user.slice(0, 2);
+    // debugger
 
-    // var editTask = '';
-    // if (this.props.location.pathname ==="/user/tasks/new"){
-    //   editTask = <TasksCreate/>;
-    // } else if (this.props.location.pathname ==="/user/tasks/" + this.props.params.id + "/edit"){
-    //   editTask = <TasksEdit id={this.props.params.id}/>
-    // }
 
     if (this.state.edited && this.props.children) {
 
       return (
-        <div className="whole-page">
+        <div className="whole-page group">
           <div className="sidebar">
-            <img src={window.logo_url} />
+            <img src={window.landing_logo_url} />
           </div>
           <div className="upward-dog-main">
             <nav className="task-header">
               {this.logout()}
-              <h1>Tasks</h1>
+              <h1>
+                <span className="user-logo">
+                  { user }
+                </span>
+                Tasks
+              </h1>
             </nav>
             <div className="task-container group">
-              <div className="task-main">
+              <div className="task-main-clicked">
                 <ul className="task-list" onClick={this.clicked}>
                   {
                     incompleteTasks.map(function (task) {
@@ -113,6 +115,11 @@ var TasksIndex = React.createClass({
                 </div>
               </div>
               <div className="task-form">
+                <nav className="edit-header">
+                  <span className="user-logo">
+                    { user }
+                  </span>
+                </nav>
                 {this.props.children}
               </div>
             </div>
@@ -123,15 +130,20 @@ var TasksIndex = React.createClass({
       return (
         <div className="whole-page">
           <div className="sidebar">
-            <img src={window.logo_url} />
+            <img src={window.landing_logo_url} />
           </div>
           <div className="upward-dog-main">
             <nav className="task-header">
               {this.logout()}
-              <h1>Tasks</h1>
+              <h1>
+                <span className="user-logo">
+                  { user }
+                </span>
+                Tasks
+              </h1>
             </nav>
             <div className="task-container group">
-              <div className="task-main">
+              <div className="task-main-unclicked">
                 <ul className="task-list" onClick={this.clicked}>
                   {
                     incompleteTasks.map(function (task) {

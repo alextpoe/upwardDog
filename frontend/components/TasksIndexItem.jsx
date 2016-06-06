@@ -16,11 +16,6 @@ var TasksIndexItem = React.createClass({
 
     ClientActions.updateTask(
       {
-        title: task.title,
-        description: task.description,
-        manager_id: task.manager_id,
-        assignee_id: task.assignee_id,
-        project_id: task.project_id,
         completed: true
       },
       task.id

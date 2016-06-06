@@ -74,10 +74,11 @@ var TasksForm = React.createClass({
 
   render: function () {
     return (
-      <li>
+      <li className="new-task-list">
         <input
           className="new-task"
           ref="form"
+          placeholder="New Task Here: [Enter] to submit!"
           value={this.state.title}
           onChange={this.keyHandler}
           onBlur={this.blurHandler}

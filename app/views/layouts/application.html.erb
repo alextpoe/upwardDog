@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Asana</title>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+  <title>upwardDog</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
-
 </head>
 <body>
   <script>window.logo_url = "<%= image_url("upwardDog-logo.png") %>"</script>
+  <script>window.landing_logo_url = "<%= image_url("upwardDog-landing-logo.png") %>"</script>
 <%= yield %>
 
 </body>
