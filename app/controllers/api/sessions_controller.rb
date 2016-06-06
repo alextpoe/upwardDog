@@ -18,6 +18,12 @@ class Api::SessionsController < ApplicationController
     end
   end
 
+  def omni_auth
+    @user = User.find_or_create_from_auth_hash(auth_hash)
+    login(@user)
+    render "api/users/show"
+  end
+
   def destroy
     @user = current_user
     if @user
@@ -41,4 +47,10 @@ class Api::SessionsController < ApplicationController
       render json: {}
     end
   end
+end
+
+private
+
+def auth_hash
+  request.env['omniauth.auth']
 end

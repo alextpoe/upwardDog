@@ -32515,6 +32515,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var ErrorStore = __webpack_require__(250);
 	var SessionApiUtil = __webpack_require__(244);
@@ -32622,6 +32623,11 @@
 	        React.createElement(
 	          'div',
 	          { className: 'form-fields' },
+	          React.createElement(
+	            'a',
+	            { href: '/auth/twitter/' },
+	            'Or Use Twitter'
+	          ),
 	          React.createElement(
 	            'label',
 	            null,

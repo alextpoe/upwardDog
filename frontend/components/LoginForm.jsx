@@ -1,4 +1,5 @@
 var React = require('react');
+var Link = require('react-router').Link;
 var SessionStore = require('../stores/SessionStore');
 var ErrorStore = require('../stores/ErrorStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
@@ -89,6 +90,7 @@ var LoginForm = React.createClass({
           <h1 className="form-heading">Log In</h1>
           { this.fieldErrors("base") }
           <div className="form-fields">
+            <a href="/auth/twitter/">Or Use Twitter</a>
             <label>
               <span className="field">Username:</span>
 

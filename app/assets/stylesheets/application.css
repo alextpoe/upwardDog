@@ -373,6 +373,7 @@
 
  .task-list-item > Link {
    display: block;
+   position: absolute;
  }
 
  .checkmark{

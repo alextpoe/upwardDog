@@ -17,3 +17,6 @@ node_modules
 
 # Ignore bundle.js.
 /bundle.js
+
+# Ignore application configuration
+/config/application.yml
