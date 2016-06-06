@@ -35,6 +35,7 @@ var TasksEdit = React.createClass({
   },
 
   onBeforeUnload: function () {
+    debugger
     var task = this.state;
     ClientActions.updateTask({
       task: task
@@ -110,7 +111,7 @@ var TasksEdit = React.createClass({
           <input value={this.state.title} onChange={this.titleChange}/>
         </li>
         <li className="description group"><textarea wrap="soft" placeholder="Description" value={ this.state.description } onChange={this.descriptionChange}/></li>
-        <li><button type="submit" onClick={this.onSubmit}>Submit</button></li>
+        <li><button className="update-submit" type="submit" onClick={this.onSubmit}>Submit</button></li>
       </ul>
     );
   }

@@ -31,12 +31,11 @@
     "react-addons-linked-state-mixin": "^0.14.2",
     "react-dom": "^0.14.8",
     "react-router": "^2.4.1",
+    "react-window-mixins": "0.0.7",
     "webpack": "^1.13.1"
   },
   "engines": {
     "node": "5.1.0",
     "npm": "3.3.12"
   }
-
-
 }

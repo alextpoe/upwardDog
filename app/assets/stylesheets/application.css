@@ -459,9 +459,23 @@
  .title{
    position: relative;
  }
+
+ .description {
+   float: left;
+   margin-left: 30px;
+ }
+
  .description > textarea{
    padding: 5px 10px 5px 5px;
    height: 40px;
    width: 100%;
    font-size: 14px;
+ }
+
+ .update-submit{
+   float: left;
+   position: relative;
+   display: block;
+   border-top: 1px solid #ccc;
+   width: 100%;
  }

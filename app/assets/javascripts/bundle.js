@@ -33199,6 +33199,7 @@
 	  },
 	
 	  onBeforeUnload: function () {
+	    debugger;
 	    var task = this.state;
 	    ClientActions.updateTask({
 	      task: task
@@ -33291,7 +33292,7 @@
 	        null,
 	        React.createElement(
 	          'button',
-	          { type: 'submit', onClick: this.onSubmit },
+	          { className: 'update-submit', type: 'submit', onClick: this.onSubmit },
 	          'Submit'
 	        )
 	      )
