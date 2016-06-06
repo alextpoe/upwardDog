@@ -111,7 +111,7 @@ var TasksEdit = React.createClass({
           <input value={this.state.title} onChange={this.titleChange}/>
         </li>
         <li className="description group"><textarea wrap="soft" placeholder="Description" value={ this.state.description } onChange={this.descriptionChange}/></li>
-        <li><button className="update-submit" type="submit" onClick={this.onSubmit}>Submit</button></li>
+        <button className="update-submit" type="submit" onClick={this.onSubmit}>Submit</button>
       </ul>
     );
   }

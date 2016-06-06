@@ -33288,13 +33288,9 @@
 	        React.createElement('textarea', { wrap: 'soft', placeholder: 'Description', value: this.state.description, onChange: this.descriptionChange })
 	      ),
 	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement(
-	          'button',
-	          { className: 'update-submit', type: 'submit', onClick: this.onSubmit },
-	          'Submit'
-	        )
+	        'button',
+	        { className: 'update-submit', type: 'submit', onClick: this.onSubmit },
+	        'Submit'
 	      )
 	    );
 	  }
