@@ -33704,7 +33704,7 @@
 	          { className: 'form-fields' },
 	          React.createElement(
 	            'a',
-	            { href: '/auth/twitter/' },
+	            { href: '/auth/twitter' },
 	            'Or Use Twitter'
 	          ),
 	          React.createElement(

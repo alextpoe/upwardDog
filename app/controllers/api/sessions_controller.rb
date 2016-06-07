@@ -1,6 +1,6 @@
 class Api::SessionsController < ApplicationController
   def create
-    @user = User.find_or_create_from_auth_hash(auth_hash) || User.find_by_credentials(
+    @user = User.find_by_credentials(
       params[:user][:username],
       params[:user][:password]
     )
@@ -20,9 +20,8 @@ class Api::SessionsController < ApplicationController
 
   def omni_auth
     @user = User.find_or_create_from_auth_hash(auth_hash)
-    debugger
     login(@user)
-    render "api/users/show"
+    redirect_to root_url
   end
 
   def destroy
@@ -48,10 +47,9 @@ class Api::SessionsController < ApplicationController
       render json: {}
     end
   end
-end
+  private
 
-private
-
-def auth_hash
-  request.env['omniauth.auth']
+  def auth_hash
+    request.env['omniauth.auth']
+  end
 end

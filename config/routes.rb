@@ -3,11 +3,11 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resource :user, only: [:create] do
-      resources :projects do
+      # resources :projects do
         resources :tasks
-      end
+      # end
     end
-    get '/auth/:provider/callback', to: 'sessions#create'
-    resource :session, only: [:create, :destroy, :show]
+    resource :session, only: [:create, :destroy, :show, :omni_auth]
   end
+  get '/auth/:provider/callback', to: 'api/sessions#omni_auth'
 end

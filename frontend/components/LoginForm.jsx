@@ -90,7 +90,7 @@ var LoginForm = React.createClass({
           <h1 className="form-heading">Log In</h1>
           { this.fieldErrors("base") }
           <div className="form-fields">
-            <a href="/auth/twitter/">Or Use Twitter</a>
+            <a href="/auth/twitter">Or Use Twitter</a>
             <label>
               <span className="field">Username:</span>
 
