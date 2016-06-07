@@ -3,9 +3,9 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resource :user, only: [:create] do
-      # resources :projects do
+      resources :projects do
         resources :tasks
-      # end
+      end
     end
     resource :session, only: [:create, :destroy, :show, :omni_auth]
   end

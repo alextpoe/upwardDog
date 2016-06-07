@@ -9,13 +9,9 @@ class User < ActiveRecord::Base
   before_validation :ensure_session_token_uniqueness
 
   has_many :teams
-  has_many :projects
-  has_many(
-    :tasks,
-    class_name: "Task",
-    foreign_key: :assignee_id,
-    primary_key: :id
-  )
+  has_many :project_users
+  has_many :projects, through: :project_users
+  has_many :tasks, through: :projects
 
   def password=(password)
     self.password_digest = BCrypt::Password.create(password)
@@ -47,7 +43,7 @@ class User < ActiveRecord::Base
       @user = User.create!(
         twitter_uid: auth_hash[:uid],
         username: auth_hash[:info][:nickname],
-        password: SecureRandom.base64 
+        password: SecureRandom.base64
       )
     end
 
