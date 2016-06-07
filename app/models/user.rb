@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_or_create_from_auth_hash(auth_hash)
+    debugger
     @user = User.find_by(twitter_uid: auth_hash[:uid])
 
     if @user.nil?

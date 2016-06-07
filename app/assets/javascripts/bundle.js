@@ -54,15 +54,15 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	
 	var Landing = __webpack_require__(220);
-	var App = __webpack_require__(248);
-	var LoginForm = __webpack_require__(249);
+	var App = __webpack_require__(268);
+	var LoginForm = __webpack_require__(269);
 	var TasksIndex = __webpack_require__(247);
-	var TasksCreate = __webpack_require__(252);
-	var TasksEdit = __webpack_require__(260);
+	var TasksCreate = __webpack_require__(255);
+	var TasksEdit = __webpack_require__(256);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var TasksApiUtil = __webpack_require__(255);
+	var TasksApiUtil = __webpack_require__(250);
 	
 	var routes = React.createElement(
 	  Route,
@@ -32209,14 +32209,14 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(253);
-	var TasksStore = __webpack_require__(258);
-	var ClientActions = __webpack_require__(254);
-	var TasksForm = __webpack_require__(259);
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var ClientActions = __webpack_require__(249);
+	var TasksForm = __webpack_require__(254);
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var TasksCreate = __webpack_require__(252);
-	var TasksEdit = __webpack_require__(260);
+	var TasksCreate = __webpack_require__(255);
+	var TasksEdit = __webpack_require__(256);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32416,6 +32416,1085 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
+	var ClientActions = __webpack_require__(249);
+	var TasksStore = __webpack_require__(253);
+	
+	var TasksIndexItem = React.createClass({
+	  displayName: 'TasksIndexItem',
+	
+	  clickHandler: function (event) {
+	    event.preventDefault();
+	    ClientActions.deleteTask(this.props.task.id);
+	  },
+	
+	  checkOff: function (event) {
+	    event.preventDefault();
+	    var task = this.props.task;
+	
+	    ClientActions.updateTask({
+	      completed: true
+	    }, task.id);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'task-list-item' },
+	      React.createElement(
+	        'div',
+	        { className: 'checkmark', onClick: this.checkOff },
+	        '✓'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: "/user/tasks/" + this.props.task.id + "/edit" },
+	        this.props.task.title
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'delete', type: 'submit', onClick: this.clickHandler },
+	        'Delete'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = TasksIndexItem;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksApiUtil = __webpack_require__(250);
+	
+	var ClientActions = {
+	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
+	
+	  createTask: TasksApiUtil.createTask,
+	
+	  updateTask: TasksApiUtil.editTask,
+	
+	  deleteTask: TasksApiUtil.deleteTask
+	};
+	
+	module.exports = ClientActions;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var TasksActions = __webpack_require__(251);
+	
+	var TasksApiUtil = {
+	  receiveAllTasks: function (tasks) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { tasks: tasks },
+	      success: function (data) {
+	        TasksActions.receiveAllTasks(data);
+	      }
+	    });
+	  },
+	  createTask: function (task) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/user/tasks",
+	      dataType: "json",
+	      data: { task: task },
+	      success: function (task) {
+	        TasksActions.receiveTask(task);
+	      }
+	    });
+	  },
+	
+	  getTask: function (id) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      success: function () {
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  editTask: function (task, id) {
+	    $.ajax({
+	      type: "PATCH",
+	      url: "api/user/tasks/" + id,
+	      dataType: "json",
+	      data: { task: task },
+	      success: function (task) {
+	        TasksActions.receiveTask(task);
+	      }
+	    });
+	  },
+	
+	  deleteTask: function (id) {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "api/user/tasks/" + id,
+	      success: function (task) {
+	        TasksActions.removeTask(task);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = TasksApiUtil;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(252);
+	
+	var TasksActions = {
+	  receiveAllTasks: function (tasks) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASKS_RECEIVED,
+	      tasks: tasks
+	    });
+	  },
+	
+	  receiveTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_RECEIVED,
+	      task: task
+	    });
+	  },
+	
+	  removeTask: function (task) {
+	    AppDispatcher.dispatch({
+	      actionType: TasksConstants.TASK_REMOVED,
+	      task: task
+	    });
+	  }
+	};
+	
+	module.exports = TasksActions;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports) {
+
+	var TasksConstants = {
+	  TASKS_RECEIVED: "TASKS_RECEIVED",
+	  TASK_RECEIVED: "TASK_RECEIVED",
+	  TASK_REMOVED: "TASK_REMOVED"
+	};
+	
+	module.exports = TasksConstants;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(222).Store;
+	var AppDispatcher = __webpack_require__(240);
+	var TasksConstants = __webpack_require__(252);
+	var SessionStore = __webpack_require__(221);
+	
+	var TasksStore = new Store(AppDispatcher);
+	
+	window._tasks = {};
+	var _currentUser = {};
+	
+	var _resetTasks = function (tasks) {
+	  _tasks = {};
+	  _currentUser = {};
+	  var userTasks = [];
+	
+	  _currentUser = SessionStore.currentUser();
+	  tasks.forEach(function (task) {
+	    if (task.assignee_id === _currentUser.id) {
+	      userTasks.push(task);
+	    }
+	  });
+	  userTasks.forEach(function (task) {
+	    _tasks[task.id] = task;
+	  });
+	};
+	
+	var _setTask = function (task) {
+	  _tasks[task.id] = task;
+	};
+	
+	var _removeTask = function (task) {
+	  delete _tasks[task.id];
+	};
+	
+	TasksStore.all = function () {
+	  var tasks = Object.keys(_tasks).map(function (id) {
+	    return _tasks[id];
+	  });
+	
+	  return tasks;
+	};
+	
+	TasksStore.find = function (id) {
+	  return _tasks[id];
+	};
+	
+	TasksStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TasksConstants.TASKS_RECEIVED:
+	      _resetTasks(payload.tasks);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_RECEIVED:
+	      _setTask(payload.task);
+	      TasksStore.__emitChange();
+	      break;
+	    case TasksConstants.TASK_REMOVED:
+	      _removeTask(payload.task);
+	      TasksStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = TasksStore;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(249);
+	
+	var TasksForm = React.createClass({
+	  displayName: 'TasksForm',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
+	  },
+	
+	  keyHandler: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  // clickHandler: function (event) {
+	  //   event.preventDefault();
+	  //
+	  //   // debugger
+	  //   this.context.router.push("/user/tasks/new");
+	  // },
+	
+	  blurHandler: function (event) {
+	    event.preventDefault();
+	    if (event.target.value.length > 1) {
+	      ClientActions.createTask({
+	        title: this.state.title,
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      });
+	      this.setState({ title: "" });
+	    }
+	  },
+	
+	  enterHandler: function (event) {
+	    if (event.keyCode == 13) {
+	      ClientActions.createTask({
+	        title: this.state.title,
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      });
+	      this.setState({ title: "" });
+	    }
+	  },
+	
+	  // focusHandler: function () {
+	  //   this.context.router.push("/user/tasks")
+	  //   this.refs.form.focus();
+	  // },
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'new-task-list' },
+	      React.createElement('input', {
+	        className: 'new-task',
+	        ref: 'form',
+	        placeholder: 'New Task Here: [Enter] to submit!',
+	        value: this.state.title,
+	        onChange: this.keyHandler,
+	        onBlur: this.blurHandler,
+	        onFocus: this.focusHandler,
+	        onKeyDown: this.enterHandler
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = TasksForm;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(249);
+	var TasksForm = __webpack_require__(254);
+	
+	var TasksCreate = React.createClass({
+	  displayName: 'TasksCreate',
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: "",
+	      manager_id: "",
+	      assignee_id: SessionStore.currentUser().id,
+	      project_id: "",
+	      completed: false
+	    };
+	  },
+	
+	  titleChange: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  descriptionChange: function (event) {
+	    this.setState({ description: event.target.value });
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	    ClientActions.createTask(this.state);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
+	        null,
+	        'Title: ',
+	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        'Description: ',
+	        React.createElement('input', { value: this.state.description, onChange: this.descriptionChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.onSubmit },
+	          'Submit'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TasksCreate;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var OnUnload = __webpack_require__(257).OnUnload;
+	var TasksIndexItem = __webpack_require__(248);
+	var TasksStore = __webpack_require__(253);
+	var SessionStore = __webpack_require__(221);
+	var ClientActions = __webpack_require__(249);
+	
+	var TasksEdit = React.createClass({
+	  displayName: 'TasksEdit',
+	
+	  mixins: [OnUnload],
+	
+	  getInitialState: function () {
+	    var possibleTask = TasksStore.find(this.props.params.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      return {
+	        title: task.title,
+	        description: task.description,
+	        manager_id: task.manager_id,
+	        assignee_id: task.assignee_id,
+	        project_id: task.project_id,
+	        completed: task.completed
+	      };
+	    } else {
+	      return {
+	        title: "",
+	        description: "",
+	        manager_id: "",
+	        assignee_id: SessionStore.currentUser().id,
+	        project_id: "",
+	        completed: false
+	      };
+	    }
+	  },
+	
+	  onBeforeUnload: function () {
+	    debugger;
+	    var task = this.state;
+	    ClientActions.updateTask({
+	      task: task
+	    }, this.props.params.id);
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    var possibleTask = TasksStore.find(newProps.params.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      this.setState({
+	        title: task.title,
+	        description: task.description,
+	        manager_id: task.manager_id,
+	        assignee_id: task.assignee_id,
+	        project_id: task.project_id,
+	        completed: task.completed
+	      });
+	    }
+	  },
+	
+	  titleChange: function (event) {
+	    this.setState({ title: event.target.value });
+	  },
+	
+	  descriptionChange: function (event) {
+	    this.setState({ description: event.target.value });
+	  },
+	
+	  managerChange: function (event) {
+	    this.setState({ manager_id: event.target.value });
+	  },
+	
+	  assigneeChange: function (event) {
+	    this.setState({ assignee_id: event.target.value });
+	  },
+	
+	  projectChange: function (event) {
+	    this.setState({ project_id: event.target.value });
+	  },
+	
+	  checkOff: function (event) {
+	    event.preventDefault();
+	
+	    var task = this.state;
+	
+	    ClientActions.updateTask({
+	      completed: true
+	    }, this.props.params.id);
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	    ClientActions.updateTask(this.state, this.props.params.id);
+	  },
+	
+	  render: function () {
+	    var checkmark = React.createElement(
+	      'div',
+	      { className: 'checkmark-edit', onClick: this.checkOff },
+	      ' ✓ '
+	    );
+	    var project;
+	    if (!this.state.project_id) {
+	      project = "No Project";
+	    } else {
+	      project = this.state.project_id;
+	    }
+	    return React.createElement(
+	      'ul',
+	      { className: 'edit-list' },
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'title' },
+	        checkmark,
+	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'description group' },
+	        React.createElement('textarea', { wrap: 'soft', placeholder: 'Description', value: this.state.description, onChange: this.descriptionChange })
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'update-submit', type: 'submit', onClick: this.onSubmit },
+	        'Submit'
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TasksEdit;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  OnResize: __webpack_require__(258),
+	  OnScroll: __webpack_require__(266),
+	  OnUnload: __webpack_require__(267)
+	};
+	
+
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global window */
+	
+	var throttle = __webpack_require__(259);
+	
+	module.exports = {
+	  getInitialState: function() {
+	    var defaults = { window: { height: 0, width: 0 }, document: { height: 0, width: 0 } };
+	    return !this.onResize ? defaults : null;
+	  },
+	
+	  componentWillMount: function() {
+	    if (!this.onResize) {
+	      this.onResize = function() {
+	        this.setState({
+	          window: { height: window.innerHeight, width: window.innerWidth },
+	          document: { height: document.body.clientHeight, width: document.body.clientWidth }
+	        });
+	      }.bind(this);
+	    }
+	
+	    this.onResize();
+	  },
+	
+	  componentDidMount: function() {
+	    this.onResizeThrottled = throttle(this.onResize, 10);
+	    window.addEventListener("resize", this.onResizeThrottled);
+	  },
+	
+	  componentWillUnmount: function() {
+	    window.removeEventListener("resize", this.onResizeThrottled);
+	  }
+	};
+
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	var debounce = __webpack_require__(260),
+	    isFunction = __webpack_require__(261),
+	    isObject = __webpack_require__(262);
+	
+	/** Used as an internal `_.debounce` options object */
+	var debounceOptions = {
+	  'leading': false,
+	  'maxWait': 0,
+	  'trailing': false
+	};
+	
+	/**
+	 * Creates a function that, when executed, will only call the `func` function
+	 * at most once per every `wait` milliseconds. Provide an options object to
+	 * indicate that `func` should be invoked on the leading and/or trailing edge
+	 * of the `wait` timeout. Subsequent calls to the throttled function will
+	 * return the result of the last `func` call.
+	 *
+	 * Note: If `leading` and `trailing` options are `true` `func` will be called
+	 * on the trailing edge of the timeout only if the the throttled function is
+	 * invoked more than once during the `wait` timeout.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Functions
+	 * @param {Function} func The function to throttle.
+	 * @param {number} wait The number of milliseconds to throttle executions to.
+	 * @param {Object} [options] The options object.
+	 * @param {boolean} [options.leading=true] Specify execution on the leading edge of the timeout.
+	 * @param {boolean} [options.trailing=true] Specify execution on the trailing edge of the timeout.
+	 * @returns {Function} Returns the new throttled function.
+	 * @example
+	 *
+	 * // avoid excessively updating the position while scrolling
+	 * var throttled = _.throttle(updatePosition, 100);
+	 * jQuery(window).on('scroll', throttled);
+	 *
+	 * // execute `renewToken` when the click event is fired, but not more than once every 5 minutes
+	 * jQuery('.interactive').on('click', _.throttle(renewToken, 300000, {
+	 *   'trailing': false
+	 * }));
+	 */
+	function throttle(func, wait, options) {
+	  var leading = true,
+	      trailing = true;
+	
+	  if (!isFunction(func)) {
+	    throw new TypeError;
+	  }
+	  if (options === false) {
+	    leading = false;
+	  } else if (isObject(options)) {
+	    leading = 'leading' in options ? options.leading : leading;
+	    trailing = 'trailing' in options ? options.trailing : trailing;
+	  }
+	  debounceOptions.leading = leading;
+	  debounceOptions.maxWait = wait;
+	  debounceOptions.trailing = trailing;
+	
+	  return debounce(func, wait, debounceOptions);
+	}
+	
+	module.exports = throttle;
+
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	var isFunction = __webpack_require__(261),
+	    isObject = __webpack_require__(262),
+	    now = __webpack_require__(264);
+	
+	/* Native method shortcuts for methods with the same name as other `lodash` methods */
+	var nativeMax = Math.max;
+	
+	/**
+	 * Creates a function that will delay the execution of `func` until after
+	 * `wait` milliseconds have elapsed since the last time it was invoked.
+	 * Provide an options object to indicate that `func` should be invoked on
+	 * the leading and/or trailing edge of the `wait` timeout. Subsequent calls
+	 * to the debounced function will return the result of the last `func` call.
+	 *
+	 * Note: If `leading` and `trailing` options are `true` `func` will be called
+	 * on the trailing edge of the timeout only if the the debounced function is
+	 * invoked more than once during the `wait` timeout.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Functions
+	 * @param {Function} func The function to debounce.
+	 * @param {number} wait The number of milliseconds to delay.
+	 * @param {Object} [options] The options object.
+	 * @param {boolean} [options.leading=false] Specify execution on the leading edge of the timeout.
+	 * @param {number} [options.maxWait] The maximum time `func` is allowed to be delayed before it's called.
+	 * @param {boolean} [options.trailing=true] Specify execution on the trailing edge of the timeout.
+	 * @returns {Function} Returns the new debounced function.
+	 * @example
+	 *
+	 * // avoid costly calculations while the window size is in flux
+	 * var lazyLayout = _.debounce(calculateLayout, 150);
+	 * jQuery(window).on('resize', lazyLayout);
+	 *
+	 * // execute `sendMail` when the click event is fired, debouncing subsequent calls
+	 * jQuery('#postbox').on('click', _.debounce(sendMail, 300, {
+	 *   'leading': true,
+	 *   'trailing': false
+	 * });
+	 *
+	 * // ensure `batchLog` is executed once after 1 second of debounced calls
+	 * var source = new EventSource('/stream');
+	 * source.addEventListener('message', _.debounce(batchLog, 250, {
+	 *   'maxWait': 1000
+	 * }, false);
+	 */
+	function debounce(func, wait, options) {
+	  var args,
+	      maxTimeoutId,
+	      result,
+	      stamp,
+	      thisArg,
+	      timeoutId,
+	      trailingCall,
+	      lastCalled = 0,
+	      maxWait = false,
+	      trailing = true;
+	
+	  if (!isFunction(func)) {
+	    throw new TypeError;
+	  }
+	  wait = nativeMax(0, wait) || 0;
+	  if (options === true) {
+	    var leading = true;
+	    trailing = false;
+	  } else if (isObject(options)) {
+	    leading = options.leading;
+	    maxWait = 'maxWait' in options && (nativeMax(wait, options.maxWait) || 0);
+	    trailing = 'trailing' in options ? options.trailing : trailing;
+	  }
+	  var delayed = function() {
+	    var remaining = wait - (now() - stamp);
+	    if (remaining <= 0) {
+	      if (maxTimeoutId) {
+	        clearTimeout(maxTimeoutId);
+	      }
+	      var isCalled = trailingCall;
+	      maxTimeoutId = timeoutId = trailingCall = undefined;
+	      if (isCalled) {
+	        lastCalled = now();
+	        result = func.apply(thisArg, args);
+	        if (!timeoutId && !maxTimeoutId) {
+	          args = thisArg = null;
+	        }
+	      }
+	    } else {
+	      timeoutId = setTimeout(delayed, remaining);
+	    }
+	  };
+	
+	  var maxDelayed = function() {
+	    if (timeoutId) {
+	      clearTimeout(timeoutId);
+	    }
+	    maxTimeoutId = timeoutId = trailingCall = undefined;
+	    if (trailing || (maxWait !== wait)) {
+	      lastCalled = now();
+	      result = func.apply(thisArg, args);
+	      if (!timeoutId && !maxTimeoutId) {
+	        args = thisArg = null;
+	      }
+	    }
+	  };
+	
+	  return function() {
+	    args = arguments;
+	    stamp = now();
+	    thisArg = this;
+	    trailingCall = trailing && (timeoutId || !leading);
+	
+	    if (maxWait === false) {
+	      var leadingCall = leading && !timeoutId;
+	    } else {
+	      if (!maxTimeoutId && !leading) {
+	        lastCalled = stamp;
+	      }
+	      var remaining = maxWait - (stamp - lastCalled),
+	          isCalled = remaining <= 0;
+	
+	      if (isCalled) {
+	        if (maxTimeoutId) {
+	          maxTimeoutId = clearTimeout(maxTimeoutId);
+	        }
+	        lastCalled = stamp;
+	        result = func.apply(thisArg, args);
+	      }
+	      else if (!maxTimeoutId) {
+	        maxTimeoutId = setTimeout(maxDelayed, remaining);
+	      }
+	    }
+	    if (isCalled && timeoutId) {
+	      timeoutId = clearTimeout(timeoutId);
+	    }
+	    else if (!timeoutId && wait !== maxWait) {
+	      timeoutId = setTimeout(delayed, wait);
+	    }
+	    if (leadingCall) {
+	      isCalled = true;
+	      result = func.apply(thisArg, args);
+	    }
+	    if (isCalled && !timeoutId && !maxTimeoutId) {
+	      args = thisArg = null;
+	    }
+	    return result;
+	  };
+	}
+	
+	module.exports = debounce;
+
+
+/***/ },
+/* 261 */
+/***/ function(module, exports) {
+
+	/**
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	
+	/**
+	 * Checks if `value` is a function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Objects
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if the `value` is a function, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 */
+	function isFunction(value) {
+	  return typeof value == 'function';
+	}
+	
+	module.exports = isFunction;
+
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	var objectTypes = __webpack_require__(263);
+	
+	/**
+	 * Checks if `value` is the language type of Object.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Objects
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if the `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // check if the value is the ECMAScript language type of Object
+	  // http://es5.github.io/#x8
+	  // and avoid a V8 bug
+	  // http://code.google.com/p/v8/issues/detail?id=2291
+	  return !!(value && objectTypes[typeof value]);
+	}
+	
+	module.exports = isObject;
+
+
+/***/ },
+/* 263 */
+/***/ function(module, exports) {
+
+	/**
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	
+	/** Used to determine if values are of the language type Object */
+	var objectTypes = {
+	  'boolean': false,
+	  'function': true,
+	  'object': true,
+	  'number': false,
+	  'string': false,
+	  'undefined': false
+	};
+	
+	module.exports = objectTypes;
+
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	var isNative = __webpack_require__(265);
+	
+	/**
+	 * Gets the number of milliseconds that have elapsed since the Unix epoch
+	 * (1 January 1970 00:00:00 UTC).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utilities
+	 * @example
+	 *
+	 * var stamp = _.now();
+	 * _.defer(function() { console.log(_.now() - stamp); });
+	 * // => logs the number of milliseconds it took for the deferred function to be called
+	 */
+	var now = isNative(now = Date.now) && now || function() {
+	  return new Date().getTime();
+	};
+	
+	module.exports = now;
+
+
+/***/ },
+/* 265 */
+/***/ function(module, exports) {
+
+	/**
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	
+	/** Used for native method references */
+	var objectProto = Object.prototype;
+	
+	/** Used to resolve the internal [[Class]] of values */
+	var toString = objectProto.toString;
+	
+	/** Used to detect if a method is native */
+	var reNative = RegExp('^' +
+	  String(toString)
+	    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+	    .replace(/toString| for [^\]]+/g, '.*?') + '$'
+	);
+	
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if the `value` is a native function, else `false`.
+	 */
+	function isNative(value) {
+	  return typeof value == 'function' && reNative.test(value);
+	}
+	
+	module.exports = isNative;
+
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global window */
+	
+	var throttle = __webpack_require__(259);
+	
+	module.exports = {
+	  getInitialState: function() {
+	    return !this.onScroll ? { scroll: { x: 0, y: 0 } } : null;
+	  },
+	
+	  componentDidMount: function() {
+	    if (!this.onScroll) {
+	      this.onScroll = function() {
+	        this.setState({ scroll: { x: window.pageXOffset, y: window.pageYOffset } });
+	      }.bind(this);
+	    }
+	
+	    this.onScroll();
+	    this.onScrollThrottled = throttle(this.onScroll, 10);
+	    window.addEventListener("scroll", this.onScrollThrottled);
+	  },
+	
+	  componentWillUnmount: function() {
+	    window.removeEventListener("scroll", this.onScrollThrottled);
+	  }
+	};
+
+
+/***/ },
+/* 267 */
+/***/ function(module, exports) {
+
+	/*global window */
+	
+	module.exports = {
+	  componentDidMount: function() {
+	    if (this.onUnload) {
+	      window.addEventListener("unload", this.onUnload);
+	    }
+	    if (this.onBeforeUnload) {
+	      window.addEventListener("beforeunload", this.onBeforeUnload);
+	    }
+	  },
+	
+	  componentWillUnmount: function() {
+	    if (this.onUnload) {
+	      window.removeEventListener("unload", this.onUnload);
+	    }
+	    if (this.onBeforeUnload) {
+	      window.removeEventListener("beforeunload", this.onBeforeUnload);
+	    }
+	  }
+	};
+
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	var TasksIndex = __webpack_require__(247);
@@ -32511,15 +33590,15 @@
 	module.exports = App;
 
 /***/ },
-/* 249 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
-	var ErrorStore = __webpack_require__(250);
+	var ErrorStore = __webpack_require__(270);
 	var SessionApiUtil = __webpack_require__(244);
-	var UserApiUtil = __webpack_require__(251);
+	var UserApiUtil = __webpack_require__(271);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -32674,7 +33753,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 250 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
@@ -32724,7 +33803,7 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 251 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionActions = __webpack_require__(245);
@@ -32749,1085 +33828,6 @@
 	};
 	
 	module.exports = UserApiUtil;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(253);
-	var TasksStore = __webpack_require__(258);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(254);
-	var TasksForm = __webpack_require__(259);
-	
-	var TasksCreate = React.createClass({
-	  displayName: 'TasksCreate',
-	
-	  getInitialState: function () {
-	    return {
-	      title: "",
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    };
-	  },
-	
-	  titleChange: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  descriptionChange: function (event) {
-	    this.setState({ description: event.target.value });
-	  },
-	
-	  onSubmit: function (event) {
-	    event.preventDefault();
-	    ClientActions.createTask(this.state);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      null,
-	      React.createElement(
-	        'li',
-	        null,
-	        'Title: ',
-	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        'Description: ',
-	        React.createElement('input', { value: this.state.description, onChange: this.descriptionChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.onSubmit },
-	          'Submit'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksCreate;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var ClientActions = __webpack_require__(254);
-	var TasksStore = __webpack_require__(258);
-	
-	var TasksIndexItem = React.createClass({
-	  displayName: 'TasksIndexItem',
-	
-	  clickHandler: function (event) {
-	    event.preventDefault();
-	    ClientActions.deleteTask(this.props.task.id);
-	  },
-	
-	  checkOff: function (event) {
-	    event.preventDefault();
-	    var task = this.props.task;
-	
-	    ClientActions.updateTask({
-	      completed: true
-	    }, task.id);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'task-list-item' },
-	      React.createElement(
-	        'div',
-	        { className: 'checkmark', onClick: this.checkOff },
-	        '✓'
-	      ),
-	      React.createElement(
-	        Link,
-	        { to: "/user/tasks/" + this.props.task.id + "/edit" },
-	        this.props.task.title
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'delete', type: 'submit', onClick: this.clickHandler },
-	        'Delete'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = TasksIndexItem;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var TasksApiUtil = __webpack_require__(255);
-	
-	var ClientActions = {
-	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
-	
-	  createTask: TasksApiUtil.createTask,
-	
-	  updateTask: TasksApiUtil.editTask,
-	
-	  deleteTask: TasksApiUtil.deleteTask
-	};
-	
-	module.exports = ClientActions;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var TasksActions = __webpack_require__(256);
-	
-	var TasksApiUtil = {
-	  receiveAllTasks: function (tasks) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { tasks: tasks },
-	      success: function (data) {
-	        TasksActions.receiveAllTasks(data);
-	      }
-	    });
-	  },
-	  createTask: function (task) {
-	    $.ajax({
-	      type: "POST",
-	      url: "api/user/tasks",
-	      dataType: "json",
-	      data: { task: task },
-	      success: function (task) {
-	        TasksActions.receiveTask(task);
-	      }
-	    });
-	  },
-	
-	  getTask: function (id) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      success: function () {
-	        console.log("success");
-	      }
-	    });
-	  },
-	
-	  editTask: function (task, id) {
-	    $.ajax({
-	      type: "PATCH",
-	      url: "api/user/tasks/" + id,
-	      dataType: "json",
-	      data: { task: task },
-	      success: function (task) {
-	        TasksActions.receiveTask(task);
-	      }
-	    });
-	  },
-	
-	  deleteTask: function (id) {
-	    $.ajax({
-	      type: "DELETE",
-	      url: "api/user/tasks/" + id,
-	      success: function (task) {
-	        TasksActions.removeTask(task);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = TasksApiUtil;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(257);
-	
-	var TasksActions = {
-	  receiveAllTasks: function (tasks) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASKS_RECEIVED,
-	      tasks: tasks
-	    });
-	  },
-	
-	  receiveTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_RECEIVED,
-	      task: task
-	    });
-	  },
-	
-	  removeTask: function (task) {
-	    AppDispatcher.dispatch({
-	      actionType: TasksConstants.TASK_REMOVED,
-	      task: task
-	    });
-	  }
-	};
-	
-	module.exports = TasksActions;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports) {
-
-	var TasksConstants = {
-	  TASKS_RECEIVED: "TASKS_RECEIVED",
-	  TASK_RECEIVED: "TASK_RECEIVED",
-	  TASK_REMOVED: "TASK_REMOVED"
-	};
-	
-	module.exports = TasksConstants;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(222).Store;
-	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(257);
-	var SessionStore = __webpack_require__(221);
-	
-	var TasksStore = new Store(AppDispatcher);
-	
-	window._tasks = {};
-	var _currentUser = {};
-	
-	var _resetTasks = function (tasks) {
-	  _tasks = {};
-	  _currentUser = {};
-	  var userTasks = [];
-	
-	  _currentUser = SessionStore.currentUser();
-	  tasks.forEach(function (task) {
-	    if (task.assignee_id === _currentUser.id) {
-	      userTasks.push(task);
-	    }
-	  });
-	  userTasks.forEach(function (task) {
-	    _tasks[task.id] = task;
-	  });
-	};
-	
-	var _setTask = function (task) {
-	  _tasks[task.id] = task;
-	};
-	
-	var _removeTask = function (task) {
-	  delete _tasks[task.id];
-	};
-	
-	TasksStore.all = function () {
-	  var tasks = Object.keys(_tasks).map(function (id) {
-	    return _tasks[id];
-	  });
-	
-	  return tasks;
-	};
-	
-	TasksStore.find = function (id) {
-	  return _tasks[id];
-	};
-	
-	TasksStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case TasksConstants.TASKS_RECEIVED:
-	      _resetTasks(payload.tasks);
-	      TasksStore.__emitChange();
-	      break;
-	    case TasksConstants.TASK_RECEIVED:
-	      _setTask(payload.task);
-	      TasksStore.__emitChange();
-	      break;
-	    case TasksConstants.TASK_REMOVED:
-	      _removeTask(payload.task);
-	      TasksStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = TasksStore;
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(253);
-	var TasksStore = __webpack_require__(258);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(254);
-	
-	var TasksForm = React.createClass({
-	  displayName: 'TasksForm',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return {
-	      title: "",
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    };
-	  },
-	
-	  keyHandler: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  // clickHandler: function (event) {
-	  //   event.preventDefault();
-	  //
-	  //   // debugger
-	  //   this.context.router.push("/user/tasks/new");
-	  // },
-	
-	  blurHandler: function (event) {
-	    event.preventDefault();
-	    if (event.target.value.length > 1) {
-	      ClientActions.createTask({
-	        title: this.state.title,
-	        description: "",
-	        manager_id: "",
-	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
-	        completed: false
-	      });
-	      this.setState({ title: "" });
-	    }
-	  },
-	
-	  enterHandler: function (event) {
-	    if (event.keyCode == 13) {
-	      ClientActions.createTask({
-	        title: this.state.title,
-	        description: "",
-	        manager_id: "",
-	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
-	        completed: false
-	      });
-	      this.setState({ title: "" });
-	    }
-	  },
-	
-	  // focusHandler: function () {
-	  //   this.context.router.push("/user/tasks")
-	  //   this.refs.form.focus();
-	  // },
-	
-	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'new-task-list' },
-	      React.createElement('input', {
-	        className: 'new-task',
-	        ref: 'form',
-	        placeholder: 'New Task Here: [Enter] to submit!',
-	        value: this.state.title,
-	        onChange: this.keyHandler,
-	        onBlur: this.blurHandler,
-	        onFocus: this.focusHandler,
-	        onKeyDown: this.enterHandler
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = TasksForm;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var OnUnload = __webpack_require__(261).OnUnload;
-	var TasksIndexItem = __webpack_require__(253);
-	var TasksStore = __webpack_require__(258);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(254);
-	
-	var TasksEdit = React.createClass({
-	  displayName: 'TasksEdit',
-	
-	  mixins: [OnUnload],
-	
-	  getInitialState: function () {
-	    var possibleTask = TasksStore.find(this.props.params.id);
-	    var task = possibleTask ? possibleTask : false;
-	    if (task) {
-	      return {
-	        title: task.title,
-	        description: task.description,
-	        manager_id: task.manager_id,
-	        assignee_id: task.assignee_id,
-	        project_id: task.project_id,
-	        completed: task.completed
-	      };
-	    } else {
-	      return {
-	        title: "",
-	        description: "",
-	        manager_id: "",
-	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
-	        completed: false
-	      };
-	    }
-	  },
-	
-	  onBeforeUnload: function () {
-	    debugger;
-	    var task = this.state;
-	    ClientActions.updateTask({
-	      task: task
-	    }, this.props.params.id);
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    var possibleTask = TasksStore.find(newProps.params.id);
-	    var task = possibleTask ? possibleTask : false;
-	    if (task) {
-	      this.setState({
-	        title: task.title,
-	        description: task.description,
-	        manager_id: task.manager_id,
-	        assignee_id: task.assignee_id,
-	        project_id: task.project_id,
-	        completed: task.completed
-	      });
-	    }
-	  },
-	
-	  titleChange: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  descriptionChange: function (event) {
-	    this.setState({ description: event.target.value });
-	  },
-	
-	  managerChange: function (event) {
-	    this.setState({ manager_id: event.target.value });
-	  },
-	
-	  assigneeChange: function (event) {
-	    this.setState({ assignee_id: event.target.value });
-	  },
-	
-	  projectChange: function (event) {
-	    this.setState({ project_id: event.target.value });
-	  },
-	
-	  checkOff: function (event) {
-	    event.preventDefault();
-	
-	    var task = this.state;
-	
-	    ClientActions.updateTask({
-	      completed: true
-	    }, this.props.params.id);
-	  },
-	
-	  onSubmit: function (event) {
-	    event.preventDefault();
-	    ClientActions.updateTask(this.state, this.props.params.id);
-	  },
-	
-	  render: function () {
-	    var checkmark = React.createElement(
-	      'div',
-	      { className: 'checkmark-edit', onClick: this.checkOff },
-	      ' ✓ '
-	    );
-	    var project;
-	    if (!this.state.project_id) {
-	      project = "No Project";
-	    } else {
-	      project = this.state.project_id;
-	    }
-	    return React.createElement(
-	      'ul',
-	      { className: 'edit-list' },
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'title' },
-	        checkmark,
-	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'description group' },
-	        React.createElement('textarea', { wrap: 'soft', placeholder: 'Description', value: this.state.description, onChange: this.descriptionChange })
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'update-submit', type: 'submit', onClick: this.onSubmit },
-	        'Submit'
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksEdit;
-
-/***/ },
-/* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  OnResize: __webpack_require__(262),
-	  OnScroll: __webpack_require__(270),
-	  OnUnload: __webpack_require__(271)
-	};
-	
-
-
-/***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global window */
-	
-	var throttle = __webpack_require__(263);
-	
-	module.exports = {
-	  getInitialState: function() {
-	    var defaults = { window: { height: 0, width: 0 }, document: { height: 0, width: 0 } };
-	    return !this.onResize ? defaults : null;
-	  },
-	
-	  componentWillMount: function() {
-	    if (!this.onResize) {
-	      this.onResize = function() {
-	        this.setState({
-	          window: { height: window.innerHeight, width: window.innerWidth },
-	          document: { height: document.body.clientHeight, width: document.body.clientWidth }
-	        });
-	      }.bind(this);
-	    }
-	
-	    this.onResize();
-	  },
-	
-	  componentDidMount: function() {
-	    this.onResizeThrottled = throttle(this.onResize, 10);
-	    window.addEventListener("resize", this.onResizeThrottled);
-	  },
-	
-	  componentWillUnmount: function() {
-	    window.removeEventListener("resize", this.onResizeThrottled);
-	  }
-	};
-
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
-	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <http://lodash.com/license>
-	 */
-	var debounce = __webpack_require__(264),
-	    isFunction = __webpack_require__(265),
-	    isObject = __webpack_require__(266);
-	
-	/** Used as an internal `_.debounce` options object */
-	var debounceOptions = {
-	  'leading': false,
-	  'maxWait': 0,
-	  'trailing': false
-	};
-	
-	/**
-	 * Creates a function that, when executed, will only call the `func` function
-	 * at most once per every `wait` milliseconds. Provide an options object to
-	 * indicate that `func` should be invoked on the leading and/or trailing edge
-	 * of the `wait` timeout. Subsequent calls to the throttled function will
-	 * return the result of the last `func` call.
-	 *
-	 * Note: If `leading` and `trailing` options are `true` `func` will be called
-	 * on the trailing edge of the timeout only if the the throttled function is
-	 * invoked more than once during the `wait` timeout.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Functions
-	 * @param {Function} func The function to throttle.
-	 * @param {number} wait The number of milliseconds to throttle executions to.
-	 * @param {Object} [options] The options object.
-	 * @param {boolean} [options.leading=true] Specify execution on the leading edge of the timeout.
-	 * @param {boolean} [options.trailing=true] Specify execution on the trailing edge of the timeout.
-	 * @returns {Function} Returns the new throttled function.
-	 * @example
-	 *
-	 * // avoid excessively updating the position while scrolling
-	 * var throttled = _.throttle(updatePosition, 100);
-	 * jQuery(window).on('scroll', throttled);
-	 *
-	 * // execute `renewToken` when the click event is fired, but not more than once every 5 minutes
-	 * jQuery('.interactive').on('click', _.throttle(renewToken, 300000, {
-	 *   'trailing': false
-	 * }));
-	 */
-	function throttle(func, wait, options) {
-	  var leading = true,
-	      trailing = true;
-	
-	  if (!isFunction(func)) {
-	    throw new TypeError;
-	  }
-	  if (options === false) {
-	    leading = false;
-	  } else if (isObject(options)) {
-	    leading = 'leading' in options ? options.leading : leading;
-	    trailing = 'trailing' in options ? options.trailing : trailing;
-	  }
-	  debounceOptions.leading = leading;
-	  debounceOptions.maxWait = wait;
-	  debounceOptions.trailing = trailing;
-	
-	  return debounce(func, wait, debounceOptions);
-	}
-	
-	module.exports = throttle;
-
-
-/***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
-	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <http://lodash.com/license>
-	 */
-	var isFunction = __webpack_require__(265),
-	    isObject = __webpack_require__(266),
-	    now = __webpack_require__(268);
-	
-	/* Native method shortcuts for methods with the same name as other `lodash` methods */
-	var nativeMax = Math.max;
-	
-	/**
-	 * Creates a function that will delay the execution of `func` until after
-	 * `wait` milliseconds have elapsed since the last time it was invoked.
-	 * Provide an options object to indicate that `func` should be invoked on
-	 * the leading and/or trailing edge of the `wait` timeout. Subsequent calls
-	 * to the debounced function will return the result of the last `func` call.
-	 *
-	 * Note: If `leading` and `trailing` options are `true` `func` will be called
-	 * on the trailing edge of the timeout only if the the debounced function is
-	 * invoked more than once during the `wait` timeout.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Functions
-	 * @param {Function} func The function to debounce.
-	 * @param {number} wait The number of milliseconds to delay.
-	 * @param {Object} [options] The options object.
-	 * @param {boolean} [options.leading=false] Specify execution on the leading edge of the timeout.
-	 * @param {number} [options.maxWait] The maximum time `func` is allowed to be delayed before it's called.
-	 * @param {boolean} [options.trailing=true] Specify execution on the trailing edge of the timeout.
-	 * @returns {Function} Returns the new debounced function.
-	 * @example
-	 *
-	 * // avoid costly calculations while the window size is in flux
-	 * var lazyLayout = _.debounce(calculateLayout, 150);
-	 * jQuery(window).on('resize', lazyLayout);
-	 *
-	 * // execute `sendMail` when the click event is fired, debouncing subsequent calls
-	 * jQuery('#postbox').on('click', _.debounce(sendMail, 300, {
-	 *   'leading': true,
-	 *   'trailing': false
-	 * });
-	 *
-	 * // ensure `batchLog` is executed once after 1 second of debounced calls
-	 * var source = new EventSource('/stream');
-	 * source.addEventListener('message', _.debounce(batchLog, 250, {
-	 *   'maxWait': 1000
-	 * }, false);
-	 */
-	function debounce(func, wait, options) {
-	  var args,
-	      maxTimeoutId,
-	      result,
-	      stamp,
-	      thisArg,
-	      timeoutId,
-	      trailingCall,
-	      lastCalled = 0,
-	      maxWait = false,
-	      trailing = true;
-	
-	  if (!isFunction(func)) {
-	    throw new TypeError;
-	  }
-	  wait = nativeMax(0, wait) || 0;
-	  if (options === true) {
-	    var leading = true;
-	    trailing = false;
-	  } else if (isObject(options)) {
-	    leading = options.leading;
-	    maxWait = 'maxWait' in options && (nativeMax(wait, options.maxWait) || 0);
-	    trailing = 'trailing' in options ? options.trailing : trailing;
-	  }
-	  var delayed = function() {
-	    var remaining = wait - (now() - stamp);
-	    if (remaining <= 0) {
-	      if (maxTimeoutId) {
-	        clearTimeout(maxTimeoutId);
-	      }
-	      var isCalled = trailingCall;
-	      maxTimeoutId = timeoutId = trailingCall = undefined;
-	      if (isCalled) {
-	        lastCalled = now();
-	        result = func.apply(thisArg, args);
-	        if (!timeoutId && !maxTimeoutId) {
-	          args = thisArg = null;
-	        }
-	      }
-	    } else {
-	      timeoutId = setTimeout(delayed, remaining);
-	    }
-	  };
-	
-	  var maxDelayed = function() {
-	    if (timeoutId) {
-	      clearTimeout(timeoutId);
-	    }
-	    maxTimeoutId = timeoutId = trailingCall = undefined;
-	    if (trailing || (maxWait !== wait)) {
-	      lastCalled = now();
-	      result = func.apply(thisArg, args);
-	      if (!timeoutId && !maxTimeoutId) {
-	        args = thisArg = null;
-	      }
-	    }
-	  };
-	
-	  return function() {
-	    args = arguments;
-	    stamp = now();
-	    thisArg = this;
-	    trailingCall = trailing && (timeoutId || !leading);
-	
-	    if (maxWait === false) {
-	      var leadingCall = leading && !timeoutId;
-	    } else {
-	      if (!maxTimeoutId && !leading) {
-	        lastCalled = stamp;
-	      }
-	      var remaining = maxWait - (stamp - lastCalled),
-	          isCalled = remaining <= 0;
-	
-	      if (isCalled) {
-	        if (maxTimeoutId) {
-	          maxTimeoutId = clearTimeout(maxTimeoutId);
-	        }
-	        lastCalled = stamp;
-	        result = func.apply(thisArg, args);
-	      }
-	      else if (!maxTimeoutId) {
-	        maxTimeoutId = setTimeout(maxDelayed, remaining);
-	      }
-	    }
-	    if (isCalled && timeoutId) {
-	      timeoutId = clearTimeout(timeoutId);
-	    }
-	    else if (!timeoutId && wait !== maxWait) {
-	      timeoutId = setTimeout(delayed, wait);
-	    }
-	    if (leadingCall) {
-	      isCalled = true;
-	      result = func.apply(thisArg, args);
-	    }
-	    if (isCalled && !timeoutId && !maxTimeoutId) {
-	      args = thisArg = null;
-	    }
-	    return result;
-	  };
-	}
-	
-	module.exports = debounce;
-
-
-/***/ },
-/* 265 */
-/***/ function(module, exports) {
-
-	/**
-	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
-	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <http://lodash.com/license>
-	 */
-	
-	/**
-	 * Checks if `value` is a function.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Objects
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if the `value` is a function, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 */
-	function isFunction(value) {
-	  return typeof value == 'function';
-	}
-	
-	module.exports = isFunction;
-
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
-	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <http://lodash.com/license>
-	 */
-	var objectTypes = __webpack_require__(267);
-	
-	/**
-	 * Checks if `value` is the language type of Object.
-	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Objects
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if the `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(1);
-	 * // => false
-	 */
-	function isObject(value) {
-	  // check if the value is the ECMAScript language type of Object
-	  // http://es5.github.io/#x8
-	  // and avoid a V8 bug
-	  // http://code.google.com/p/v8/issues/detail?id=2291
-	  return !!(value && objectTypes[typeof value]);
-	}
-	
-	module.exports = isObject;
-
-
-/***/ },
-/* 267 */
-/***/ function(module, exports) {
-
-	/**
-	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
-	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <http://lodash.com/license>
-	 */
-	
-	/** Used to determine if values are of the language type Object */
-	var objectTypes = {
-	  'boolean': false,
-	  'function': true,
-	  'object': true,
-	  'number': false,
-	  'string': false,
-	  'undefined': false
-	};
-	
-	module.exports = objectTypes;
-
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
-	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <http://lodash.com/license>
-	 */
-	var isNative = __webpack_require__(269);
-	
-	/**
-	 * Gets the number of milliseconds that have elapsed since the Unix epoch
-	 * (1 January 1970 00:00:00 UTC).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utilities
-	 * @example
-	 *
-	 * var stamp = _.now();
-	 * _.defer(function() { console.log(_.now() - stamp); });
-	 * // => logs the number of milliseconds it took for the deferred function to be called
-	 */
-	var now = isNative(now = Date.now) && now || function() {
-	  return new Date().getTime();
-	};
-	
-	module.exports = now;
-
-
-/***/ },
-/* 269 */
-/***/ function(module, exports) {
-
-	/**
-	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-	 * Build: `lodash modularize modern exports="npm" -o ./npm/`
-	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <http://lodash.com/license>
-	 */
-	
-	/** Used for native method references */
-	var objectProto = Object.prototype;
-	
-	/** Used to resolve the internal [[Class]] of values */
-	var toString = objectProto.toString;
-	
-	/** Used to detect if a method is native */
-	var reNative = RegExp('^' +
-	  String(toString)
-	    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-	    .replace(/toString| for [^\]]+/g, '.*?') + '$'
-	);
-	
-	/**
-	 * Checks if `value` is a native function.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if the `value` is a native function, else `false`.
-	 */
-	function isNative(value) {
-	  return typeof value == 'function' && reNative.test(value);
-	}
-	
-	module.exports = isNative;
-
-
-/***/ },
-/* 270 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global window */
-	
-	var throttle = __webpack_require__(263);
-	
-	module.exports = {
-	  getInitialState: function() {
-	    return !this.onScroll ? { scroll: { x: 0, y: 0 } } : null;
-	  },
-	
-	  componentDidMount: function() {
-	    if (!this.onScroll) {
-	      this.onScroll = function() {
-	        this.setState({ scroll: { x: window.pageXOffset, y: window.pageYOffset } });
-	      }.bind(this);
-	    }
-	
-	    this.onScroll();
-	    this.onScrollThrottled = throttle(this.onScroll, 10);
-	    window.addEventListener("scroll", this.onScrollThrottled);
-	  },
-	
-	  componentWillUnmount: function() {
-	    window.removeEventListener("scroll", this.onScrollThrottled);
-	  }
-	};
-
-
-/***/ },
-/* 271 */
-/***/ function(module, exports) {
-
-	/*global window */
-	
-	module.exports = {
-	  componentDidMount: function() {
-	    if (this.onUnload) {
-	      window.addEventListener("unload", this.onUnload);
-	    }
-	    if (this.onBeforeUnload) {
-	      window.addEventListener("beforeunload", this.onBeforeUnload);
-	    }
-	  },
-	
-	  componentWillUnmount: function() {
-	    if (this.onUnload) {
-	      window.removeEventListener("unload", this.onUnload);
-	    }
-	    if (this.onBeforeUnload) {
-	      window.removeEventListener("beforeunload", this.onBeforeUnload);
-	    }
-	  }
-	};
-
 
 /***/ }
 /******/ ]);
