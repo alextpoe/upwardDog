@@ -16,7 +16,6 @@ var Landing = React.createClass({
       this.context.router.push("/hello")
     } else {
       this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id)
-      debugger
     }
   },
 
