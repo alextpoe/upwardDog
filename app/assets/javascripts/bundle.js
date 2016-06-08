@@ -25260,6 +25260,8 @@
 	  redirectIfNotLoggedIn: function () {
 	    if (!SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/hello");
+	    } else if (this.props.params.length > 0) {
+	      this.context.router.push("/user/projects/" + this.props.params.project_id);
 	    } else {
 	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id);
 	    }
@@ -32273,6 +32275,7 @@
 	
 	  componentWillUnmount: function () {
 	    this.tasksListener.remove();
+	    this.sessionListener.remove();
 	  },
 	
 	  // clickHandler: function (event) {
@@ -33818,6 +33821,7 @@
 	var ProjectsActions = __webpack_require__(273);
 	
 	var ProjectsApiUtil = {
+	
 	  receiveAllProjects: function (projects, complete) {
 	    $.ajax({
 	      type: "GET",
@@ -33936,7 +33940,7 @@
 	
 	window._projects = {};
 	var _currentUser = {};
-	var _currentProject = {};
+	var _mostRecentProject = {};
 	
 	var _resetProjects = function (projects) {
 	  _projects = {};
@@ -33956,7 +33960,9 @@
 	};
 	
 	var _setProject = function (project) {
+	  _mostRecentProject = {};
 	  _projects[project.id] = project;
+	  _mostRecentProject = project;
 	};
 	
 	var _removeProject = function (project) {
@@ -33975,8 +33981,8 @@
 	  return _projects[id];
 	};
 	
-	ProjectsStore.currentProject = function () {
-	  return $.extend({}, _currentProject);
+	ProjectsStore.mostRecentProject = function () {
+	  return $.extend({}, _mostRecentProject);
 	};
 	
 	ProjectsStore.__onDispatch = function (payload) {
@@ -34026,18 +34032,22 @@
 	  },
 	
 	  onChange: function () {
-	
-	    var userProjects = SessionStore.currentUser().projects;
+	    var currentUser = SessionStore.currentUser();
 	    var projects = ProjectsStore.all();
-	    if (userProjects) {
-	      var filteredProjects = projects.filter(function (project) {
-	        userProjects.indexOf(project) >= 0;
+	    if (currentUser && projects) {
+	      var filteredProjects = [];
+	      projects.forEach(function (project) {
+	        project.users.forEach(function (user) {
+	          if (user.id === currentUser.id) {
+	            filteredProjects.push(project);
+	          }
+	        });
 	      });
 	      this.setState({ projects: filteredProjects });
 	    } else {
 	      this.setState({ projects: projects });
 	    }
-	    // this.context.router.push("/user/projects")
+	    this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id);
 	  },
 	
 	  componentDidMount: function () {
@@ -34048,15 +34058,23 @@
 	
 	  componentWillUnmount: function () {
 	    this.projectsListener.remove();
+	    this.sessionListener.remove();
 	  },
 	
 	  newProject: function (event) {
 	    event.preventDefault();
 	    this.setState({ clicked: true });
+	    this.context.router.push("/user/projects/new");
 	  },
 	
 	  render: function () {
-	    var projects = SessionStore.currentUser().projects;
+	    var projects;
+	    if (this.state.projects.length < 1) {
+	      projects = SessionStore.currentUser().projects;
+	    } else {
+	      projects = this.state.projects;
+	    }
+	
 	    var item = React.createElement('div', null);
 	    if (projects && projects.length > 0) {
 	      item = projects.map(function (project) {
@@ -34068,68 +34086,61 @@
 	    var user = user.slice(0, 2);
 	
 	    var children = React.Children.map(this.props.children, function (child, i) {
-	      if (i === 0) {
-	        return React.cloneElement(child, {
-	          user: SessionStore.currentUser()
-	        });
-	      }
+	      return React.cloneElement(child, {
+	        user: SessionStore.currentUser(),
+	        key: i
+	      });
 	    });
 	
-	    if (this.state.clicked) {
-	      return React.createElement(
+	    //   if (this.state.clicked) {
+	    //     return (
+	    //     <div className="whole-page group">
+	    //       <NewProjectsForm>
+	    //       <div className="sidebar">
+	    //         <img src={window.landing_logo_url} />
+	    //         <button onClick={this.newProject} className="signup">+</button>
+	    //         <ul>
+	    //           {
+	    //             item
+	    //           }
+	    //         </ul>
+	    //       </div>
+	    //       <div className="upward-dog-main">
+	    //         { children }
+	    //       </div>
+	    //     </NewProjectsForm>
+	    //     </div>
+	    //   )
+	    // } else {
+	    return React.createElement(
+	      'div',
+	      { className: 'whole-page group' },
+	      React.createElement(
 	        'div',
-	        { className: 'whole-page group' },
+	        { className: 'sidebar' },
+	        React.createElement('img', { src: window.landing_logo_url }),
 	        React.createElement(
-	          NewProjectsForm,
-	          null,
-	          React.createElement(
-	            'div',
-	            { className: 'sidebar' },
-	            React.createElement('img', { src: window.landing_logo_url }),
-	            React.createElement(
-	              'button',
-	              { onClick: this.newProject, className: 'signup' },
-	              '+'
-	            ),
-	            React.createElement(
-	              'ul',
-	              null,
-	              item
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'upward-dog-main' },
-	            children
-	          )
-	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        { className: 'whole-page group' },
-	        React.createElement(
-	          'div',
-	          { className: 'sidebar' },
-	          React.createElement('img', { src: window.landing_logo_url }),
-	          React.createElement(
-	            'button',
-	            { onClick: this.newProject, className: 'signup' },
-	            '+'
-	          ),
-	          React.createElement(
-	            'ul',
-	            null,
-	            item
-	          )
+	          'button',
+	          { onClick: this.newProject, className: 'signup' },
+	          '+'
 	        ),
 	        React.createElement(
+	          'ul',
+	          null,
+	          item
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'upward-dog-main' },
+	        React.createElement(
 	          'div',
-	          { className: 'upward-dog-main' },
+	          null,
 	          children
 	        )
-	      );
-	    }
+	      )
+	    );
+	    // }
 	  }
 	});
 	
@@ -34154,7 +34165,7 @@
 	      { className: 'project-list-item' },
 	      React.createElement(
 	        Link,
-	        { to: "/user/projects/" + this.props.project.project_id },
+	        { to: "/user/projects/" + this.props.project.id },
 	        this.props.project.title
 	      )
 	    );
@@ -34185,6 +34196,7 @@
 	  },
 	
 	  getInitialState: function () {
+	    debugger;
 	    return {
 	      title: "",
 	      description: ""
@@ -34200,15 +34212,15 @@
 	
 	  onChange: function () {
 	    // this.user = SessionStore.currentUser();
-	    // debugger
-	    var project = this.props.user.projects[0];
-	
-	    this.setState({
-	      title: project.title,
-	      description: project.description,
-	      tasks: project.tasks,
-	      id: project.project_id
-	    });
+	    debugger;
+	    // var project = this.props.user.projects[0]
+	    //
+	    // this.setState({
+	    //   title: project.title,
+	    //   description: project.description,
+	    //   tasks: project.tasks,
+	    //   id: project.project_id
+	    // })
 	    // var possibleProject = ProjectsStore.find(this.props.params.project_id)
 	    //
 	    // var project = possibleProject ? possibleProject : null
@@ -34248,7 +34260,7 @@
 	  },
 	
 	  componentWillUnmount: function () {
-	    // this.sessionListener.remove();
+	    this.sessionListener.remove();
 	    this.projectsListener.remove();
 	  },
 	
@@ -34337,6 +34349,7 @@
 	  },
 	
 	  onSubmit: function (event) {
+	    var that = this;
 	    event.preventDefault();
 	
 	    var projectData = {
@@ -34361,24 +34374,23 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement('div', { className: 'login', onClick: this.bgClick }),
 	      React.createElement(
 	        'form',
-	        { className: 'login-form', onSubmit: this.onSubmit },
+	        { onSubmit: this.onSubmit },
 	        React.createElement(
 	          'h1',
-	          { className: 'form-heading' },
+	          null,
 	          'Create A New Project'
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-fields' },
+	          null,
 	          React.createElement(
 	            'label',
 	            null,
 	            React.createElement(
 	              'span',
-	              { className: 'field' },
+	              null,
 	              'Title:'
 	            ),
 	            React.createElement('input', {
@@ -34393,7 +34405,7 @@
 	            null,
 	            React.createElement(
 	              'span',
-	              { className: 'field' },
+	              null,
 	              'Description:'
 	            ),
 	            React.createElement('input', {
@@ -34406,7 +34418,7 @@
 	        React.createElement('br', null),
 	        React.createElement(
 	          'button',
-	          { className: 'log-submit', type: 'submit' },
+	          { type: 'submit' },
 	          'Create Project'
 	        )
 	      )

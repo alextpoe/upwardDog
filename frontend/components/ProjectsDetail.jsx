@@ -14,6 +14,7 @@ var ProjectsDetail = React.createClass({
   },
 
   getInitialState: function () {
+    debugger
       return {
         title: "",
         description: ""
@@ -29,15 +30,15 @@ var ProjectsDetail = React.createClass({
 
   onChange: function () {
     // this.user = SessionStore.currentUser();
-    // debugger
-    var project = this.props.user.projects[0]
-
-    this.setState({
-      title: project.title,
-      description: project.description,
-      tasks: project.tasks,
-      id: project.project_id
-    })
+    debugger
+    // var project = this.props.user.projects[0]
+    //
+    // this.setState({
+    //   title: project.title,
+    //   description: project.description,
+    //   tasks: project.tasks,
+    //   id: project.project_id
+    // })
     // var possibleProject = ProjectsStore.find(this.props.params.project_id)
     //
     // var project = possibleProject ? possibleProject : null
@@ -54,6 +55,7 @@ var ProjectsDetail = React.createClass({
     // }
     // debugger
   },
+
 
   componentDidMount: function () {
     this.projectsListener = ProjectsStore.addListener(this.onChange)
@@ -77,7 +79,7 @@ var ProjectsDetail = React.createClass({
   },
 
   componentWillUnmount: function () {
-    // this.sessionListener.remove();
+    this.sessionListener.remove();
     this.projectsListener.remove();
   },
 

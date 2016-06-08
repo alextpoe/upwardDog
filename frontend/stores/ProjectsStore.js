@@ -7,7 +7,7 @@ var ProjectsStore = new Store(AppDispatcher);
 
 window._projects = {};
 var _currentUser = {};
-var _currentProject = {};
+var _mostRecentProject = {};
 
 var _resetProjects = function (projects) {
   _projects = {};
@@ -27,7 +27,9 @@ var _resetProjects = function (projects) {
 };
 
 var _setProject = function (project) {
+  _mostRecentProject = {};
   _projects[project.id] = project;
+  _mostRecentProject = project;
 };
 
 var _removeProject = function (project) {
@@ -46,8 +48,8 @@ ProjectsStore.find = function (id) {
   return _projects[id];
 };
 
-ProjectsStore.currentProject = function () {
-  return $.extend({}, _currentProject);
+ProjectsStore.mostRecentProject = function () {
+  return $.extend({}, _mostRecentProject);
 };
 
 ProjectsStore.__onDispatch = function (payload) {

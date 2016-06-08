@@ -16,6 +16,7 @@ var NewProjectsForm = React.createClass({
   },
 
   onSubmit: function(event) {
+    var that = this;
     event.preventDefault();
 
     var projectData = {
@@ -39,14 +40,11 @@ var NewProjectsForm = React.createClass({
   render: function () {
     return (
       <div>
-        <div className="login" onClick={this.bgClick}>
-        </div>
-
-        <form className="login-form" onSubmit={this.onSubmit}>
-          <h1 className="form-heading">Create A New Project</h1>
-          <div className="form-fields">
+        <form onSubmit={this.onSubmit}>
+          <h1 >Create A New Project</h1>
+          <div >
             <label>
-              <span className="field">Title:</span>
+              <span>Title:</span>
               <input
                 type="text"
                 className="username"
@@ -57,7 +55,7 @@ var NewProjectsForm = React.createClass({
           <br />
 
             <label >
-              <span className="field">
+              <span >
                 Description:
               </span>
 
@@ -70,7 +68,7 @@ var NewProjectsForm = React.createClass({
           </div>
         <br />
 
-          <button className="log-submit" type="submit">Create Project</button>
+          <button type="submit">Create Project</button>
         </form>
 
       </div>

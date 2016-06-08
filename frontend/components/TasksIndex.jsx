@@ -51,6 +51,7 @@ var TasksIndex = React.createClass({
 
   componentWillUnmount: function () {
     this.tasksListener.remove();
+    this.sessionListener.remove();
   },
 
   // clickHandler: function (event) {

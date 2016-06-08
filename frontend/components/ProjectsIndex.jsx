@@ -21,18 +21,22 @@ var ProjectsIndex = React.createClass({
   },
 
   onChange: function () {
-
-    var userProjects = SessionStore.currentUser().projects
+    var currentUser = SessionStore.currentUser();
     var projects = ProjectsStore.all()
-    if (userProjects) {
-      var filteredProjects = projects.filter( function(project) {
-        userProjects.indexOf(project) >= 0
+    if (currentUser && projects) {
+      var filteredProjects = [];
+      projects.forEach( function(project) {
+        project.users.forEach(function (user){
+          if (user.id === currentUser.id){
+            filteredProjects.push(project)
+          }
+        })
       })
       this.setState({ projects: filteredProjects })
     } else {
       this.setState({ projects: projects })
     }
-    // this.context.router.push("/user/projects")
+    this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id)
   },
 
 
@@ -45,17 +49,25 @@ var ProjectsIndex = React.createClass({
 
   componentWillUnmount: function () {
     this.projectsListener.remove();
+    this.sessionListener.remove();
   },
 
   newProject: function (event) {
     event.preventDefault();
     this.setState({ clicked: true })
+    this.context.router.push("/user/projects/new")
   },
 
 
 
   render: function () {
-    var projects = SessionStore.currentUser().projects;
+    var projects;
+    if (this.state.projects.length < 1){
+      projects = SessionStore.currentUser().projects;
+    } else {
+      projects = this.state.projects;
+    }
+
     var item = <div></div>;
     if (projects && projects.length > 0) {
       item = (
@@ -69,31 +81,32 @@ var ProjectsIndex = React.createClass({
     var user = user.slice(0, 2);
 
     var children = React.Children.map(this.props.children, function (child, i) {
-      if ( i === 0 ){return React.cloneElement(child, {
-        user: SessionStore.currentUser()
-      })}
+      return React.cloneElement(child, {
+        user: SessionStore.currentUser(),
+        key: i
+      })
     });
 
-    if (this.state.clicked) {
-      return (
-      <div className="whole-page group">
-        <NewProjectsForm>
-        <div className="sidebar">
-          <img src={window.landing_logo_url} />
-          <button onClick={this.newProject} className="signup">+</button>
-          <ul>
-            {
-              item
-            }
-          </ul>
-        </div>
-        <div className="upward-dog-main">
-          { children }
-        </div>
-      </NewProjectsForm>
-      </div>
-    )
-  } else {
+  //   if (this.state.clicked) {
+  //     return (
+  //     <div className="whole-page group">
+  //       <NewProjectsForm>
+  //       <div className="sidebar">
+  //         <img src={window.landing_logo_url} />
+  //         <button onClick={this.newProject} className="signup">+</button>
+  //         <ul>
+  //           {
+  //             item
+  //           }
+  //         </ul>
+  //       </div>
+  //       <div className="upward-dog-main">
+  //         { children }
+  //       </div>
+  //     </NewProjectsForm>
+  //     </div>
+  //   )
+  // } else {
       return (
         <div className="whole-page group">
           <div className="sidebar">
@@ -106,11 +119,11 @@ var ProjectsIndex = React.createClass({
             </ul>
           </div>
           <div className="upward-dog-main">
-            { children }
+            <div>{ children }</div>
           </div>
         </div>
       )
-    }
+    // }
   }
 });
 
