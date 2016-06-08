@@ -64,8 +64,7 @@ var LoginForm = React.createClass({
       SessionApiUtil.login(loginData);
     } else {
       UserApiUtil.signup(
-        loginData,
-        ProjectsApiUtil.createProject({ title: "My Tasks" })
+        loginData
       );
     }
   },

@@ -32846,7 +32846,6 @@
 	  },
 	
 	  onBeforeUnload: function () {
-	    debugger;
 	    var task = this.state;
 	    ClientActions.updateTask({
 	      task: task
@@ -33649,7 +33648,7 @@
 	    if (this.props.location.pathname === "/hello/login" || this.props.location.pathname === "/hello/login/guest") {
 	      SessionApiUtil.login(loginData);
 	    } else {
-	      UserApiUtil.signup(loginData, ProjectsApiUtil.createProject({ title: "My Tasks" }));
+	      UserApiUtil.signup(loginData);
 	    }
 	  },
 	

@@ -34,7 +34,6 @@ var TasksEdit = React.createClass({
   },
 
   onBeforeUnload: function () {
-    debugger
     var task = this.state;
     ClientActions.updateTask({
       task: task
