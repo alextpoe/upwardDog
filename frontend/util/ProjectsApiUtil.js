@@ -1,7 +1,7 @@
 var ProjectsActions = require('../actions/ProjectsActions');
 
 var ProjectsApiUtil = {
-  receiveAllProjects: function (projects) {
+  receiveAllProjects: function (projects, complete) {
     $.ajax({
       type: "GET",
       url: "api/user/projects",
@@ -9,7 +9,8 @@ var ProjectsApiUtil = {
       data: {projects: projects},
       success: function (data) {
         ProjectsActions.receiveAllProjects(data);
-      }
+      },
+      complete: complete
     });
   },
   createProject: function (project) {
@@ -29,7 +30,8 @@ var ProjectsApiUtil = {
       type: "GET",
       url: "api/user/projects/" + id,
       dataType: "json",
-      success: function () {
+      success: function (project) {
+        ProjectsActions.receiveProject(project);
         console.log("success");
       }
     });

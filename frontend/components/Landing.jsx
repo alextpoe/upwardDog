@@ -2,6 +2,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var SessionStore = require('../stores/SessionStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
+var ProjectsApiUtil = require('../util/ProjectsApiUtil');
 var TasksIndex = require('./TasksIndex');
 
 var Landing = React.createClass({
@@ -14,7 +15,7 @@ var Landing = React.createClass({
     if (!SessionStore.isUserLoggedIn()) {
       this.context.router.push("/hello")
     } else {
-      this.context.router.push("/user/tasks")
+      this.context.router.push("/user/projects/" + 1)
     }
   },
 

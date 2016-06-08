@@ -11,14 +11,14 @@ var ProjectsActions = {
     });
   },
 
-  receiveTask: function (project) {
+  receiveProject: function (project) {
     AppDispatcher.dispatch({
       actionType: ProjectsConstants.PROJECT_RECEIVED,
       project: project
     });
   },
 
-  removeTask: function (project) {
+  removeProject: function (project) {
     AppDispatcher.dispatch({
       actionType: ProjectsConstants.PROJECT_REMOVED,
       project: project

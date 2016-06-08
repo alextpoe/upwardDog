@@ -34,4 +34,14 @@ class Api::ProjectsController < ApplicationController
       render :show
     end
   end
+
+  private
+
+  def project_params
+    params.require(:project).permit(
+      :title,
+      :description,
+      :manager_id
+      )
+  end
 end

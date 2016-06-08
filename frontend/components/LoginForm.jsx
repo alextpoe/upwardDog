@@ -4,6 +4,7 @@ var SessionStore = require('../stores/SessionStore');
 var ErrorStore = require('../stores/ErrorStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
 var UserApiUtil = require('../util/UserApiUtil');
+var ProjectsApiUtil = require('../util/ProjectsApiUtil');
 
 var LoginForm = React.createClass({
   getInitialState: function () {
@@ -31,7 +32,7 @@ var LoginForm = React.createClass({
   redirectIfLoggedIn: function () {
     // debugger
     if (SessionStore.isUserLoggedIn()) {
-      this.context.router.push("/user/tasks");
+      this.context.router.push("/user/projects/" + 1);
     }
   },
 
@@ -62,7 +63,10 @@ var LoginForm = React.createClass({
         this.props.location.pathname ==="/hello/login/guest") {
       SessionApiUtil.login(loginData);
     } else {
-      UserApiUtil.signup(loginData);
+      UserApiUtil.signup(
+        loginData,
+        ProjectsApiUtil.createProject({ title: "My Tasks" })
+      );
     }
   },
 

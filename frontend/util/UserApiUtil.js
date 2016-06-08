@@ -2,7 +2,7 @@ var SessionActions = require('../actions/SessionActions');
 var ErrorActions = require('../actions/ErrorActions');
 
 var UserApiUtil = {
-  signup: function (formData) {
+  signup: function (formData, complete) {
     $.ajax({
       type: "POST",
       url: "api/user",
@@ -14,7 +14,8 @@ var UserApiUtil = {
       error: function (xhr){
         var errors = xhr.responseJSON;
         ErrorActions.setErrors("signup", errors);
-      }
+      },
+      complete: complete
     });
   }
 };

@@ -6,6 +6,7 @@ var TasksStore = require('../stores/TasksStore');
 
 var TasksIndexItem = React.createClass({
   clickHandler: function (event) {
+
     event.preventDefault();
     ClientActions.deleteTask(this.props.task.id);
   },
@@ -18,6 +19,7 @@ var TasksIndexItem = React.createClass({
       {
         completed: true
       },
+      this.props.task.project_id,
       task.id
     )
   },
@@ -28,7 +30,7 @@ var TasksIndexItem = React.createClass({
         <div className="checkmark" onClick={this.checkOff}>
           ✓
         </div>
-        <Link to={"/user/tasks/" + this.props.task.id + "/edit"}>{this.props.task.title}</Link>
+        <Link to={"/user/projects/" + this.props.task.project_id + "/tasks/" + this.props.task.id + "/edit"}>{this.props.task.title}</Link>
         <button className="delete" type="submit" onClick={this.clickHandler}>Delete</button>
       </li>
     )

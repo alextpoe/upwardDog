@@ -7,20 +7,21 @@ var ProjectsStore = new Store(AppDispatcher);
 
 window._projects = {};
 var _currentUser = {};
+var _currentProject = {};
 
 var _resetProjects = function (projects) {
   _projects = {};
-  _currentUser = {};
-  var userProjects = [];
-
-
-  _currentUser = SessionStore.currentUser();
+  // _currentUser = {};
+  // var userProjects = [];
+  //
+  //
+  // _currentUser = SessionStore.currentUser();
+  // projects.forEach(function (project) {
+  //   if (project.users.indexOf(_currentUser) >= 0){
+  //     userProjects.push(project);
+  //   }
+  // });
   projects.forEach(function (project) {
-    if (project.users.indexOf(_currentUser.id) >= 0){
-      userProjects.push(project);
-    }
-  });
-  userProjects.forEach(function (project) {
     _projects[project.id] = project;
   });
 };
@@ -43,6 +44,10 @@ ProjectsStore.all = function () {
 
 ProjectsStore.find = function (id) {
   return _projects[id];
+};
+
+ProjectsStore.currentProject = function () {
+  return $.extend({}, _currentProject);
 };
 
 ProjectsStore.__onDispatch = function (payload) {

@@ -59,6 +59,9 @@
 	var TasksIndex = __webpack_require__(247);
 	var TasksCreate = __webpack_require__(255);
 	var TasksEdit = __webpack_require__(256);
+	var ProjectsIndex = __webpack_require__(276);
+	var ProjectsDetail = __webpack_require__(278);
+	var NewProjectsForm = __webpack_require__(279);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
@@ -74,14 +77,22 @@
 	    React.createElement(Route, { path: '/hello/signup', component: LoginForm }),
 	    React.createElement(Route, { path: '/hello/login/guest', component: LoginForm })
 	  ),
-	  React.createElement(IndexRoute, { component: TasksIndex }),
+	  React.createElement(IndexRoute, { component: ProjectsIndex }),
 	  React.createElement(
 	    Route,
-	    {
-	      path: '/user/tasks',
-	      component: TasksIndex },
-	    React.createElement(Route, { path: '/user/tasks/new', component: TasksCreate }),
-	    React.createElement(Route, { path: '/user/tasks/:id/edit', component: TasksEdit })
+	    { path: '/user/projects', component: ProjectsIndex },
+	    React.createElement(Route, { path: '/user/projects/new', component: NewProjectsForm }),
+	    React.createElement(
+	      Route,
+	      { path: '/user/projects/:project_id', component: ProjectsDetail },
+	      React.createElement(IndexRoute, { component: TasksIndex }),
+	      React.createElement(
+	        Route,
+	        { path: '/user/projects/:project_id/tasks', component: TasksIndex },
+	        React.createElement(Route, { path: '/user/projects/:project_id/tasks/new', component: TasksCreate }),
+	        React.createElement(Route, { path: '/user/projects/:project_id/tasks/:id/edit', component: TasksEdit })
+	      )
+	    )
 	  )
 	);
 	
@@ -25235,6 +25246,7 @@
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
+	var ProjectsApiUtil = __webpack_require__(272);
 	var TasksIndex = __webpack_require__(247);
 	
 	var Landing = React.createClass({
@@ -25249,7 +25261,7 @@
 	    if (!SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/hello");
 	    } else {
-	      this.context.router.push("/user/tasks");
+	      this.context.router.push("/user/projects/" + 1);
 	    }
 	  },
 	
@@ -32211,10 +32223,12 @@
 	var Link = __webpack_require__(159).Link;
 	var TasksIndexItem = __webpack_require__(248);
 	var TasksStore = __webpack_require__(253);
+	var ProjectsStore = __webpack_require__(275);
 	var ClientActions = __webpack_require__(249);
 	var TasksForm = __webpack_require__(254);
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
+	var ProjectsApiUtil = __webpack_require__(272);
 	var TasksCreate = __webpack_require__(255);
 	var TasksEdit = __webpack_require__(256);
 	
@@ -32227,24 +32241,37 @@
 	  },
 	
 	  getInitialState: function () {
-	    return { tasks: TasksStore.all(),
+	    return { tasks: "",
 	      edited: false };
 	  },
 	
 	  onChange: function () {
-	    this.setState({ tasks: TasksStore.all() });
-	    this.context.router.push("/user/tasks");
+	    ProjectsApiUtil.getProject(this.props.params.project_id);
+	
+	    var possibleProject = ProjectsStore.find(this.props.project.id);
+	    var project = possibleProject ? possibleProject : false;
+	    if (project) {
+	      this.setState({
+	        tasks: project.tasks,
+	        edited: false
+	      });
+	    }
+	
+	    // this.context.router.push("/user/projects/" + this.props.project + "tasks")
 	  },
 	
 	  componentDidMount: function () {
 	    this.tasksListener = TasksStore.addListener(this.onChange);
 	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
+	    ClientActions.receiveAllTasks(this.props.params.project_id);
 	    SessionApiUtil.fetchCurrentUser();
-	    ClientActions.receiveAllTasks();
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ tasks: newProps.project.tasks });
 	  },
 	
 	  componentWillUnmount: function () {
-	    this.sessionListener.remove();
 	    this.tasksListener.remove();
 	  },
 	
@@ -32262,16 +32289,7 @@
 	
 	  newTask: function (event) {
 	    event.preventDefault();
-	    this.context.router.push("/user/tasks/new");
-	  },
-	
-	  logout: function () {
-	    if (SessionStore.isUserLoggedIn()) {
-	      return React.createElement('input', {
-	        type: 'submit',
-	        value: 'Log Out',
-	        onClick: SessionApiUtil.logout });
-	    }
+	    this.context.router.push("/user/projects/" + this.props.params.project_id + "tasks/new");
 	  },
 	
 	  clicked: function () {
@@ -32283,10 +32301,23 @@
 	  },
 	
 	  render: function () {
-	    var tasks = this.state.tasks;
-	    var incompleteTasks = tasks.filter(function (task) {
-	      return !task.completed;
-	    });
+	    var tasks = this.state.tasks ? this.state.tasks : [];
+	    var taskItem = React.createElement('div', null);
+	
+	    // var children = React.Children.map(this.props.children, function (child) {
+	    //   return React.cloneElement(child, {
+	    //     user: SessionStore.currentUser()
+	    //   })
+	    // });
+	
+	    if (tasks) {
+	      taskItem = tasks.map(function (task) {
+	        if (!task.completed) {
+	          return React.createElement(TasksIndexItem, { task: task, key: task.id });
+	        }
+	      });
+	    }
+	
 	    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
 	    var user = user.slice(0, 2);
 	    // debugger
@@ -32295,112 +32326,52 @@
 	
 	      return React.createElement(
 	        'div',
-	        { className: 'whole-page group' },
+	        { className: 'task-container group' },
 	        React.createElement(
 	          'div',
-	          { className: 'sidebar' },
-	          React.createElement('img', { src: window.landing_logo_url })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'upward-dog-main' },
+	          { className: 'task-main-clicked' },
 	          React.createElement(
-	            'nav',
-	            { className: 'task-header' },
-	            this.logout(),
-	            React.createElement(
-	              'h1',
-	              null,
-	              React.createElement(
-	                'span',
-	                { className: 'user-logo' },
-	                user
-	              ),
-	              'Tasks'
-	            )
+	            'ul',
+	            { className: 'task-list', onClick: this.clicked },
+	            taskItem
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'task-container group' },
-	            React.createElement(
-	              'div',
-	              { className: 'task-main-clicked' },
-	              React.createElement(
-	                'ul',
-	                { className: 'task-list', onClick: this.clicked },
-	                incompleteTasks.map(function (task) {
-	                  return React.createElement(TasksIndexItem, { task: task, key: task.id });
-	                })
-	              ),
-	              React.createElement(
-	                'div',
-	                { onClick: this.unClicked },
-	                React.createElement(TasksForm, null)
-	              )
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'task-form' },
-	              React.createElement(
-	                'nav',
-	                { className: 'edit-header' },
-	                React.createElement(
-	                  'span',
-	                  { className: 'user-logo' },
-	                  user
-	                )
-	              ),
-	              this.props.children
-	            )
+	            { onClick: this.unClicked },
+	            React.createElement(TasksForm, { project: this.props.project })
 	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'task-form' },
+	          React.createElement(
+	            'nav',
+	            { className: 'edit-header' },
+	            React.createElement(
+	              'span',
+	              { className: 'user-logo' },
+	              user
+	            )
+	          ),
+	          this.props.children
 	        )
 	      );
 	    } else {
 	      return React.createElement(
 	        'div',
-	        { className: 'whole-page' },
+	        { className: 'task-container group' },
 	        React.createElement(
 	          'div',
-	          { className: 'sidebar' },
-	          React.createElement('img', { src: window.landing_logo_url })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'upward-dog-main' },
+	          { className: 'task-main-unclicked' },
 	          React.createElement(
-	            'nav',
-	            { className: 'task-header' },
-	            this.logout(),
-	            React.createElement(
-	              'h1',
-	              null,
-	              React.createElement(
-	                'span',
-	                { className: 'user-logo' },
-	                user
-	              ),
-	              'Tasks'
-	            )
+	            'ul',
+	            { className: 'task-list', onClick: this.clicked },
+	            taskItem
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'task-container group' },
-	            React.createElement(
-	              'div',
-	              { className: 'task-main-unclicked' },
-	              React.createElement(
-	                'ul',
-	                { className: 'task-list', onClick: this.clicked },
-	                incompleteTasks.map(function (task) {
-	                  return React.createElement(TasksIndexItem, { task: task, key: task.id });
-	                })
-	              ),
-	              React.createElement(
-	                'div',
-	                null,
-	                React.createElement(TasksForm, null)
-	              )
-	            )
+	            null,
+	            React.createElement(TasksForm, { project: this.props.project })
 	          )
 	        )
 	      );
@@ -32423,6 +32394,7 @@
 	  displayName: 'TasksIndexItem',
 	
 	  clickHandler: function (event) {
+	
 	    event.preventDefault();
 	    ClientActions.deleteTask(this.props.task.id);
 	  },
@@ -32433,7 +32405,7 @@
 	
 	    ClientActions.updateTask({
 	      completed: true
-	    }, task.id);
+	    }, this.props.task.project_id, task.id);
 	  },
 	
 	  render: function () {
@@ -32447,7 +32419,7 @@
 	      ),
 	      React.createElement(
 	        Link,
-	        { to: "/user/tasks/" + this.props.task.id + "/edit" },
+	        { to: "/user/projects/" + this.props.task.project_id + "/tasks/" + this.props.task.id + "/edit" },
 	        this.props.task.title
 	      ),
 	      React.createElement(
@@ -32467,6 +32439,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var TasksApiUtil = __webpack_require__(250);
+	var ProjectsApiUtil = __webpack_require__(272);
 	
 	var ClientActions = {
 	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
@@ -32475,7 +32448,17 @@
 	
 	  updateTask: TasksApiUtil.editTask,
 	
-	  deleteTask: TasksApiUtil.deleteTask
+	  deleteTask: TasksApiUtil.deleteTask,
+	
+	  fetchAllProjects: ProjectsApiUtil.receiveAllProjects,
+	
+	  createProject: ProjectsApiUtil.createProject,
+	
+	  updateProject: ProjectsApiUtil.editProject,
+	
+	  deleteProject: ProjectsApiUtil.deleteProject,
+	
+	  fetchProject: ProjectsApiUtil.getProject
 	};
 	
 	module.exports = ClientActions;
@@ -32487,33 +32470,33 @@
 	var TasksActions = __webpack_require__(251);
 	
 	var TasksApiUtil = {
-	  receiveAllTasks: function (tasks) {
+	  receiveAllTasks: function (project_id) {
 	    $.ajax({
 	      type: "GET",
-	      url: "api/user/tasks",
+	      url: "api/user/projects/" + project_id + "/tasks",
 	      dataType: "json",
-	      data: { tasks: tasks },
 	      success: function (data) {
 	        TasksActions.receiveAllTasks(data);
 	      }
 	    });
 	  },
-	  createTask: function (task) {
+	  createTask: function (task, project_id, complete) {
 	    $.ajax({
 	      type: "POST",
-	      url: "api/user/tasks",
+	      url: "api/user/projects/" + project_id + "/tasks",
 	      dataType: "json",
 	      data: { task: task },
 	      success: function (task) {
 	        TasksActions.receiveTask(task);
-	      }
+	      },
+	      complete: complete
 	    });
 	  },
 	
-	  getTask: function (id) {
+	  getTask: function (project_id, id) {
 	    $.ajax({
 	      type: "GET",
-	      url: "api/user/tasks/" + id,
+	      url: "api/user/projects/" + project_id + "/tasks/" + id,
 	      dataType: "json",
 	      success: function () {
 	        console.log("success");
@@ -32521,10 +32504,10 @@
 	    });
 	  },
 	
-	  editTask: function (task, id) {
+	  editTask: function (task, project_id, id) {
 	    $.ajax({
 	      type: "PATCH",
-	      url: "api/user/tasks/" + id,
+	      url: "api/user/projects/" + project_id + "/tasks/" + id,
 	      dataType: "json",
 	      data: { task: task },
 	      success: function (task) {
@@ -32533,10 +32516,10 @@
 	    });
 	  },
 	
-	  deleteTask: function (id) {
+	  deleteTask: function (id, project_id) {
 	    $.ajax({
 	      type: "DELETE",
-	      url: "api/user/tasks/" + id,
+	      url: "api/user/projects/" + project_id + "/tasks/" + id,
 	      success: function (task) {
 	        TasksActions.removeTask(task);
 	      }
@@ -32598,24 +32581,17 @@
 	var AppDispatcher = __webpack_require__(240);
 	var TasksConstants = __webpack_require__(252);
 	var SessionStore = __webpack_require__(221);
+	var ProjectsStore = __webpack_require__(275);
 	
 	var TasksStore = new Store(AppDispatcher);
 	
 	window._tasks = {};
-	var _currentUser = {};
 	
 	var _resetTasks = function (tasks) {
-	  _tasks = {};
-	  _currentUser = {};
-	  var userTasks = [];
 	
-	  _currentUser = SessionStore.currentUser();
+	  _tasks = {};
+	
 	  tasks.forEach(function (task) {
-	    if (task.assignee_id === _currentUser.id) {
-	      userTasks.push(task);
-	    }
-	  });
-	  userTasks.forEach(function (task) {
 	    _tasks[task.id] = task;
 	  });
 	};
@@ -32669,6 +32645,7 @@
 	var TasksStore = __webpack_require__(253);
 	var SessionStore = __webpack_require__(221);
 	var ClientActions = __webpack_require__(249);
+	var ProjectsApiUtil = __webpack_require__(272);
 	
 	var TasksForm = React.createClass({
 	  displayName: 'TasksForm',
@@ -32688,6 +32665,10 @@
 	    };
 	  },
 	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ project_id: newProps.project.id });
+	  },
+	
 	  keyHandler: function (event) {
 	    this.setState({ title: event.target.value });
 	  },
@@ -32702,12 +32683,13 @@
 	  blurHandler: function (event) {
 	    event.preventDefault();
 	    if (event.target.value.length > 1) {
+	
 	      ClientActions.createTask({
 	        title: this.state.title,
 	        description: "",
 	        manager_id: "",
 	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
+	        project_id: this.state.project_id,
 	        completed: false
 	      });
 	      this.setState({ title: "" });
@@ -32721,7 +32703,7 @@
 	        description: "",
 	        manager_id: "",
 	        assignee_id: SessionStore.currentUser().id,
-	        project_id: "",
+	        project_id: this.state.project_id,
 	        completed: false
 	      });
 	      this.setState({ title: "" });
@@ -32839,7 +32821,6 @@
 	  displayName: 'TasksEdit',
 	
 	  mixins: [OnUnload],
-	
 	  getInitialState: function () {
 	    var possibleTask = TasksStore.find(this.props.params.id);
 	    var task = possibleTask ? possibleTask : false;
@@ -32911,15 +32892,14 @@
 	    event.preventDefault();
 	
 	    var task = this.state;
-	
 	    ClientActions.updateTask({
 	      completed: true
-	    }, this.props.params.id);
+	    }, this.props.params.project_id, this.props.params.id);
 	  },
 	
 	  onSubmit: function (event) {
 	    event.preventDefault();
-	    ClientActions.updateTask(this.state, this.props.params.id);
+	    ClientActions.updateTask(this.state, this.props.params.project_id, this.props.params.id);
 	  },
 	
 	  render: function () {
@@ -32940,7 +32920,8 @@
 	      React.createElement(
 	        'li',
 	        null,
-	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
+	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange }),
+	        'Project ID:'
 	      ),
 	      React.createElement(
 	        'li',
@@ -33599,6 +33580,7 @@
 	var ErrorStore = __webpack_require__(270);
 	var SessionApiUtil = __webpack_require__(244);
 	var UserApiUtil = __webpack_require__(271);
+	var ProjectsApiUtil = __webpack_require__(272);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -33627,7 +33609,7 @@
 	  redirectIfLoggedIn: function () {
 	    // debugger
 	    if (SessionStore.isUserLoggedIn()) {
-	      this.context.router.push("/user/tasks");
+	      this.context.router.push("/user/projects/" + 1);
 	    }
 	  },
 	
@@ -33667,7 +33649,7 @@
 	    if (this.props.location.pathname === "/hello/login" || this.props.location.pathname === "/hello/login/guest") {
 	      SessionApiUtil.login(loginData);
 	    } else {
-	      UserApiUtil.signup(loginData);
+	      UserApiUtil.signup(loginData, ProjectsApiUtil.createProject({ title: "My Tasks" }));
 	    }
 	  },
 	
@@ -33810,7 +33792,7 @@
 	var ErrorActions = __webpack_require__(246);
 	
 	var UserApiUtil = {
-	  signup: function (formData) {
+	  signup: function (formData, complete) {
 	    $.ajax({
 	      type: "POST",
 	      url: "api/user",
@@ -33822,12 +33804,619 @@
 	      error: function (xhr) {
 	        var errors = xhr.responseJSON;
 	        ErrorActions.setErrors("signup", errors);
-	      }
+	      },
+	      complete: complete
 	    });
 	  }
 	};
 	
 	module.exports = UserApiUtil;
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ProjectsActions = __webpack_require__(273);
+	
+	var ProjectsApiUtil = {
+	  receiveAllProjects: function (projects, complete) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/projects",
+	      dataType: "json",
+	      data: { projects: projects },
+	      success: function (data) {
+	        ProjectsActions.receiveAllProjects(data);
+	      },
+	      complete: complete
+	    });
+	  },
+	  createProject: function (project) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/user/projects",
+	      dataType: "json",
+	      data: { project: project },
+	      success: function (project) {
+	        ProjectsActions.receiveProject(project);
+	      }
+	    });
+	  },
+	
+	  getProject: function (id) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/projects/" + id,
+	      dataType: "json",
+	      success: function (project) {
+	        ProjectsActions.receiveProject(project);
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  editProject: function (project, id) {
+	    $.ajax({
+	      type: "PATCH",
+	      url: "api/user/projects/" + id,
+	      dataType: "json",
+	      data: { project: project },
+	      success: function (project) {
+	        ProjectsActions.receiveProject(project);
+	      }
+	    });
+	  },
+	
+	  deleteProject: function (id) {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "api/user/projects/" + id,
+	      success: function (project) {
+	        ProjectsActions.removeProject(project);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = ProjectsApiUtil;
+
+/***/ },
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var ProjectsConstants = __webpack_require__(274);
+	
+	var ProjectsActions = {
+	  receiveAllProjects: function (projects) {
+	    AppDispatcher.dispatch({
+	      actionType: ProjectsConstants.PROJECTS_RECEIVED,
+	      projects: projects
+	    });
+	  },
+	
+	  receiveProject: function (project) {
+	    AppDispatcher.dispatch({
+	      actionType: ProjectsConstants.PROJECT_RECEIVED,
+	      project: project
+	    });
+	  },
+	
+	  removeProject: function (project) {
+	    AppDispatcher.dispatch({
+	      actionType: ProjectsConstants.PROJECT_REMOVED,
+	      project: project
+	    });
+	  }
+	};
+	
+	module.exports = ProjectsActions;
+
+/***/ },
+/* 274 */
+/***/ function(module, exports) {
+
+	var ProjectsConstants = {
+	  PROJECTS_RECEIVED: "PROJECTS_RECEIVED",
+	  PROJECT_RECEIVED: "PROJECT_RECEIVED",
+	  PROJECT_REMOVED: "PROJECT_REMOVED"
+	};
+	
+	module.exports = ProjectsConstants;
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(222).Store;
+	var AppDispatcher = __webpack_require__(240);
+	var ProjectsConstants = __webpack_require__(274);
+	var SessionStore = __webpack_require__(221);
+	
+	var ProjectsStore = new Store(AppDispatcher);
+	
+	window._projects = {};
+	var _currentUser = {};
+	var _currentProject = {};
+	
+	var _resetProjects = function (projects) {
+	  _projects = {};
+	  // _currentUser = {};
+	  // var userProjects = [];
+	  //
+	  //
+	  // _currentUser = SessionStore.currentUser();
+	  // projects.forEach(function (project) {
+	  //   if (project.users.indexOf(_currentUser) >= 0){
+	  //     userProjects.push(project);
+	  //   }
+	  // });
+	  projects.forEach(function (project) {
+	    _projects[project.id] = project;
+	  });
+	};
+	
+	var _setProject = function (project) {
+	  _projects[project.id] = project;
+	};
+	
+	var _removeProject = function (project) {
+	  delete _projects[project.id];
+	};
+	
+	ProjectsStore.all = function () {
+	  var projects = Object.keys(_projects).map(function (id) {
+	    return _projects[id];
+	  });
+	
+	  return projects;
+	};
+	
+	ProjectsStore.find = function (id) {
+	  return _projects[id];
+	};
+	
+	ProjectsStore.currentProject = function () {
+	  return $.extend({}, _currentProject);
+	};
+	
+	ProjectsStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ProjectsConstants.PROJECTS_RECEIVED:
+	      _resetProjects(payload.projects);
+	      ProjectsStore.__emitChange();
+	      break;
+	    case ProjectsConstants.PROJECT_RECEIVED:
+	      _setProject(payload.project);
+	      ProjectsStore.__emitChange();
+	      break;
+	    case ProjectsConstants.PROJECT_REMOVED:
+	      _removeProject(payload.project);
+	      ProjectsStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ProjectsStore;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var ClientActions = __webpack_require__(249);
+	var SessionStore = __webpack_require__(221);
+	var SessionApiUtil = __webpack_require__(244);
+	var ProjectsIndexItem = __webpack_require__(277);
+	var ProjectsStore = __webpack_require__(275);
+	var TasksIndex = __webpack_require__(247);
+	var TasksStore = __webpack_require__(253);
+	var NewProjectsForm = __webpack_require__(279);
+	
+	var ProjectsIndex = React.createClass({
+	  displayName: 'ProjectsIndex',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return { projects: ProjectsStore.all(), clicked: false };
+	  },
+	
+	  onChange: function () {
+	    SessionApiUtil.fetchCurrentUser();
+	
+	    var userProjects = SessionStore.currentUser().projects;
+	    var projects = ProjectsStore.all();
+	    if (userProjects) {
+	      var filteredProjects = projects.filter(function (project) {
+	        userProjects.indexOf(project) >= 0;
+	      });
+	      this.setState({ projects: filteredProjects });
+	    } else {
+	      this.setState({ projects: projects });
+	    }
+	    // this.context.router.push("/user/projects")
+	  },
+	
+	  componentDidMount: function () {
+	    this.projectsListener = ProjectsStore.addListener(this.onChange);
+	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this), this.onChange);
+	    ClientActions.fetchAllProjects();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.projectsListener.remove();
+	  },
+	
+	  newProject: function (event) {
+	    event.preventDefault();
+	    this.setState({ clicked: true });
+	  },
+	
+	  render: function () {
+	    var projects = SessionStore.currentUser().projects;
+	    var item = React.createElement('div', null);
+	    if (projects && projects.length > 0) {
+	      item = projects.map(function (project) {
+	        return React.createElement(ProjectsIndexItem, { project: project, key: project.id });
+	      });
+	    }
+	
+	    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
+	    var user = user.slice(0, 2);
+	
+	    var children = React.Children.map(this.props.children, function (child, i) {
+	      if (i === 0) {
+	        return React.cloneElement(child, {
+	          user: SessionStore.currentUser()
+	        });
+	      }
+	    });
+	
+	    if (this.state.clicked) {
+	      return React.createElement(
+	        'div',
+	        { className: 'whole-page group' },
+	        React.createElement(
+	          NewProjectsForm,
+	          null,
+	          React.createElement(
+	            'div',
+	            { className: 'sidebar' },
+	            React.createElement('img', { src: window.landing_logo_url }),
+	            React.createElement(
+	              'button',
+	              { onClick: this.newProject, className: 'signup' },
+	              '+'
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              item
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'upward-dog-main' },
+	            children
+	          )
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'whole-page group' },
+	        React.createElement(
+	          'div',
+	          { className: 'sidebar' },
+	          React.createElement('img', { src: window.landing_logo_url }),
+	          React.createElement(
+	            'button',
+	            { onClick: this.newProject, className: 'signup' },
+	            '+'
+	          ),
+	          React.createElement(
+	            'ul',
+	            null,
+	            item
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'upward-dog-main' },
+	          children
+	        )
+	      );
+	    }
+	  }
+	});
+	
+	module.exports = ProjectsIndex;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var ClientActions = __webpack_require__(249);
+	var ProjectsStore = __webpack_require__(253);
+	
+	var ProjectsIndexItem = React.createClass({
+	  displayName: 'ProjectsIndexItem',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'project-list-item' },
+	      React.createElement(
+	        Link,
+	        { to: "/user/projects/" + this.props.project.project_id },
+	        this.props.project.title
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = ProjectsIndexItem;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndex = __webpack_require__(247);
+	var ProjectsIndex = __webpack_require__(276);
+	var ProjectsStore = __webpack_require__(275);
+	var ClientActions = __webpack_require__(249);
+	var SessionStore = __webpack_require__(221);
+	var SessionApiUtil = __webpack_require__(244);
+	
+	var ProjectsDetail = React.createClass({
+	  displayName: 'ProjectsDetail',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      title: "",
+	      description: ""
+	    };
+	    // }
+	    //     manager_id: "",
+	    //     assignee_id: SessionStore.currentUser().id,
+	    //     project_id: "",
+	    //     completed: false
+	    //   }
+	    // }
+	  },
+	
+	  onChange: function () {
+	    // this.user = SessionStore.currentUser();
+	    // debugger
+	    var project = this.props.user.projects[0];
+	
+	    this.setState({
+	      title: project.title,
+	      description: project.description,
+	      tasks: project.tasks,
+	      id: project.project_id
+	    });
+	    // var possibleProject = ProjectsStore.find(this.props.params.project_id)
+	    //
+	    // var project = possibleProject ? possibleProject : null
+	    // if (project){
+	    //   this.setState({
+	    //     title: project.title,
+	    //     description: project.description,
+	    //   })
+	    // } else {
+	    //   this.setState({
+	    //     title: "",
+	    //     description: ""
+	    //   })
+	    // }
+	    // debugger
+	  },
+	
+	  componentDidMount: function () {
+	    this.projectsListener = ProjectsStore.addListener(this.onChange);
+	    // debugger
+	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
+	    SessionApiUtil.fetchCurrentUser();
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    var possibleProject = ProjectsStore.find(newProps.params.project_id);
+	    var project = possibleProject ? possibleProject : false;
+	    if (project) {
+	      this.setState({
+	        title: project.title,
+	        description: project.description,
+	        tasks: project.tasks,
+	        id: project.id
+	      });
+	    }
+	    // this.setState({ projects: newProps.projects })
+	  },
+	
+	  componentWillUnmount: function () {
+	    // this.sessionListener.remove();
+	    this.projectsListener.remove();
+	  },
+	
+	  // clickHandler: function (event) {
+	  //   if (event.target.if === "") {
+	  //     this.context.router.push("/user/tasks/new")
+	  //   } else {
+	  //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
+	  //   }
+	  // },
+	  //
+	  // componentWillReceiveProps: function () {
+	  //   debugger
+	  // },
+	
+	  logout: function () {
+	    if (SessionStore.isUserLoggedIn()) {
+	      return React.createElement('input', {
+	        type: 'submit',
+	        value: 'Log Out',
+	        onClick: SessionApiUtil.logout });
+	    }
+	  },
+	
+	  render: function () {
+	    var project = this.state;
+	    var projectId = this.props.params.id ? this.props.params.id : "";
+	    var projectHeader = project.title;
+	    var projectTasks = project.tasks;
+	
+	    var children = React.Children.map(this.props.children, function (child) {
+	      return React.cloneElement(child, {
+	        project: project
+	      });
+	    });
+	
+	    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
+	    var user = user.slice(0, 2);
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'task-header' },
+	        this.logout(),
+	        React.createElement(
+	          'h1',
+	          null,
+	          React.createElement(
+	            'span',
+	            { className: 'user-logo' },
+	            user
+	          ),
+	          projectHeader
+	        )
+	      ),
+	      children
+	    );
+	  }
+	});
+	
+	module.exports = ProjectsDetail;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var ProjectsApiUtil = __webpack_require__(272);
+	
+	var NewProjectsForm = React.createClass({
+	  displayName: 'NewProjectsForm',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return { title: "", description: "" };
+	  },
+	
+	  bgClick: function () {
+	    this.context.router.push("/user/projects/" + this.props.params.project_id);
+	  },
+	
+	  onSubmit: function (event) {
+	    event.preventDefault();
+	
+	    var projectData = {
+	      title: this.state.title,
+	      description: this.state.description
+	    };
+	
+	    ProjectsApiUtil.createProject(projectData);
+	  },
+	
+	  titleChange: function (event) {
+	    var newTitle = event.target.value;
+	    this.setState({ title: newTitle });
+	  },
+	
+	  descriptionChange: function (event) {
+	    var newDescription = event.target.value;
+	    this.setState({ description: newDescription });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement('div', { className: 'login', onClick: this.bgClick }),
+	      React.createElement(
+	        'form',
+	        { className: 'login-form', onSubmit: this.onSubmit },
+	        React.createElement(
+	          'h1',
+	          { className: 'form-heading' },
+	          'Create A New Project'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'form-fields' },
+	          React.createElement(
+	            'label',
+	            null,
+	            React.createElement(
+	              'span',
+	              { className: 'field' },
+	              'Title:'
+	            ),
+	            React.createElement('input', {
+	              type: 'text',
+	              className: 'username',
+	              value: this.state.title,
+	              onChange: this.titleChange })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            React.createElement(
+	              'span',
+	              { className: 'field' },
+	              'Description:'
+	            ),
+	            React.createElement('input', {
+	              className: 'password',
+	              type: 'text',
+	              value: this.state.description,
+	              onChange: this.descriptionChange })
+	          )
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'button',
+	          { className: 'log-submit', type: 'submit' },
+	          'Create Project'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = NewProjectsForm;
 
 /***/ }
 /******/ ]);

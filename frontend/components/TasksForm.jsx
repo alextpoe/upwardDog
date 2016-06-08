@@ -4,6 +4,7 @@ var TasksIndexItem = require('./TasksIndexItem');
 var TasksStore = require('../stores/TasksStore');
 var SessionStore = require('../stores/SessionStore');
 var ClientActions = require('../actions/ClientActions');
+var ProjectsApiUtil = require('../util/ProjectsApiUtil');
 
 
 var TasksForm = React.createClass({
@@ -22,6 +23,9 @@ var TasksForm = React.createClass({
     }
   },
 
+  componentWillReceiveProps: function (newProps) {
+    this.setState({ project_id: newProps.project.id})
+  },
 
   keyHandler: function (event) {
     this.setState({ title: event.target.value })
@@ -37,13 +41,14 @@ var TasksForm = React.createClass({
   blurHandler: function (event) {
     event.preventDefault();
     if ( event.target.value.length > 1 ) {
+
       ClientActions.createTask(
         {
           title: this.state.title,
           description: "",
           manager_id: "",
           assignee_id: SessionStore.currentUser().id,
-          project_id: "",
+          project_id: this.state.project_id,
           completed: false
         }
       );
@@ -59,7 +64,7 @@ var TasksForm = React.createClass({
           description: "",
           manager_id: "",
           assignee_id: SessionStore.currentUser().id,
-          project_id: "",
+          project_id: this.state.project_id,
           completed: false
         }
       );

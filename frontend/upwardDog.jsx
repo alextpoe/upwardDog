@@ -13,6 +13,9 @@ var LoginForm = require('./components/LoginForm');
 var TasksIndex = require('./components/TasksIndex');
 var TasksCreate = require('./components/TasksCreate');
 var TasksEdit = require('./components/TasksEdit');
+var ProjectsIndex = require('./components/ProjectsIndex');
+var ProjectsDetail = require('./components/ProjectsDetail');
+var NewProjectsForm = require('./components/NewProjectsForm');
 
 var SessionStore = require('./stores/SessionStore');
 var SessionApiUtil = require('./util/SessionApiUtil');
@@ -25,12 +28,16 @@ var routes = (
       <Route path="/hello/signup" component={ LoginForm } />
       <Route path="/hello/login/guest" component={ LoginForm } />
     </Route>
-    <IndexRoute component={TasksIndex} />
-    <Route
-      path="/user/tasks"
-      component={TasksIndex}>
-      <Route path="/user/tasks/new" component={ TasksCreate }/>
-      <Route path="/user/tasks/:id/edit" component={ TasksEdit }/>
+    <IndexRoute component={ProjectsIndex} />
+    <Route path="/user/projects" component={ProjectsIndex}>
+      <Route path="/user/projects/new" component={NewProjectsForm} />
+      <Route path="/user/projects/:project_id" component={ProjectsDetail} >
+        <IndexRoute component={TasksIndex} />
+        <Route path="/user/projects/:project_id/tasks" component={TasksIndex} >
+          <Route path="/user/projects/:project_id/tasks/new" component={ TasksCreate }/>
+          <Route path="/user/projects/:project_id/tasks/:id/edit" component={ TasksEdit }/>
+        </Route>
+      </Route>
     </Route>
   </Route>
 );

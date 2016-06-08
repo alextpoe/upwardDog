@@ -1,33 +1,33 @@
 var TasksActions = require('../actions/TasksActions');
 
 var TasksApiUtil = {
-  receiveAllTasks: function (tasks) {
+  receiveAllTasks: function (project_id) {
     $.ajax({
       type: "GET",
-      url: "api/user/tasks",
+      url: "api/user/projects/" + project_id + "/tasks",
       dataType: "json",
-      data: {tasks: tasks},
       success: function (data) {
         TasksActions.receiveAllTasks(data);
       }
     });
   },
-  createTask: function (task) {
+  createTask: function (task, project_id, complete) {
     $.ajax({
       type: "POST",
-      url: "api/user/tasks",
+      url: "api/user/projects/" + project_id + "/tasks",
       dataType: "json",
       data: { task: task },
       success: function (task) {
         TasksActions.receiveTask(task);
-      }
+      },
+      complete: complete
     });
   },
 
-  getTask: function (id) {
+  getTask: function (project_id, id) {
     $.ajax({
       type: "GET",
-      url: "api/user/tasks/" + id,
+      url: "api/user/projects/" + project_id + "/tasks/" + id,
       dataType: "json",
       success: function () {
         console.log("success");
@@ -35,10 +35,10 @@ var TasksApiUtil = {
     });
   },
 
-  editTask: function (task, id) {
+  editTask: function (task, project_id, id) {
     $.ajax({
       type: "PATCH",
-      url: "api/user/tasks/" + id,
+      url: "api/user/projects/" + project_id + "/tasks/" + id,
       dataType: "json",
       data: {task: task},
       success: function (task) {
@@ -47,10 +47,10 @@ var TasksApiUtil = {
     });
   },
 
-  deleteTask: function (id) {
+  deleteTask: function (id, project_id) {
     $.ajax({
       type: "DELETE",
-      url: "api/user/tasks/" + id,
+      url: "api/user/projects/" + project_id + "/tasks/" + id,
       success: function (task) {
         TasksActions.removeTask(task);
       }

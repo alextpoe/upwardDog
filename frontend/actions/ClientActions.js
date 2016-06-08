@@ -1,4 +1,5 @@
 var TasksApiUtil = require('../util/TasksApiUtil');
+var ProjectsApiUtil = require('../util/ProjectsApiUtil');
 
 var ClientActions = {
   receiveAllTasks: TasksApiUtil.receiveAllTasks,
@@ -7,7 +8,17 @@ var ClientActions = {
 
   updateTask: TasksApiUtil.editTask,
 
-  deleteTask: TasksApiUtil.deleteTask
+  deleteTask: TasksApiUtil.deleteTask,
+
+  fetchAllProjects: ProjectsApiUtil.receiveAllProjects,
+
+  createProject: ProjectsApiUtil.createProject,
+
+  updateProject: ProjectsApiUtil.editProject,
+
+  deleteProject: ProjectsApiUtil.deleteProject,
+
+  fetchProject: ProjectsApiUtil.getProject
 };
 
 

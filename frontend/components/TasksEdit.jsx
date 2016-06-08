@@ -9,7 +9,6 @@ var ClientActions = require('../actions/ClientActions');
 
 var TasksEdit = React.createClass({
   mixins: [ OnUnload ],
-
   getInitialState: function () {
     var possibleTask = TasksStore.find(this.props.params.id)
     var task = possibleTask ? possibleTask : false
@@ -81,18 +80,18 @@ var TasksEdit = React.createClass({
     event.preventDefault();
 
     var task = this.state;
-
     ClientActions.updateTask(
       {
         completed: true
       },
+      this.props.params.project_id,
       this.props.params.id
     )
   },
 
   onSubmit: function (event) {
     event.preventDefault();
-    ClientActions.updateTask(this.state, this.props.params.id);
+    ClientActions.updateTask(this.state, this.props.params.project_id, this.props.params.id);
   },
 
   render: function () {
@@ -105,7 +104,7 @@ var TasksEdit = React.createClass({
     }
     return (
       <ul className="edit-list">
-        <li><input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/></li>
+        <li><input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/>Project ID:</li>
         <li className="title">
           {checkmark}
           <input value={this.state.title} onChange={this.titleChange}/>
