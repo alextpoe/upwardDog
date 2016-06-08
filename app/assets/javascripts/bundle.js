@@ -25261,7 +25261,8 @@
 	    if (!SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/hello");
 	    } else {
-	      this.context.router.push("/user/projects/" + 1);
+	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id);
+	      debugger;
 	    }
 	  },
 	
@@ -33609,7 +33610,7 @@
 	  redirectIfLoggedIn: function () {
 	    // debugger
 	    if (SessionStore.isUserLoggedIn()) {
-	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].id);
+	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id);
 	    }
 	  },
 	

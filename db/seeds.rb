@@ -11,6 +11,7 @@ User.create({ username: "apoe", password: "password"})
 User.create({ username: "downward_dog", password: "password"})
 User.create({ username: "happy", password: "password"})
 User.create({ username: "asana", password: "password"})
+User.create({ username: "Guest", password: "password"})
 
 
 Task.create({
