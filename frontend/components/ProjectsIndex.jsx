@@ -21,7 +21,6 @@ var ProjectsIndex = React.createClass({
   },
 
   onChange: function () {
-    SessionApiUtil.fetchCurrentUser()
 
     var userProjects = SessionStore.currentUser().projects
     var projects = ProjectsStore.all()

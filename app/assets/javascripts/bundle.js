@@ -33609,7 +33609,7 @@
 	  redirectIfLoggedIn: function () {
 	    // debugger
 	    if (SessionStore.isUserLoggedIn()) {
-	      this.context.router.push("/user/projects/" + 1);
+	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].id);
 	    }
 	  },
 	
@@ -34027,7 +34027,6 @@
 	  },
 	
 	  onChange: function () {
-	    SessionApiUtil.fetchCurrentUser();
 	
 	    var userProjects = SessionStore.currentUser().projects;
 	    var projects = ProjectsStore.all();
