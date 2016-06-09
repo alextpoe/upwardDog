@@ -14,7 +14,6 @@ var ProjectsDetail = React.createClass({
   },
 
   getInitialState: function () {
-    debugger
       return {
         title: "",
         description: ""
@@ -30,7 +29,6 @@ var ProjectsDetail = React.createClass({
 
   onChange: function () {
     // this.user = SessionStore.currentUser();
-    debugger
     // var project = this.props.user.projects[0]
     //
     // this.setState({

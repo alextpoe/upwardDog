@@ -34158,17 +34158,58 @@
 	var ProjectsIndexItem = React.createClass({
 	  displayName: 'ProjectsIndexItem',
 	
+	  getInitialState: function () {
+	    return { hovered: false };
+	  },
+	
+	  mouseOver: function (event) {
+	    event.preventDefault();
+	    this.setState({ hovered: true });
+	  },
+	
+	  mouseLeave: function (event) {
+	    event.preventDefault();
+	    this.setState({ hovered: false });
+	  },
+	
+	  deleteClick: function (event) {
+	    event.preventDefault();
+	    ClientActions.deleteProject(this.props.project.id);
+	  },
 	
 	  render: function () {
-	    return React.createElement(
-	      'li',
-	      { className: 'project-list-item' },
-	      React.createElement(
-	        Link,
-	        { to: "/user/projects/" + this.props.project.id },
-	        this.props.project.title
-	      )
-	    );
+	    if (this.state.hovered) {
+	      return React.createElement(
+	        'li',
+	        { className: 'project-list-item', onMouseOver: this.mouseOver, onMouseLeave: this.mouseLeave },
+	        React.createElement(
+	          Link,
+	          { to: "/user/projects/" + this.props.project.id },
+	          this.props.project.title
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.deleteClick },
+	          'Delete Project'
+	        ),
+	        React.createElement(
+	          'button',
+	          { type: 'submit', onClick: this.editClick },
+	          'Edit Project'
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'li',
+	        { className: 'project-list-item', onMouseOver: this.mouseOver },
+	        React.createElement(
+	          Link,
+	          { to: "/user/projects/" + this.props.project.id },
+	          this.props.project.title
+	        )
+	      );
+	    }
 	  }
 	
 	});
@@ -34196,7 +34237,6 @@
 	  },
 	
 	  getInitialState: function () {
-	    debugger;
 	    return {
 	      title: "",
 	      description: ""
@@ -34212,7 +34252,6 @@
 	
 	  onChange: function () {
 	    // this.user = SessionStore.currentUser();
-	    debugger;
 	    // var project = this.props.user.projects[0]
 	    //
 	    // this.setState({
