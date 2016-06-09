@@ -363,7 +363,7 @@
    border-radius: 3px;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
-   width: calc(50% - 110px);
+   width: calc(50% - 15px);
    text-align: center;
    height: 100%;
    bottom: 0;

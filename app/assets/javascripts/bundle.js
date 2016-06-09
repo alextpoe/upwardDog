@@ -34107,6 +34107,7 @@
 	    var item = React.createElement('div', null);
 	    if (projects && projects.length > 0) {
 	      item = projects.map(function (project) {
+	        if (!project.id) console.log(project);
 	        return React.createElement(ProjectsIndexItem, { project: project, key: project.id });
 	      });
 	    }

@@ -7,5 +7,5 @@ json.projects @user.projects do |project|
   json.title project.title
   json.description project.description
   json.tasks project.tasks
-  json.project_id project.id
+  json.id project.id
 end
