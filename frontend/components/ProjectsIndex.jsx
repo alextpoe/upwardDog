@@ -144,6 +144,7 @@ var ProjectsIndex = React.createClass({
           </div>
           <div className="upward-dog-main group">
             <div>{ children }</div>
+            <img className="background" src={window.background_url} />
           </div>
         </div>
       )

@@ -33732,13 +33732,13 @@
 	        React.createElement(
 	          'div',
 	          { className: 'below-header' },
-	          'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+	          'Breathe. Feel. upwardDog.'
 	        )
 	      ),
 	      React.createElement(
 	        'footer',
 	        { className: 'footer' },
-	        'Here\'s more writing that will be filled with something clever.'
+	        '"It\'s a dog eat dog world. The best move upward. Dog." - Ringo Starr'
 	      ),
 	      this.props.children
 	    );
@@ -34163,7 +34163,8 @@
 	          'div',
 	          null,
 	          children
-	        )
+	        ),
+	        React.createElement('img', { className: 'background', src: window.background_url })
 	      )
 	    );
 	    // }

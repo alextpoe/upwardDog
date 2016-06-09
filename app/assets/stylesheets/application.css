@@ -341,6 +341,7 @@
    right: 0px;
    display: block;
    position: absolute;
+   opacity: .85;
  }
 
  .task-main-unclicked{
@@ -653,4 +654,14 @@
 .projects-form-submit:hover{
   background: #02CEFF;
   -webkit-box-shadow: 0 0 0 3px #80E6FF;
+}
+
+.background{
+  z-index: -3;
+  position: fixed;
+  float: left;
+  top: 72px;
+  height: 100%;
+  bottom: 0px;
+  left: 130px;
 }

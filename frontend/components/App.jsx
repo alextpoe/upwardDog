@@ -53,11 +53,11 @@ var App = React.createClass({
         { this.header() }
         <div className="pretty">
           <div className="below-header">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Breathe. Feel. upwardDog.
           </div>
         </div>
         <footer className="footer">
-          Here's more writing that will be filled with something clever.
+          "It's a dog eat dog world. The best move upward. Dog." - Ringo Starr
         </footer>
         {this.props.children}
       </div>
