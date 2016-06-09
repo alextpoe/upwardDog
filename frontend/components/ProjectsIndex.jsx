@@ -85,6 +85,7 @@ var ProjectsIndex = React.createClass({
 
     var item = <div></div>;
     if (projects && projects.length > 0) {
+
       item = (
         projects.map(function (project) {
           if (!project.id) console.log( project ); 

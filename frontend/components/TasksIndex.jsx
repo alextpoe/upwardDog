@@ -23,18 +23,6 @@ var TasksIndex = React.createClass({
   },
 
   onChange: function () {
-    // ClientActions.receiveAllTasks(this.props.params.project_id);
-    // var projectId = parseInt(this.props.params.project_id);
-    // var allTasks = TasksStore.all()
-    //
-    // var tasks = allTasks.filter(function (task) {
-    //   return task.project_id === projectId
-    // })
-    // // debugger
-    // this.setState({tasks: tasks})
-    // debugger
-    // this.setState({tasks: allTasks})
-
     ProjectsApiUtil.getProject(this.props.params.project_id)
 
     var possibleProject = ProjectsStore.find(this.props.project.id)
@@ -45,16 +33,11 @@ var TasksIndex = React.createClass({
         edited: false
       })
     }
-    //
-
-    // this.context.router.push("/user/projects/" + this.props.project + "tasks")
   },
 
   componentDidMount: function () {
     this.tasksListener = TasksStore.addListener(this.onChange)
-    // this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this))
     ClientActions.receiveAllTasks(this.props.params.project_id)
-    // SessionApiUtil.fetchCurrentUser()
   },
 
   componentWillReceiveProps: function (newProps) {
@@ -63,14 +46,14 @@ var TasksIndex = React.createClass({
 
   componentWillUnmount: function () {
     this.tasksListener.remove();
-    // this.sessionListener.remove();
   },
 
 
 
   newTask: function (event) {
     event.preventDefault();
-    this.context.router.push("/user/projects/" + this.props.params.project_id + "tasks/new")
+    this.context.router.push(
+      "/user/projects/" + this.props.params.project_id + "tasks/new")
   },
 
   clicked: function () {
@@ -88,7 +71,6 @@ var TasksIndex = React.createClass({
 
     if (tasks) {
       taskItem = (
-
         tasks.map(function (task) {
           if (!task.completed) {
             return <TasksIndexItem task={task} key={task.id} />;
@@ -97,31 +79,18 @@ var TasksIndex = React.createClass({
       )
     }
 
-    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
-    var user = user.slice(0, 2);
-    // debugger
-
-
     if (this.state.edited && this.props.children) {
-
       return (
         <div className="task-container group">
           <div className="task-main-clicked">
             <ul className="task-list" onClick={this.clicked}>
-              {
-                taskItem
-              }
+              { taskItem }
             </ul>
             <div onClick={this.unClicked}>
               <TasksForm project={this.props.project}/>
             </div>
           </div>
           <div className="task-form">
-            <nav className="edit-header">
-              <span className="user-logo">
-                { user }
-              </span>
-            </nav>
             {this.props.children}
           </div>
         </div>
@@ -131,9 +100,7 @@ var TasksIndex = React.createClass({
         <div className="task-container group">
           <div className="task-main-unclicked">
             <ul className="task-list" onClick={this.clicked}>
-              {
-                taskItem
-              }
+              { taskItem }
             </ul>
             <div>
               <TasksForm project={this.props.project}/>

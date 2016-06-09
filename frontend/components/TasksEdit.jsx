@@ -8,7 +8,10 @@ var ClientActions = require('../actions/ClientActions');
 
 
 var TasksEdit = React.createClass({
-  mixins: [ OnUnload ],
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
+
   getInitialState: function () {
     var possibleTask = TasksStore.find(this.props.params.id)
     var task = possibleTask ? possibleTask : false
@@ -32,7 +35,7 @@ var TasksEdit = React.createClass({
       }
     }
   },
-  // 
+  //
   // onBeforeUnload: function () {
   //   var task = this.state;
   //   ClientActions.updateTask({
@@ -88,12 +91,37 @@ var TasksEdit = React.createClass({
     )
   },
 
+  enterHandler: function (event) {
+    if(event.keyCode == 13){
+      ClientActions.updateTask(
+        this.state,
+        this.props.params.project_id,
+        this.props.params.id
+      );
+    }
+  },
+
+  exitHandler: function (event) {
+    event.preventDefault();
+    ClientActions.updateTask(
+      this.state,
+      this.props.params.project_id,
+      this.props.params.id
+    );
+  },
+
   onSubmit: function (event) {
     event.preventDefault();
-    ClientActions.updateTask(this.state, this.props.params.project_id, this.props.params.id);
+    ClientActions.updateTask(
+      this.state,
+      this.props.params.project_id,
+      this.props.params.id
+    );
   },
 
   render: function () {
+    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
+    var user = user.slice(0, 2);
     var checkmark = (<div className="checkmark-edit" onClick={this.checkOff}> ✓ </div>);
     var project;
     if (!this.state.project_id) {
@@ -102,15 +130,23 @@ var TasksEdit = React.createClass({
       project = this.state.project_id;
     }
     return (
-      <ul className="edit-list">
-        <li>Project ID:<input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/></li>
-        <li className="title">
-          {checkmark}
-          <input value={this.state.title} onChange={this.titleChange}/>
-        </li>
-        <li className="description group"><textarea wrap="soft" placeholder="Description" value={ this.state.description } onChange={this.descriptionChange}/></li>
-        <button className="update-submit" type="submit" onClick={this.onSubmit}>Submit</button>
-      </ul>
+      <div>
+        <nav className="edit-header">
+          <span className="user-logo">
+            { user }
+          </span>
+          <span className="exit" onClick={this.exitHandler}>x</span>
+        </nav>
+        <ul className="edit-list" onKeyDown={this.enterHandler}>
+          <li>Project ID:<input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/></li>
+          <li className="title">
+            {checkmark}
+            <input value={this.state.title} onChange={this.titleChange}/>
+          </li>
+          <li className="description group"><textarea wrap="soft" placeholder="Description" value={ this.state.description } onChange={this.descriptionChange}/></li>
+          <button className="update-submit" type="submit" onClick={this.onSubmit}>Submit</button>
+        </ul>
+      </div>
     );
   }
 });

@@ -25265,7 +25265,7 @@
 	    } else if (this.props.params.project_id && this.props.params.project_id !== "undefined") {
 	      this.context.router.push("/user/projects/" + this.props.params.project_id);
 	    } else {
-	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id);
+	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].id);
 	    }
 	  },
 	
@@ -25284,7 +25284,6 @@
 	  },
 	
 	  render: function () {
-	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -32361,18 +32360,6 @@
 	  },
 	
 	  onChange: function () {
-	    // ClientActions.receiveAllTasks(this.props.params.project_id);
-	    // var projectId = parseInt(this.props.params.project_id);
-	    // var allTasks = TasksStore.all()
-	    //
-	    // var tasks = allTasks.filter(function (task) {
-	    //   return task.project_id === projectId
-	    // })
-	    // // debugger
-	    // this.setState({tasks: tasks})
-	    // debugger
-	    // this.setState({tasks: allTasks})
-	
 	    ProjectsApiUtil.getProject(this.props.params.project_id);
 	
 	    var possibleProject = ProjectsStore.find(this.props.project.id);
@@ -32383,16 +32370,11 @@
 	        edited: false
 	      });
 	    }
-	    //
-	
-	    // this.context.router.push("/user/projects/" + this.props.project + "tasks")
 	  },
 	
 	  componentDidMount: function () {
 	    this.tasksListener = TasksStore.addListener(this.onChange);
-	    // this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this))
 	    ClientActions.receiveAllTasks(this.props.params.project_id);
-	    // SessionApiUtil.fetchCurrentUser()
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
@@ -32401,7 +32383,6 @@
 	
 	  componentWillUnmount: function () {
 	    this.tasksListener.remove();
-	    // this.sessionListener.remove();
 	  },
 	
 	  newTask: function (event) {
@@ -32429,12 +32410,7 @@
 	      });
 	    }
 	
-	    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
-	    var user = user.slice(0, 2);
-	    // debugger
-	
 	    if (this.state.edited && this.props.children) {
-	
 	      return React.createElement(
 	        'div',
 	        { className: 'task-container group' },
@@ -32455,15 +32431,6 @@
 	        React.createElement(
 	          'div',
 	          { className: 'task-form' },
-	          React.createElement(
-	            'nav',
-	            { className: 'edit-header' },
-	            React.createElement(
-	              'span',
-	              { className: 'user-logo' },
-	              user
-	            )
-	          ),
 	          this.props.children
 	        )
 	      );
@@ -32759,7 +32726,6 @@
 	var ProjectsStore = new Store(AppDispatcher);
 	
 	window._projects = {};
-	var _currentUser = {};
 	var _mostRecentProject = {};
 	
 	var _resetProjects = function (projects) {
@@ -32866,13 +32832,6 @@
 	    this.setState({ title: event.target.value });
 	  },
 	
-	  // clickHandler: function (event) {
-	  //   event.preventDefault();
-	  //
-	  //   // debugger
-	  //   this.context.router.push("/user/tasks/new");
-	  // },
-	
 	  blurHandler: function (event) {
 	    event.preventDefault();
 	    if (event.target.value.length > 1) {
@@ -32902,11 +32861,6 @@
 	      this.setState({ title: "" });
 	    }
 	  },
-	
-	  // focusHandler: function () {
-	  //   this.context.router.push("/user/tasks")
-	  //   this.refs.form.focus();
-	  // },
 	
 	  render: function () {
 	    return React.createElement(
@@ -33013,7 +32967,10 @@
 	var TasksEdit = React.createClass({
 	  displayName: 'TasksEdit',
 	
-	  mixins: [OnUnload],
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
 	  getInitialState: function () {
 	    var possibleTask = TasksStore.find(this.props.params.id);
 	    var task = possibleTask ? possibleTask : false;
@@ -33089,12 +33046,25 @@
 	    }, this.props.params.project_id, this.props.params.id);
 	  },
 	
+	  enterHandler: function (event) {
+	    if (event.keyCode == 13) {
+	      ClientActions.updateTask(this.state, this.props.params.project_id, this.props.params.id);
+	    }
+	  },
+	
+	  exitHandler: function (event) {
+	    event.preventDefault();
+	    ClientActions.updateTask(this.state, this.props.params.project_id, this.props.params.id);
+	  },
+	
 	  onSubmit: function (event) {
 	    event.preventDefault();
 	    ClientActions.updateTask(this.state, this.props.params.project_id, this.props.params.id);
 	  },
 	
 	  render: function () {
+	    var user = SessionStore.currentUser().username ? SessionStore.currentUser().username : [];
+	    var user = user.slice(0, 2);
 	    var checkmark = React.createElement(
 	      'div',
 	      { className: 'checkmark-edit', onClick: this.checkOff },
@@ -33107,29 +33077,47 @@
 	      project = this.state.project_id;
 	    }
 	    return React.createElement(
-	      'ul',
-	      { className: 'edit-list' },
+	      'div',
+	      null,
 	      React.createElement(
-	        'li',
-	        null,
-	        'Project ID:',
-	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
+	        'nav',
+	        { className: 'edit-header' },
+	        React.createElement(
+	          'span',
+	          { className: 'user-logo' },
+	          user
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'exit', onClick: this.exitHandler },
+	          'x'
+	        )
 	      ),
 	      React.createElement(
-	        'li',
-	        { className: 'title' },
-	        checkmark,
-	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'description group' },
-	        React.createElement('textarea', { wrap: 'soft', placeholder: 'Description', value: this.state.description, onChange: this.descriptionChange })
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'update-submit', type: 'submit', onClick: this.onSubmit },
-	        'Submit'
+	        'ul',
+	        { className: 'edit-list', onKeyDown: this.enterHandler },
+	        React.createElement(
+	          'li',
+	          null,
+	          'Project ID:',
+	          React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'title' },
+	          checkmark,
+	          React.createElement('input', { value: this.state.title, onChange: this.titleChange })
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'description group' },
+	          React.createElement('textarea', { wrap: 'soft', placeholder: 'Description', value: this.state.description, onChange: this.descriptionChange })
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'update-submit', type: 'submit', onClick: this.onSubmit },
+	          'Submit'
+	        )
 	      )
 	    );
 	  }
@@ -33701,8 +33689,6 @@
 	  },
 	
 	  header: function () {
-	
-	    // } else
 	    if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
 	      return React.createElement(
 	        'nav',
@@ -33736,7 +33722,6 @@
 	  },
 	
 	  render: function () {
-	
 	    return React.createElement(
 	      'div',
 	      { className: 'container' },
@@ -33799,9 +33784,8 @@
 	  },
 	
 	  redirectIfLoggedIn: function () {
-	    // debugger
 	    if (SessionStore.isUserLoggedIn()) {
-	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id);
+	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].id);
 	    }
 	  },
 	
@@ -34106,6 +34090,7 @@
 	
 	    var item = React.createElement('div', null);
 	    if (projects && projects.length > 0) {
+	
 	      item = projects.map(function (project) {
 	        if (!project.id) console.log(project);
 	        return React.createElement(ProjectsIndexItem, { project: project, key: project.id });
@@ -34527,10 +34512,6 @@
 	      };
 	    }
 	  },
-	
-	  // bgClick: function (){
-	  //   this.context.router.push("/user/projects/" + this.props.params.project_id);
-	  // },
 	
 	  onSubmit: function (event) {
 	    var that = this;

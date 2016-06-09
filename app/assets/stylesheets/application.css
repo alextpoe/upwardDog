@@ -381,7 +381,7 @@
    border-radius: 3px;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
-   width: calc(50% - 25px);
+   width: calc(50% - 15px);
    height: 100%;
    bottom: 0;
  }
@@ -434,6 +434,7 @@
    color: #3BE8B0;
    -webkit-box-shadow: 0 0 0 3px #3BE8B0;
    border: 1px solid #fff;
+   cursor: pointer;
  }
 
  .delete{
@@ -450,6 +451,17 @@
    border-bottom: 1px solid #ccc;
    padding: 20px;
  }
+
+ .exit{
+  float: right;
+  color: #000;
+ }
+
+ .exit:hover{
+   cursor: pointer;
+   color: #ccc;
+ }
+
  .edit-list > li {
    float: left;
    width: 75%;
@@ -498,6 +510,7 @@
    color: #3BE8B0;
    -webkit-box-shadow: 0 0 0 3px #3BE8B0;
    border: 1px solid #fff;
+   cursor: pointer;
  }
 
  .title{

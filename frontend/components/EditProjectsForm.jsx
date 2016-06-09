@@ -24,11 +24,6 @@ var EditProjectsForm = React.createClass({
     }
   },
 
-
-  // bgClick: function (){
-  //   this.context.router.push("/user/projects/" + this.props.params.project_id);
-  // },
-
   onSubmit: function(event) {
     var that = this;
     event.preventDefault();
@@ -82,11 +77,11 @@ var EditProjectsForm = React.createClass({
                 onChange={this.descriptionChange}/>
             </label>
           </div>
+
         <br />
 
           <button className="projects-form-submit" type="submit">Edit</button>
         </form>
-
       </div>
     );
   }

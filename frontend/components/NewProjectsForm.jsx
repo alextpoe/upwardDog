@@ -59,7 +59,6 @@ var NewProjectsForm = React.createClass({
               <span className="projects-form-span">
                 Description:
               </span>
-
               <input
                 className="projects-form-input"
                 placeholder="Enter Description Here"
@@ -68,12 +67,11 @@ var NewProjectsForm = React.createClass({
                 onChange={this.descriptionChange}/>
             </label>
           </div>
+
         <br />
 
           <button className="projects-form-submit" type="submit">Create</button>
         </form>
-
-
       </div>
     );
   }

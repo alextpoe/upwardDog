@@ -31,8 +31,6 @@ var App = React.createClass({
   },
 
   header: function () {
-
-    // } else
     if (["login", "signup"].indexOf(this.props.location.pathname) === -1) {
       return (
         <nav className="top-header">
@@ -50,7 +48,6 @@ var App = React.createClass({
   },
 
   render: function () {
-
     return(
       <div className="container">
         { this.header() }

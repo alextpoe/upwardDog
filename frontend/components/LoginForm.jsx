@@ -30,9 +30,8 @@ var LoginForm = React.createClass({
   },
 
   redirectIfLoggedIn: function () {
-    // debugger
     if (SessionStore.isUserLoggedIn()) {
-      this.context.router.push("/user/projects/"+ SessionStore.currentUser().projects[0].project_id);
+      this.context.router.push("/user/projects/"+ SessionStore.currentUser().projects[0].id);
     }
   },
 

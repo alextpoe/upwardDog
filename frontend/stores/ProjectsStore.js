@@ -6,7 +6,6 @@ var SessionStore = require('./SessionStore');
 var ProjectsStore = new Store(AppDispatcher);
 
 window._projects = {};
-var _currentUser = {};
 var _mostRecentProject = {};
 
 var _resetProjects = function (projects) {

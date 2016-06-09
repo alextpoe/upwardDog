@@ -31,13 +31,6 @@ var TasksForm = React.createClass({
     this.setState({ title: event.target.value })
   },
 
-  // clickHandler: function (event) {
-  //   event.preventDefault();
-  //
-  //   // debugger
-  //   this.context.router.push("/user/tasks/new");
-  // },
-
   blurHandler: function (event) {
     event.preventDefault();
     if ( event.target.value.length > 1 ) {
@@ -71,11 +64,6 @@ var TasksForm = React.createClass({
       this.setState({title: ""})
     }
   },
-
-  // focusHandler: function () {
-  //   this.context.router.push("/user/tasks")
-  //   this.refs.form.focus();
-  // },
 
   render: function () {
     return (
