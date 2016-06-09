@@ -25260,7 +25260,7 @@
 	  redirectIfNotLoggedIn: function () {
 	    if (!SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/hello");
-	    } else if (this.props.params.length > 0) {
+	    } else if (this.props.params.project_id) {
 	      this.context.router.push("/user/projects/" + this.props.params.project_id);
 	    } else {
 	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id);
