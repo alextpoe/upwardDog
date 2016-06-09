@@ -5,6 +5,10 @@ var ProjectsStore = require('../stores/TasksStore');
 
 
 var ProjectsIndexItem = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
+
   getInitialState: function () {
     return({ hovered: false })
   },
@@ -22,6 +26,11 @@ var ProjectsIndexItem = React.createClass({
   deleteClick: function (event) {
     event.preventDefault()
     ClientActions.deleteProject(this.props.project.id)
+  },
+
+  editClick: function (event) {
+    event.preventDefault()
+    this.context.router.push("/user/projects/" + this.props.project.id + "/edit")
   },
 
   render: function () {

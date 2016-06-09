@@ -62,6 +62,7 @@
 	var ProjectsIndex = __webpack_require__(276);
 	var ProjectsDetail = __webpack_require__(278);
 	var NewProjectsForm = __webpack_require__(279);
+	var EditProjectsForm = __webpack_require__(280);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
@@ -82,6 +83,7 @@
 	    Route,
 	    { path: '/user/projects', component: ProjectsIndex },
 	    React.createElement(Route, { path: '/user/projects/new', component: NewProjectsForm }),
+	    React.createElement(Route, { path: '/user/projects/:id/edit', component: EditProjectsForm }),
 	    React.createElement(
 	      Route,
 	      { path: '/user/projects/:project_id', component: ProjectsDetail },
@@ -25260,7 +25262,7 @@
 	  redirectIfNotLoggedIn: function () {
 	    if (!SessionStore.isUserLoggedIn()) {
 	      this.context.router.push("/hello");
-	    } else if (this.props.params.project_id) {
+	    } else if (this.props.params.project_id && this.props.params.project_id !== "undefined") {
 	      this.context.router.push("/user/projects/" + this.props.params.project_id);
 	    } else {
 	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id);
@@ -34158,6 +34160,10 @@
 	var ProjectsIndexItem = React.createClass({
 	  displayName: 'ProjectsIndexItem',
 	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
 	  getInitialState: function () {
 	    return { hovered: false };
 	  },
@@ -34175,6 +34181,11 @@
 	  deleteClick: function (event) {
 	    event.preventDefault();
 	    ClientActions.deleteProject(this.props.project.id);
+	  },
+	
+	  editClick: function (event) {
+	    event.preventDefault();
+	    this.context.router.push("/user/projects/" + this.props.project.id + "/edit");
 	  },
 	
 	  render: function () {
@@ -34466,6 +34477,122 @@
 	});
 	
 	module.exports = NewProjectsForm;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var ProjectsApiUtil = __webpack_require__(272);
+	var ProjectsStore = __webpack_require__(275);
+	
+	var EditProjectsForm = React.createClass({
+	  displayName: 'EditProjectsForm',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    var possibleTask = ProjectsStore.find(this.props.params.id);
+	    var task = possibleTask ? possibleTask : false;
+	    if (task) {
+	      return {
+	        title: task.title,
+	        description: task.description
+	      };
+	    } else {
+	      return {
+	        title: "",
+	        description: ""
+	      };
+	    }
+	  },
+	
+	  // bgClick: function (){
+	  //   this.context.router.push("/user/projects/" + this.props.params.project_id);
+	  // },
+	
+	  onSubmit: function (event) {
+	    var that = this;
+	    event.preventDefault();
+	
+	    var projectData = {
+	      title: this.state.title,
+	      description: this.state.description
+	    };
+	
+	    ProjectsApiUtil.editProject(projectData, this.props.params.id);
+	  },
+	
+	  titleChange: function (event) {
+	    var newTitle = event.target.value;
+	    this.setState({ title: newTitle });
+	  },
+	
+	  descriptionChange: function (event) {
+	    var newDescription = event.target.value;
+	    this.setState({ description: newDescription });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.onSubmit },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Edit Project'
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          React.createElement(
+	            'label',
+	            null,
+	            React.createElement(
+	              'span',
+	              null,
+	              'Title:'
+	            ),
+	            React.createElement('input', {
+	              type: 'text',
+	              className: 'username',
+	              value: this.state.title,
+	              onChange: this.titleChange })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            null,
+	            React.createElement(
+	              'span',
+	              null,
+	              'Description:'
+	            ),
+	            React.createElement('input', {
+	              className: 'password',
+	              type: 'text',
+	              value: this.state.description,
+	              onChange: this.descriptionChange })
+	          )
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'button',
+	          { type: 'submit' },
+	          'Edit'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = EditProjectsForm;
 
 /***/ }
 /******/ ]);

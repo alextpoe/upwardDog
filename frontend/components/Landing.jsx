@@ -14,7 +14,7 @@ var Landing = React.createClass({
   redirectIfNotLoggedIn: function () {
     if (!SessionStore.isUserLoggedIn()) {
       this.context.router.push("/hello")
-    } else if (this.props.params.project_id){
+    } else if (this.props.params.project_id && this.props.params.project_id !== "undefined"){
       this.context.router.push("/user/projects/" + this.props.params.project_id)
     } else {
       this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].project_id)

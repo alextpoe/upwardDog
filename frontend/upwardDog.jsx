@@ -16,6 +16,7 @@ var TasksEdit = require('./components/TasksEdit');
 var ProjectsIndex = require('./components/ProjectsIndex');
 var ProjectsDetail = require('./components/ProjectsDetail');
 var NewProjectsForm = require('./components/NewProjectsForm');
+var EditProjectsForm = require('./components/EditProjectsForm');
 
 var SessionStore = require('./stores/SessionStore');
 var SessionApiUtil = require('./util/SessionApiUtil');
@@ -31,6 +32,7 @@ var routes = (
     <IndexRoute component={ProjectsIndex} />
     <Route path="/user/projects" component={ProjectsIndex}>
       <Route path="/user/projects/new" component={NewProjectsForm} />
+      <Route path="/user/projects/:id/edit" component={EditProjectsForm} />
       <Route path="/user/projects/:project_id" component={ProjectsDetail} >
         <IndexRoute component={TasksIndex} />
         <Route path="/user/projects/:project_id/tasks" component={TasksIndex} >
