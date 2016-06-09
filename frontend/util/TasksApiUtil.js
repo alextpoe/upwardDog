@@ -30,7 +30,6 @@ var TasksApiUtil = {
       url: "api/user/projects/" + project_id + "/tasks/" + id,
       dataType: "json",
       success: function () {
-        console.log("success");
       }
     });
   },

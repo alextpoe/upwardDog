@@ -172,9 +172,13 @@
    bottom: 0px;
    margin: auto;
    background: rgba(0, 0, 0, 0.4);
-   z-index: -1;
  }
 
+ .twitter{
+   width: 50%;
+   margin-left: 30%;
+   margin-bottom: 30px;
+ }
  .login-header{
 
  }
@@ -183,7 +187,7 @@
 
    position: absolute;
    padding: 80px;
-   height: 300px;
+   height: 400px;
    width: 300px;
    background: rgba(255, 255, 255, 0.9);
    border-radius: 4px;
@@ -197,6 +201,7 @@
    text-align: center;
    font-size: 40px;
    font-weight: 400;
+   margin-bottom: -20px;
  }
 
  .field{
@@ -211,6 +216,13 @@
   top: 50px;
   right: 15px;
  }
+
+ .form-fields > div {
+   text-align: center;
+   margin-left: 30px;
+   margin-bottom: 25px;
+   color: #b19999;
+}
 
  .username, .password{
    background-color: #fff;
@@ -323,9 +335,12 @@
  .task-container{
    padding: 15px;
    background: #eee;
-   height: 500px;
+   top: 72px;
+   bottom: 0px;
+   left: 0px;
+   right: 0px;
    display: block;
-   position: relative;
+   position: absolute;
  }
 
  .task-main-unclicked{
@@ -348,7 +363,7 @@
    border-radius: 3px;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
-   width: calc(50% - 15px);
+   width: calc(50% - 110px);
    text-align: center;
    height: 100%;
    bottom: 0;
@@ -362,12 +377,11 @@
  .task-form{
    float: right;
    position: relative;
-   right: 15px;
    background: #fff;
    border-radius: 3px;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
    padding: 2px;
-   width: calc(50% - 30px);
+   width: calc(50% - 25px);
    height: 100%;
    bottom: 0;
  }
@@ -576,6 +590,7 @@
   border-radius: 3px;
   top: 100px;
   position: relative;
+  z-index: 1;
 }
 
 .projects-form > h1{

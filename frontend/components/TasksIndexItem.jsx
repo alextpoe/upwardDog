@@ -6,9 +6,12 @@ var TasksStore = require('../stores/TasksStore');
 
 var TasksIndexItem = React.createClass({
   clickHandler: function (event) {
-
     event.preventDefault();
-    ClientActions.deleteTask(this.props.task.id);
+    
+    var id = this.props.task.id;
+    var projectId = this.props.task.project_id;
+
+    ClientActions.deleteTask(id, projectId);
   },
 
   checkOff: function (event) {

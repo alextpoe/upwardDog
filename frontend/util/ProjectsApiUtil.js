@@ -35,7 +35,6 @@ var ProjectsApiUtil = {
       dataType: "json",
       success: function (project) {
         ProjectsActions.receiveProject(project);
-        console.log("success");
       }
     });
   },

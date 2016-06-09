@@ -84,16 +84,24 @@ var LoginForm = React.createClass({
   },
 
   render: function () {
+    var headerLang;
+    if (this.props.route.path === "/hello/login") {
+      headerLang = "Log In"
+    } else {
+      headerLang = "Sign Up"
+    }
+
     return (
       <div>
         <div className="login" onClick={this.bgClick}>
         </div>
 
         <form className="login-form" onSubmit={this.onSubmit}>
-          <h1 className="form-heading">Log In</h1>
+          <h1 className="form-heading">{headerLang}</h1>
           { this.fieldErrors("base") }
           <div className="form-fields">
-            <a href="/auth/twitter">Or Use Twitter</a>
+            <div>Or</div>
+            <a href="/auth/twitter"><img className="twitter" src={window.twitter_url} /></a>
             <label>
               <span className="field">Username:</span>
 
@@ -124,7 +132,7 @@ var LoginForm = React.createClass({
           </div>
         <br />
 
-          <button className="log-submit" type="submit">{this.formType()}</button>
+          <button className="log-submit" type="submit">{headerLang}</button>
         </form>
 
       </div>

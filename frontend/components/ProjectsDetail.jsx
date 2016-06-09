@@ -50,7 +50,6 @@ var ProjectsDetail = React.createClass({
 
   componentDidMount: function () {
     this.projectsListener = ProjectsStore.addListener(this.onChange)
-    // debugger
     this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this))
     SessionApiUtil.fetchCurrentUser();
   },

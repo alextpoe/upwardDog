@@ -32,13 +32,13 @@ var TasksEdit = React.createClass({
       }
     }
   },
-
-  onBeforeUnload: function () {
-    var task = this.state;
-    ClientActions.updateTask({
-      task: task
-    }, this.props.params.id)
-  },
+  // 
+  // onBeforeUnload: function () {
+  //   var task = this.state;
+  //   ClientActions.updateTask({
+  //     task: task
+  //   }, this.props.params.id)
+  // },
 
   componentWillReceiveProps: function (newProps) {
     var possibleTask = TasksStore.find(newProps.params.id)

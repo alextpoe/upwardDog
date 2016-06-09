@@ -32133,7 +32133,6 @@
 	      dataType: "json",
 	      data: { user: credentials },
 	      success: function (currentUser) {
-	        console.log("success?");
 	        SessionActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (xhr) {
@@ -32258,7 +32257,6 @@
 	      dataType: "json",
 	      success: function (project) {
 	        ProjectsActions.receiveProject(project);
-	        console.log("success");
 	      }
 	    });
 	  },
@@ -32363,6 +32361,18 @@
 	  },
 	
 	  onChange: function () {
+	    // ClientActions.receiveAllTasks(this.props.params.project_id);
+	    // var projectId = parseInt(this.props.params.project_id);
+	    // var allTasks = TasksStore.all()
+	    //
+	    // var tasks = allTasks.filter(function (task) {
+	    //   return task.project_id === projectId
+	    // })
+	    // // debugger
+	    // this.setState({tasks: tasks})
+	    // debugger
+	    // this.setState({tasks: allTasks})
+	
 	    ProjectsApiUtil.getProject(this.props.params.project_id);
 	
 	    var possibleProject = ProjectsStore.find(this.props.project.id);
@@ -32373,15 +32383,16 @@
 	        edited: false
 	      });
 	    }
+	    //
 	
 	    // this.context.router.push("/user/projects/" + this.props.project + "tasks")
 	  },
 	
 	  componentDidMount: function () {
 	    this.tasksListener = TasksStore.addListener(this.onChange);
-	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
+	    // this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this))
 	    ClientActions.receiveAllTasks(this.props.params.project_id);
-	    SessionApiUtil.fetchCurrentUser();
+	    // SessionApiUtil.fetchCurrentUser()
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
@@ -32390,20 +32401,8 @@
 	
 	  componentWillUnmount: function () {
 	    this.tasksListener.remove();
-	    this.sessionListener.remove();
+	    // this.sessionListener.remove();
 	  },
-	
-	  // clickHandler: function (event) {
-	  //   if (event.target.if === "") {
-	  //     this.context.router.push("/user/tasks/new")
-	  //   } else {
-	  //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
-	  //   }
-	  // },
-	  //
-	  // componentWillReceiveProps: function () {
-	  //   debugger
-	  // },
 	
 	  newTask: function (event) {
 	    event.preventDefault();
@@ -32421,12 +32420,6 @@
 	  render: function () {
 	    var tasks = this.state.tasks ? this.state.tasks : [];
 	    var taskItem = React.createElement('div', null);
-	
-	    // var children = React.Children.map(this.props.children, function (child) {
-	    //   return React.cloneElement(child, {
-	    //     user: SessionStore.currentUser()
-	    //   })
-	    // });
 	
 	    if (tasks) {
 	      taskItem = tasks.map(function (task) {
@@ -32512,9 +32505,12 @@
 	  displayName: 'TasksIndexItem',
 	
 	  clickHandler: function (event) {
-	
 	    event.preventDefault();
-	    ClientActions.deleteTask(this.props.task.id);
+	
+	    var id = this.props.task.id;
+	    var projectId = this.props.task.project_id;
+	
+	    ClientActions.deleteTask(id, projectId);
 	  },
 	
 	  checkOff: function (event) {
@@ -32616,9 +32612,7 @@
 	      type: "GET",
 	      url: "api/user/projects/" + project_id + "/tasks/" + id,
 	      dataType: "json",
-	      success: function () {
-	        console.log("success");
-	      }
+	      success: function () {}
 	    });
 	  },
 	
@@ -33043,13 +33037,13 @@
 	      };
 	    }
 	  },
-	
-	  onBeforeUnload: function () {
-	    var task = this.state;
-	    ClientActions.updateTask({
-	      task: task
-	    }, this.props.params.id);
-	  },
+	  //
+	  // onBeforeUnload: function () {
+	  //   var task = this.state;
+	  //   ClientActions.updateTask({
+	  //     task: task
+	  //   }, this.props.params.id)
+	  // },
 	
 	  componentWillReceiveProps: function (newProps) {
 	    var possibleTask = TasksStore.find(newProps.params.id);
@@ -33866,6 +33860,13 @@
 	  },
 	
 	  render: function () {
+	    var headerLang;
+	    if (this.props.route.path === "/hello/login") {
+	      headerLang = "Log In";
+	    } else {
+	      headerLang = "Sign Up";
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -33876,16 +33877,21 @@
 	        React.createElement(
 	          'h1',
 	          { className: 'form-heading' },
-	          'Log In'
+	          headerLang
 	        ),
 	        this.fieldErrors("base"),
 	        React.createElement(
 	          'div',
 	          { className: 'form-fields' },
 	          React.createElement(
+	            'div',
+	            null,
+	            'Or'
+	          ),
+	          React.createElement(
 	            'a',
 	            { href: '/auth/twitter' },
-	            'Or Use Twitter'
+	            React.createElement('img', { className: 'twitter', src: window.twitter_url })
 	          ),
 	          React.createElement(
 	            'label',
@@ -33923,7 +33929,7 @@
 	        React.createElement(
 	          'button',
 	          { className: 'log-submit', type: 'submit' },
-	          this.formType()
+	          headerLang
 	        )
 	      )
 	    );
@@ -34420,7 +34426,6 @@
 	
 	  componentDidMount: function () {
 	    this.projectsListener = ProjectsStore.addListener(this.onChange);
-	    // debugger
 	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
 	    SessionApiUtil.fetchCurrentUser();
 	  },

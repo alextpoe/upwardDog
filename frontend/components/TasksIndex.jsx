@@ -23,6 +23,18 @@ var TasksIndex = React.createClass({
   },
 
   onChange: function () {
+    // ClientActions.receiveAllTasks(this.props.params.project_id);
+    // var projectId = parseInt(this.props.params.project_id);
+    // var allTasks = TasksStore.all()
+    //
+    // var tasks = allTasks.filter(function (task) {
+    //   return task.project_id === projectId
+    // })
+    // // debugger
+    // this.setState({tasks: tasks})
+    // debugger
+    // this.setState({tasks: allTasks})
+
     ProjectsApiUtil.getProject(this.props.params.project_id)
 
     var possibleProject = ProjectsStore.find(this.props.project.id)
@@ -33,16 +45,16 @@ var TasksIndex = React.createClass({
         edited: false
       })
     }
-
+    //
 
     // this.context.router.push("/user/projects/" + this.props.project + "tasks")
   },
 
   componentDidMount: function () {
     this.tasksListener = TasksStore.addListener(this.onChange)
-    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this))
+    // this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this))
     ClientActions.receiveAllTasks(this.props.params.project_id)
-    SessionApiUtil.fetchCurrentUser()
+    // SessionApiUtil.fetchCurrentUser()
   },
 
   componentWillReceiveProps: function (newProps) {
@@ -51,20 +63,10 @@ var TasksIndex = React.createClass({
 
   componentWillUnmount: function () {
     this.tasksListener.remove();
-    this.sessionListener.remove();
+    // this.sessionListener.remove();
   },
 
-  // clickHandler: function (event) {
-  //   if (event.target.if === "") {
-  //     this.context.router.push("/user/tasks/new")
-  //   } else {
-  //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
-  //   }
-  // },
-  //
-  // componentWillReceiveProps: function () {
-  //   debugger
-  // },
+
 
   newTask: function (event) {
     event.preventDefault();
@@ -83,12 +85,6 @@ var TasksIndex = React.createClass({
   render: function () {
     var tasks = this.state.tasks ? this.state.tasks : [];
     var taskItem = <div></div>;
-
-    // var children = React.Children.map(this.props.children, function (child) {
-    //   return React.cloneElement(child, {
-    //     user: SessionStore.currentUser()
-    //   })
-    // });
 
     if (tasks) {
       taskItem = (

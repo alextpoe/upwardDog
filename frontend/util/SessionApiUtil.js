@@ -9,7 +9,6 @@ var SessionApiUtil = {
       dataType: "json",
       data: { user: credentials },
       success: function (currentUser) {
-        console.log("success?");
         SessionActions.receiveCurrentUser(currentUser);
       },
       error: function (xhr) {
