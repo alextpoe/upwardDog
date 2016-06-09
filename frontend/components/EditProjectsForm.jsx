@@ -54,27 +54,29 @@ var EditProjectsForm = React.createClass({
   render: function () {
     return (
       <div>
-        <form onSubmit={this.onSubmit}>
+        <div className="login"></div>
+        <form className="projects-form" onSubmit={this.onSubmit}>
           <h1 >Edit Project</h1>
-          <div >
-            <label>
-              <span>Title:</span>
+          <div className="projects-form-fields">
+            <label className="projects-fields">
+              <span className="projects-form-span">Title:</span>
               <input
+                className="projects-form-input"
                 type="text"
-                className="username"
                 value={this.state.title}
                 onChange={this.titleChange}/>
             </label>
 
           <br />
 
-            <label >
-              <span >
+            <label className="projects-fields">
+              <span className="projects-form-span">
                 Description:
               </span>
 
               <input
-                className="password"
+                className="projects-form-input"
+                placeholder="Enter Description Here"
                 type="text"
                 value={this.state.description}
                 onChange={this.descriptionChange}/>
@@ -82,7 +84,7 @@ var EditProjectsForm = React.createClass({
           </div>
         <br />
 
-          <button type="submit">Edit</button>
+          <button className="projects-form-submit" type="submit">Edit</button>
         </form>
 
       </div>

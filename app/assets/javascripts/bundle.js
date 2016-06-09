@@ -54,19 +54,19 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	
 	var Landing = __webpack_require__(220);
-	var App = __webpack_require__(268);
-	var LoginForm = __webpack_require__(269);
-	var TasksIndex = __webpack_require__(247);
-	var TasksCreate = __webpack_require__(255);
-	var TasksEdit = __webpack_require__(256);
+	var App = __webpack_require__(272);
+	var LoginForm = __webpack_require__(273);
+	var TasksIndex = __webpack_require__(250);
+	var TasksCreate = __webpack_require__(259);
+	var TasksEdit = __webpack_require__(260);
 	var ProjectsIndex = __webpack_require__(276);
-	var ProjectsDetail = __webpack_require__(278);
-	var NewProjectsForm = __webpack_require__(279);
+	var ProjectsDetail = __webpack_require__(279);
+	var NewProjectsForm = __webpack_require__(278);
 	var EditProjectsForm = __webpack_require__(280);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var TasksApiUtil = __webpack_require__(250);
+	var TasksApiUtil = __webpack_require__(253);
 	
 	var routes = React.createElement(
 	  Route,
@@ -25248,8 +25248,8 @@
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var ProjectsApiUtil = __webpack_require__(272);
-	var TasksIndex = __webpack_require__(247);
+	var ProjectsApiUtil = __webpack_require__(247);
+	var TasksIndex = __webpack_require__(250);
 	
 	var Landing = React.createClass({
 	  displayName: 'Landing',
@@ -32223,18 +32223,131 @@
 /* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var ProjectsActions = __webpack_require__(248);
+	
+	var ProjectsApiUtil = {
+	
+	  receiveAllProjects: function (projects, complete) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/projects",
+	      dataType: "json",
+	      data: { projects: projects },
+	      success: function (data) {
+	        ProjectsActions.receiveAllProjects(data);
+	      },
+	      complete: complete
+	    });
+	  },
+	  createProject: function (project) {
+	    $.ajax({
+	      type: "POST",
+	      url: "api/user/projects",
+	      dataType: "json",
+	      data: { project: project },
+	      success: function (project) {
+	        ProjectsActions.receiveProject(project);
+	      }
+	    });
+	  },
+	
+	  getProject: function (id) {
+	    $.ajax({
+	      type: "GET",
+	      url: "api/user/projects/" + id,
+	      dataType: "json",
+	      success: function (project) {
+	        ProjectsActions.receiveProject(project);
+	        console.log("success");
+	      }
+	    });
+	  },
+	
+	  editProject: function (project, id) {
+	    $.ajax({
+	      type: "PATCH",
+	      url: "api/user/projects/" + id,
+	      dataType: "json",
+	      data: { project: project },
+	      success: function (project) {
+	        ProjectsActions.receiveProject(project);
+	      }
+	    });
+	  },
+	
+	  deleteProject: function (id) {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "api/user/projects/" + id,
+	      success: function (project) {
+	        ProjectsActions.removeProject(project);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = ProjectsApiUtil;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(240);
+	var ProjectsConstants = __webpack_require__(249);
+	
+	var ProjectsActions = {
+	  receiveAllProjects: function (projects) {
+	    AppDispatcher.dispatch({
+	      actionType: ProjectsConstants.PROJECTS_RECEIVED,
+	      projects: projects
+	    });
+	  },
+	
+	  receiveProject: function (project) {
+	    AppDispatcher.dispatch({
+	      actionType: ProjectsConstants.PROJECT_RECEIVED,
+	      project: project
+	    });
+	  },
+	
+	  removeProject: function (project) {
+	    AppDispatcher.dispatch({
+	      actionType: ProjectsConstants.PROJECT_REMOVED,
+	      project: project
+	    });
+	  }
+	};
+	
+	module.exports = ProjectsActions;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports) {
+
+	var ProjectsConstants = {
+	  PROJECTS_RECEIVED: "PROJECTS_RECEIVED",
+	  PROJECT_RECEIVED: "PROJECT_RECEIVED",
+	  PROJECT_REMOVED: "PROJECT_REMOVED"
+	};
+	
+	module.exports = ProjectsConstants;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
-	var ProjectsStore = __webpack_require__(275);
-	var ClientActions = __webpack_require__(249);
-	var TasksForm = __webpack_require__(254);
+	var TasksIndexItem = __webpack_require__(251);
+	var TasksStore = __webpack_require__(256);
+	var ProjectsStore = __webpack_require__(257);
+	var ClientActions = __webpack_require__(252);
+	var TasksForm = __webpack_require__(258);
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var ProjectsApiUtil = __webpack_require__(272);
-	var TasksCreate = __webpack_require__(255);
-	var TasksEdit = __webpack_require__(256);
+	var ProjectsApiUtil = __webpack_require__(247);
+	var TasksCreate = __webpack_require__(259);
+	var TasksEdit = __webpack_require__(260);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32387,13 +32500,13 @@
 	module.exports = TasksIndex;
 
 /***/ },
-/* 248 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var ClientActions = __webpack_require__(249);
-	var TasksStore = __webpack_require__(253);
+	var ClientActions = __webpack_require__(252);
+	var TasksStore = __webpack_require__(256);
 	
 	var TasksIndexItem = React.createClass({
 	  displayName: 'TasksIndexItem',
@@ -32440,11 +32553,11 @@
 	module.exports = TasksIndexItem;
 
 /***/ },
-/* 249 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var TasksApiUtil = __webpack_require__(250);
-	var ProjectsApiUtil = __webpack_require__(272);
+	var TasksApiUtil = __webpack_require__(253);
+	var ProjectsApiUtil = __webpack_require__(247);
 	
 	var ClientActions = {
 	  receiveAllTasks: TasksApiUtil.receiveAllTasks,
@@ -32469,10 +32582,10 @@
 	module.exports = ClientActions;
 
 /***/ },
-/* 250 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var TasksActions = __webpack_require__(251);
+	var TasksActions = __webpack_require__(254);
 	
 	var TasksApiUtil = {
 	  receiveAllTasks: function (project_id) {
@@ -32535,11 +32648,11 @@
 	module.exports = TasksApiUtil;
 
 /***/ },
-/* 251 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(252);
+	var TasksConstants = __webpack_require__(255);
 	
 	var TasksActions = {
 	  receiveAllTasks: function (tasks) {
@@ -32567,7 +32680,7 @@
 	module.exports = TasksActions;
 
 /***/ },
-/* 252 */
+/* 255 */
 /***/ function(module, exports) {
 
 	var TasksConstants = {
@@ -32579,14 +32692,14 @@
 	module.exports = TasksConstants;
 
 /***/ },
-/* 253 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
 	var AppDispatcher = __webpack_require__(240);
-	var TasksConstants = __webpack_require__(252);
+	var TasksConstants = __webpack_require__(255);
 	var SessionStore = __webpack_require__(221);
-	var ProjectsStore = __webpack_require__(275);
+	var ProjectsStore = __webpack_require__(257);
 	
 	var TasksStore = new Store(AppDispatcher);
 	
@@ -32641,16 +32754,97 @@
 	module.exports = TasksStore;
 
 /***/ },
-/* 254 */
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(222).Store;
+	var AppDispatcher = __webpack_require__(240);
+	var ProjectsConstants = __webpack_require__(249);
+	var SessionStore = __webpack_require__(221);
+	
+	var ProjectsStore = new Store(AppDispatcher);
+	
+	window._projects = {};
+	var _currentUser = {};
+	var _mostRecentProject = {};
+	
+	var _resetProjects = function (projects) {
+	  _projects = {};
+	  // _currentUser = {};
+	  // var userProjects = [];
+	  //
+	  //
+	  // _currentUser = SessionStore.currentUser();
+	  // projects.forEach(function (project) {
+	  //   if (project.users.indexOf(_currentUser) >= 0){
+	  //     userProjects.push(project);
+	  //   }
+	  // });
+	  projects.forEach(function (project) {
+	    _projects[project.id] = project;
+	  });
+	};
+	
+	var _setProject = function (project) {
+	  _mostRecentProject = {};
+	  _projects[project.id] = project;
+	  _mostRecentProject = project;
+	};
+	
+	var _removeProject = function (project) {
+	  if (_projects[project.id] === _mostRecentProject) {
+	    _mostRecentProject = {};
+	  }
+	
+	  delete _projects[project.id];
+	};
+	
+	ProjectsStore.all = function () {
+	  var projects = Object.keys(_projects).map(function (id) {
+	    return _projects[id];
+	  });
+	
+	  return projects;
+	};
+	
+	ProjectsStore.find = function (id) {
+	  return _projects[id];
+	};
+	
+	ProjectsStore.mostRecentProject = function () {
+	  return $.extend({}, _mostRecentProject);
+	};
+	
+	ProjectsStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ProjectsConstants.PROJECTS_RECEIVED:
+	      _resetProjects(payload.projects);
+	      ProjectsStore.__emitChange();
+	      break;
+	    case ProjectsConstants.PROJECT_RECEIVED:
+	      _setProject(payload.project);
+	      ProjectsStore.__emitChange();
+	      break;
+	    case ProjectsConstants.PROJECT_REMOVED:
+	      _removeProject(payload.project);
+	      ProjectsStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ProjectsStore;
+
+/***/ },
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
+	var TasksIndexItem = __webpack_require__(251);
+	var TasksStore = __webpack_require__(256);
 	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(249);
-	var ProjectsApiUtil = __webpack_require__(272);
+	var ClientActions = __webpack_require__(252);
+	var ProjectsApiUtil = __webpack_require__(247);
 	
 	var TasksForm = React.createClass({
 	  displayName: 'TasksForm',
@@ -32741,16 +32935,16 @@
 	module.exports = TasksForm;
 
 /***/ },
-/* 255 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
+	var TasksIndexItem = __webpack_require__(251);
+	var TasksStore = __webpack_require__(256);
 	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(249);
-	var TasksForm = __webpack_require__(254);
+	var ClientActions = __webpack_require__(252);
+	var TasksForm = __webpack_require__(258);
 	
 	var TasksCreate = React.createClass({
 	  displayName: 'TasksCreate',
@@ -32811,16 +33005,16 @@
 	module.exports = TasksCreate;
 
 /***/ },
-/* 256 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var OnUnload = __webpack_require__(257).OnUnload;
-	var TasksIndexItem = __webpack_require__(248);
-	var TasksStore = __webpack_require__(253);
+	var OnUnload = __webpack_require__(261).OnUnload;
+	var TasksIndexItem = __webpack_require__(251);
+	var TasksStore = __webpack_require__(256);
 	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(249);
+	var ClientActions = __webpack_require__(252);
 	
 	var TasksEdit = React.createClass({
 	  displayName: 'TasksEdit',
@@ -32924,8 +33118,8 @@
 	      React.createElement(
 	        'li',
 	        null,
-	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange }),
-	        'Project ID:'
+	        'Project ID:',
+	        React.createElement('input', { value: project, type: this.inputType, onClick: this.projectClick, onChange: this.projectChange })
 	      ),
 	      React.createElement(
 	        'li',
@@ -32950,24 +33144,24 @@
 	module.exports = TasksEdit;
 
 /***/ },
-/* 257 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  OnResize: __webpack_require__(258),
-	  OnScroll: __webpack_require__(266),
-	  OnUnload: __webpack_require__(267)
+	  OnResize: __webpack_require__(262),
+	  OnScroll: __webpack_require__(270),
+	  OnUnload: __webpack_require__(271)
 	};
 	
 
 
 /***/ },
-/* 258 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global window */
 	
-	var throttle = __webpack_require__(259);
+	var throttle = __webpack_require__(263);
 	
 	module.exports = {
 	  getInitialState: function() {
@@ -33000,7 +33194,7 @@
 
 
 /***/ },
-/* 259 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33011,9 +33205,9 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var debounce = __webpack_require__(260),
-	    isFunction = __webpack_require__(261),
-	    isObject = __webpack_require__(262);
+	var debounce = __webpack_require__(264),
+	    isFunction = __webpack_require__(265),
+	    isObject = __webpack_require__(266);
 	
 	/** Used as an internal `_.debounce` options object */
 	var debounceOptions = {
@@ -33077,7 +33271,7 @@
 
 
 /***/ },
-/* 260 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33088,9 +33282,9 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var isFunction = __webpack_require__(261),
-	    isObject = __webpack_require__(262),
-	    now = __webpack_require__(264);
+	var isFunction = __webpack_require__(265),
+	    isObject = __webpack_require__(266),
+	    now = __webpack_require__(268);
 	
 	/* Native method shortcuts for methods with the same name as other `lodash` methods */
 	var nativeMax = Math.max;
@@ -33239,7 +33433,7 @@
 
 
 /***/ },
-/* 261 */
+/* 265 */
 /***/ function(module, exports) {
 
 	/**
@@ -33272,7 +33466,7 @@
 
 
 /***/ },
-/* 262 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33283,7 +33477,7 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var objectTypes = __webpack_require__(263);
+	var objectTypes = __webpack_require__(267);
 	
 	/**
 	 * Checks if `value` is the language type of Object.
@@ -33317,7 +33511,7 @@
 
 
 /***/ },
-/* 263 */
+/* 267 */
 /***/ function(module, exports) {
 
 	/**
@@ -33343,7 +33537,7 @@
 
 
 /***/ },
-/* 264 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33354,7 +33548,7 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var isNative = __webpack_require__(265);
+	var isNative = __webpack_require__(269);
 	
 	/**
 	 * Gets the number of milliseconds that have elapsed since the Unix epoch
@@ -33377,7 +33571,7 @@
 
 
 /***/ },
-/* 265 */
+/* 269 */
 /***/ function(module, exports) {
 
 	/**
@@ -33417,12 +33611,12 @@
 
 
 /***/ },
-/* 266 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global window */
 	
-	var throttle = __webpack_require__(259);
+	var throttle = __webpack_require__(263);
 	
 	module.exports = {
 	  getInitialState: function() {
@@ -33448,7 +33642,7 @@
 
 
 /***/ },
-/* 267 */
+/* 271 */
 /***/ function(module, exports) {
 
 	/*global window */
@@ -33475,14 +33669,14 @@
 
 
 /***/ },
-/* 268 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var TasksIndex = __webpack_require__(247);
+	var TasksIndex = __webpack_require__(250);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -33575,16 +33769,16 @@
 	module.exports = App;
 
 /***/ },
-/* 269 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
-	var ErrorStore = __webpack_require__(270);
+	var ErrorStore = __webpack_require__(274);
 	var SessionApiUtil = __webpack_require__(244);
-	var UserApiUtil = __webpack_require__(271);
-	var ProjectsApiUtil = __webpack_require__(272);
+	var UserApiUtil = __webpack_require__(275);
+	var ProjectsApiUtil = __webpack_require__(247);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -33739,7 +33933,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 270 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
@@ -33789,7 +33983,7 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 271 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionActions = __webpack_require__(245);
@@ -33817,209 +34011,19 @@
 	module.exports = UserApiUtil;
 
 /***/ },
-/* 272 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ProjectsActions = __webpack_require__(273);
-	
-	var ProjectsApiUtil = {
-	
-	  receiveAllProjects: function (projects, complete) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/projects",
-	      dataType: "json",
-	      data: { projects: projects },
-	      success: function (data) {
-	        ProjectsActions.receiveAllProjects(data);
-	      },
-	      complete: complete
-	    });
-	  },
-	  createProject: function (project) {
-	    $.ajax({
-	      type: "POST",
-	      url: "api/user/projects",
-	      dataType: "json",
-	      data: { project: project },
-	      success: function (project) {
-	        ProjectsActions.receiveProject(project);
-	      }
-	    });
-	  },
-	
-	  getProject: function (id) {
-	    $.ajax({
-	      type: "GET",
-	      url: "api/user/projects/" + id,
-	      dataType: "json",
-	      success: function (project) {
-	        ProjectsActions.receiveProject(project);
-	        console.log("success");
-	      }
-	    });
-	  },
-	
-	  editProject: function (project, id) {
-	    $.ajax({
-	      type: "PATCH",
-	      url: "api/user/projects/" + id,
-	      dataType: "json",
-	      data: { project: project },
-	      success: function (project) {
-	        ProjectsActions.receiveProject(project);
-	      }
-	    });
-	  },
-	
-	  deleteProject: function (id) {
-	    $.ajax({
-	      type: "DELETE",
-	      url: "api/user/projects/" + id,
-	      success: function (project) {
-	        ProjectsActions.removeProject(project);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = ProjectsApiUtil;
-
-/***/ },
-/* 273 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(240);
-	var ProjectsConstants = __webpack_require__(274);
-	
-	var ProjectsActions = {
-	  receiveAllProjects: function (projects) {
-	    AppDispatcher.dispatch({
-	      actionType: ProjectsConstants.PROJECTS_RECEIVED,
-	      projects: projects
-	    });
-	  },
-	
-	  receiveProject: function (project) {
-	    AppDispatcher.dispatch({
-	      actionType: ProjectsConstants.PROJECT_RECEIVED,
-	      project: project
-	    });
-	  },
-	
-	  removeProject: function (project) {
-	    AppDispatcher.dispatch({
-	      actionType: ProjectsConstants.PROJECT_REMOVED,
-	      project: project
-	    });
-	  }
-	};
-	
-	module.exports = ProjectsActions;
-
-/***/ },
-/* 274 */
-/***/ function(module, exports) {
-
-	var ProjectsConstants = {
-	  PROJECTS_RECEIVED: "PROJECTS_RECEIVED",
-	  PROJECT_RECEIVED: "PROJECT_RECEIVED",
-	  PROJECT_REMOVED: "PROJECT_REMOVED"
-	};
-	
-	module.exports = ProjectsConstants;
-
-/***/ },
-/* 275 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(222).Store;
-	var AppDispatcher = __webpack_require__(240);
-	var ProjectsConstants = __webpack_require__(274);
-	var SessionStore = __webpack_require__(221);
-	
-	var ProjectsStore = new Store(AppDispatcher);
-	
-	window._projects = {};
-	var _currentUser = {};
-	var _mostRecentProject = {};
-	
-	var _resetProjects = function (projects) {
-	  _projects = {};
-	  // _currentUser = {};
-	  // var userProjects = [];
-	  //
-	  //
-	  // _currentUser = SessionStore.currentUser();
-	  // projects.forEach(function (project) {
-	  //   if (project.users.indexOf(_currentUser) >= 0){
-	  //     userProjects.push(project);
-	  //   }
-	  // });
-	  projects.forEach(function (project) {
-	    _projects[project.id] = project;
-	  });
-	};
-	
-	var _setProject = function (project) {
-	  _mostRecentProject = {};
-	  _projects[project.id] = project;
-	  _mostRecentProject = project;
-	};
-	
-	var _removeProject = function (project) {
-	  delete _projects[project.id];
-	};
-	
-	ProjectsStore.all = function () {
-	  var projects = Object.keys(_projects).map(function (id) {
-	    return _projects[id];
-	  });
-	
-	  return projects;
-	};
-	
-	ProjectsStore.find = function (id) {
-	  return _projects[id];
-	};
-	
-	ProjectsStore.mostRecentProject = function () {
-	  return $.extend({}, _mostRecentProject);
-	};
-	
-	ProjectsStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ProjectsConstants.PROJECTS_RECEIVED:
-	      _resetProjects(payload.projects);
-	      ProjectsStore.__emitChange();
-	      break;
-	    case ProjectsConstants.PROJECT_RECEIVED:
-	      _setProject(payload.project);
-	      ProjectsStore.__emitChange();
-	      break;
-	    case ProjectsConstants.PROJECT_REMOVED:
-	      _removeProject(payload.project);
-	      ProjectsStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = ProjectsStore;
-
-/***/ },
 /* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var ClientActions = __webpack_require__(249);
+	var ClientActions = __webpack_require__(252);
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	var ProjectsIndexItem = __webpack_require__(277);
-	var ProjectsStore = __webpack_require__(275);
-	var TasksIndex = __webpack_require__(247);
-	var TasksStore = __webpack_require__(253);
-	var NewProjectsForm = __webpack_require__(279);
+	var ProjectsStore = __webpack_require__(257);
+	var TasksIndex = __webpack_require__(250);
+	var TasksStore = __webpack_require__(256);
+	var NewProjectsForm = __webpack_require__(278);
 	
 	var ProjectsIndex = React.createClass({
 	  displayName: 'ProjectsIndex',
@@ -34030,7 +34034,9 @@
 	  },
 	
 	  getInitialState: function () {
-	    return { projects: ProjectsStore.all(), clicked: false };
+	    return {
+	      projects: "",
+	      mousedOver: false };
 	  },
 	
 	  onChange: function () {
@@ -34049,7 +34055,12 @@
 	    } else {
 	      this.setState({ projects: projects });
 	    }
-	    this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id);
+	
+	    if (ProjectsStore.mostRecentProject().id) {
+	      this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id);
+	    } else {
+	      this.context.router.push("/user/projects/" + filteredProjects[0].id);
+	    }
 	  },
 	
 	  componentDidMount: function () {
@@ -34067,6 +34078,16 @@
 	    event.preventDefault();
 	    this.setState({ clicked: true });
 	    this.context.router.push("/user/projects/new");
+	  },
+	
+	  mouseOver: function (event) {
+	    event.preventDefault();
+	    this.setState({ mousedOver: true });
+	  },
+	
+	  mouseLeave: function (event) {
+	    event.preventDefault();
+	    this.setState({ mousedOver: false });
 	  },
 	
 	  render: function () {
@@ -34114,6 +34135,16 @@
 	    //     </div>
 	    //   )
 	    // } else {
+	    var newProject = React.createElement('div', null);
+	
+	    if (this.state.mousedOver) {
+	      newProject = React.createElement(
+	        'div',
+	        null,
+	        'Create a New Project'
+	      );
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'whole-page group' },
@@ -34123,9 +34154,10 @@
 	        React.createElement('img', { src: window.landing_logo_url }),
 	        React.createElement(
 	          'button',
-	          { onClick: this.newProject, className: 'signup' },
+	          { onClick: this.newProject, onMouseOver: this.mouseOver, onMouseLeave: this.mouseLeave, className: 'new-project-button' },
 	          '+'
 	        ),
+	        newProject,
 	        React.createElement(
 	          'ul',
 	          null,
@@ -34134,7 +34166,7 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'upward-dog-main' },
+	        { className: 'upward-dog-main group' },
 	        React.createElement(
 	          'div',
 	          null,
@@ -34154,8 +34186,8 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var ClientActions = __webpack_require__(249);
-	var ProjectsStore = __webpack_require__(253);
+	var ClientActions = __webpack_require__(252);
+	var ProjectsStore = __webpack_require__(256);
 	
 	var ProjectsIndexItem = React.createClass({
 	  displayName: 'ProjectsIndexItem',
@@ -34202,12 +34234,12 @@
 	        React.createElement(
 	          'button',
 	          { type: 'submit', onClick: this.deleteClick },
-	          'Delete Project'
+	          'Delete'
 	        ),
 	        React.createElement(
 	          'button',
 	          { type: 'submit', onClick: this.editClick },
-	          'Edit Project'
+	          'Edit'
 	        )
 	      );
 	    } else {
@@ -34233,10 +34265,115 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndex = __webpack_require__(247);
+	var ProjectsApiUtil = __webpack_require__(247);
+	
+	var NewProjectsForm = React.createClass({
+	  displayName: 'NewProjectsForm',
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return { title: "", description: "" };
+	  },
+	
+	  bgClick: function () {
+	    this.context.router.push("/user/projects/" + this.props.params.project_id);
+	  },
+	
+	  onSubmit: function (event) {
+	    var that = this;
+	    event.preventDefault();
+	
+	    var projectData = {
+	      title: this.state.title,
+	      description: this.state.description
+	    };
+	
+	    ProjectsApiUtil.createProject(projectData);
+	  },
+	
+	  titleChange: function (event) {
+	    var newTitle = event.target.value;
+	    this.setState({ title: newTitle });
+	  },
+	
+	  descriptionChange: function (event) {
+	    var newDescription = event.target.value;
+	    this.setState({ description: newDescription });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement('div', { className: 'login' }),
+	      React.createElement(
+	        'form',
+	        { className: 'projects-form', onSubmit: this.onSubmit },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Create Project'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'projects-form-fields' },
+	          React.createElement(
+	            'label',
+	            { className: 'projects-fields' },
+	            React.createElement(
+	              'span',
+	              { className: 'projects-form-span' },
+	              'Title:'
+	            ),
+	            React.createElement('input', {
+	              className: 'projects-form-input',
+	              type: 'text',
+	              value: this.state.title,
+	              onChange: this.titleChange })
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            { className: 'projects-fields' },
+	            React.createElement(
+	              'span',
+	              { className: 'projects-form-span' },
+	              'Description:'
+	            ),
+	            React.createElement('input', {
+	              className: 'projects-form-input',
+	              placeholder: 'Enter Description Here',
+	              type: 'text',
+	              value: this.state.description,
+	              onChange: this.descriptionChange })
+	          )
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'button',
+	          { className: 'projects-form-submit', type: 'submit' },
+	          'Create'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = NewProjectsForm;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var TasksIndex = __webpack_require__(250);
 	var ProjectsIndex = __webpack_require__(276);
-	var ProjectsStore = __webpack_require__(275);
-	var ClientActions = __webpack_require__(249);
+	var ProjectsStore = __webpack_require__(257);
+	var ClientActions = __webpack_require__(252);
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	
@@ -34252,13 +34389,6 @@
 	      title: "",
 	      description: ""
 	    };
-	    // }
-	    //     manager_id: "",
-	    //     assignee_id: SessionStore.currentUser().id,
-	    //     project_id: "",
-	    //     completed: false
-	    //   }
-	    // }
 	  },
 	
 	  onChange: function () {
@@ -34306,25 +34436,12 @@
 	        id: project.id
 	      });
 	    }
-	    // this.setState({ projects: newProps.projects })
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.sessionListener.remove();
 	    this.projectsListener.remove();
 	  },
-	
-	  // clickHandler: function (event) {
-	  //   if (event.target.if === "") {
-	  //     this.context.router.push("/user/tasks/new")
-	  //   } else {
-	  //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
-	  //   }
-	  // },
-	  //
-	  // componentWillReceiveProps: function () {
-	  //   debugger
-	  // },
 	
 	  logout: function () {
 	    if (SessionStore.isUserLoggedIn()) {
@@ -34337,9 +34454,7 @@
 	
 	  render: function () {
 	    var project = this.state;
-	    var projectId = this.props.params.id ? this.props.params.id : "";
 	    var projectHeader = project.title;
-	    var projectTasks = project.tasks;
 	
 	    var children = React.Children.map(this.props.children, function (child) {
 	      return React.cloneElement(child, {
@@ -34362,7 +34477,7 @@
 	          null,
 	          React.createElement(
 	            'span',
-	            { className: 'user-logo' },
+	            { className: 'user-logo-header' },
 	            user
 	          ),
 	          projectHeader
@@ -34376,116 +34491,13 @@
 	module.exports = ProjectsDetail;
 
 /***/ },
-/* 279 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var ProjectsApiUtil = __webpack_require__(272);
-	
-	var NewProjectsForm = React.createClass({
-	  displayName: 'NewProjectsForm',
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  getInitialState: function () {
-	    return { title: "", description: "" };
-	  },
-	
-	  bgClick: function () {
-	    this.context.router.push("/user/projects/" + this.props.params.project_id);
-	  },
-	
-	  onSubmit: function (event) {
-	    var that = this;
-	    event.preventDefault();
-	
-	    var projectData = {
-	      title: this.state.title,
-	      description: this.state.description
-	    };
-	
-	    ProjectsApiUtil.createProject(projectData);
-	  },
-	
-	  titleChange: function (event) {
-	    var newTitle = event.target.value;
-	    this.setState({ title: newTitle });
-	  },
-	
-	  descriptionChange: function (event) {
-	    var newDescription = event.target.value;
-	    this.setState({ description: newDescription });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.onSubmit },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Create A New Project'
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          React.createElement(
-	            'label',
-	            null,
-	            React.createElement(
-	              'span',
-	              null,
-	              'Title:'
-	            ),
-	            React.createElement('input', {
-	              type: 'text',
-	              className: 'username',
-	              value: this.state.title,
-	              onChange: this.titleChange })
-	          ),
-	          React.createElement('br', null),
-	          React.createElement(
-	            'label',
-	            null,
-	            React.createElement(
-	              'span',
-	              null,
-	              'Description:'
-	            ),
-	            React.createElement('input', {
-	              className: 'password',
-	              type: 'text',
-	              value: this.state.description,
-	              onChange: this.descriptionChange })
-	          )
-	        ),
-	        React.createElement('br', null),
-	        React.createElement(
-	          'button',
-	          { type: 'submit' },
-	          'Create Project'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = NewProjectsForm;
-
-/***/ },
 /* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var ProjectsApiUtil = __webpack_require__(272);
-	var ProjectsStore = __webpack_require__(275);
+	var ProjectsApiUtil = __webpack_require__(247);
+	var ProjectsStore = __webpack_require__(257);
 	
 	var EditProjectsForm = React.createClass({
 	  displayName: 'EditProjectsForm',
@@ -34540,9 +34552,10 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement('div', { className: 'login' }),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.onSubmit },
+	        { className: 'projects-form', onSubmit: this.onSubmit },
 	        React.createElement(
 	          'h1',
 	          null,
@@ -34550,32 +34563,33 @@
 	        ),
 	        React.createElement(
 	          'div',
-	          null,
+	          { className: 'projects-form-fields' },
 	          React.createElement(
 	            'label',
-	            null,
+	            { className: 'projects-fields' },
 	            React.createElement(
 	              'span',
-	              null,
+	              { className: 'projects-form-span' },
 	              'Title:'
 	            ),
 	            React.createElement('input', {
+	              className: 'projects-form-input',
 	              type: 'text',
-	              className: 'username',
 	              value: this.state.title,
 	              onChange: this.titleChange })
 	          ),
 	          React.createElement('br', null),
 	          React.createElement(
 	            'label',
-	            null,
+	            { className: 'projects-fields' },
 	            React.createElement(
 	              'span',
-	              null,
+	              { className: 'projects-form-span' },
 	              'Description:'
 	            ),
 	            React.createElement('input', {
-	              className: 'password',
+	              className: 'projects-form-input',
+	              placeholder: 'Enter Description Here',
 	              type: 'text',
 	              value: this.state.description,
 	              onChange: this.descriptionChange })
@@ -34584,7 +34598,7 @@
 	        React.createElement('br', null),
 	        React.createElement(
 	          'button',
-	          { type: 'submit' },
+	          { className: 'projects-form-submit', type: 'submit' },
 	          'Edit'
 	        )
 	      )

@@ -14,17 +14,10 @@ var ProjectsDetail = React.createClass({
   },
 
   getInitialState: function () {
-      return {
-        title: "",
-        description: ""
-      }
-    // }
-    //     manager_id: "",
-    //     assignee_id: SessionStore.currentUser().id,
-    //     project_id: "",
-    //     completed: false
-    //   }
-    // }
+    return {
+      title: "",
+      description: ""
+    }
   },
 
   onChange: function () {
@@ -73,25 +66,12 @@ var ProjectsDetail = React.createClass({
         id: project.id
       })
     }
-    // this.setState({ projects: newProps.projects })
   },
 
   componentWillUnmount: function () {
     this.sessionListener.remove();
     this.projectsListener.remove();
   },
-
-  // clickHandler: function (event) {
-  //   if (event.target.if === "") {
-  //     this.context.router.push("/user/tasks/new")
-  //   } else {
-  //     this.context.router.push("/user/tasks/" + event.target.id + "edit")
-  //   }
-  // },
-  //
-  // componentWillReceiveProps: function () {
-  //   debugger
-  // },
 
   logout: function () {
     if (SessionStore.isUserLoggedIn()) {
@@ -106,9 +86,7 @@ var ProjectsDetail = React.createClass({
 
   render: function () {
     var project = this.state;
-    var projectId = this.props.params.id ? this.props.params.id : "";
     var projectHeader = project.title
-    var projectTasks = project.tasks
 
     var children = React.Children.map(this.props.children, function (child) {
       return React.cloneElement(child, {
@@ -124,7 +102,7 @@ var ProjectsDetail = React.createClass({
         <div className="task-header">
           {this.logout()}
           <h1>
-            <span className="user-logo">
+            <span className="user-logo-header">
               { user }
             </span>
             { projectHeader }

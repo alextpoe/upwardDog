@@ -103,7 +103,7 @@ var TasksEdit = React.createClass({
     }
     return (
       <ul className="edit-list">
-        <li><input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/>Project ID:</li>
+        <li>Project ID:<input value={project} type={this.inputType} onClick={this.projectClick} onChange={this.projectChange}/></li>
         <li className="title">
           {checkmark}
           <input value={this.state.title} onChange={this.titleChange}/>

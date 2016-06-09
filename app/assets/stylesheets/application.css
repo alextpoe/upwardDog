@@ -172,6 +172,7 @@
    bottom: 0px;
    margin: auto;
    background: rgba(0, 0, 0, 0.4);
+   z-index: -1;
  }
 
  .login-header{
@@ -265,10 +266,18 @@
    z-index: 0;
  }
 
+ .sidebar > div{
+   color: #fff;
+   text-align: center;
+
+ }
+
  .upward-dog-main {
    float: left;
    overflow: hidden;
-   position: relative;
+   position: absolute;
+   top: 0;
+   bottom: 0;
    left: 244px;
    width: calc(100% - 244px);
  }
@@ -280,6 +289,23 @@
    font-family: 'Montserrat', sans-serif;
    -webkit-box-orient: horizontal;
    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+   padding-bottom: 10px;
+ }
+
+ .task-header > h1{
+   vertical-align: middle;
+ }
+
+ .user-logo-header{
+   background: #fc91ad;
+   border-radius: 50%;
+   font-weight: bold;
+   font-size: 12px;
+   text-transform: uppercase;
+   width: 24px;
+   padding: 8px 7px;
+   margin-right: 10px;
+   color: #fff;
  }
 
  .user-logo{
@@ -289,7 +315,7 @@
    font-size: 12px;
    text-transform: uppercase;
    width: 24px;
-   padding: 8px 8px;
+   padding: 8px 7px;
    margin-right: 10px;
    color: #fff;
  }
@@ -369,6 +395,7 @@
    padding: 5px;
    border-bottom: 1px solid #CDCFD2;
    position: relative;
+   vertical-align: -webkit-baseline-middle;
  }
 
  .task-list-item > Link {
@@ -397,6 +424,8 @@
 
  .delete{
    float: right;
+   position: relative;
+   top: 10px;
  }
 
  .edit-list{
@@ -418,7 +447,7 @@
    position:relative;
    padding: 5px 10px 5px 5px;
    width: 100%;
-   margin: auto;
+   margin-left: 10px;
  }
 
  .edit-list > li> input:hover,
@@ -471,6 +500,7 @@
    height: 40px;
    width: 100%;
    font-size: 14px;
+   margin-left: 10px;
  }
 
  .update-submit{
@@ -478,3 +508,121 @@
    border-top: 1px solid #ccc;
    width: 100%;
  }
+
+ .new-project-button{
+   position: relative;
+   text-align: center;
+   color: #fff;
+   display: inline-block;
+   height: 32px;
+   font-size: 21px;
+   padding:  5px 15px;
+   background: linear-gradient(to top right, #fc636b, #ff6d92 35%, #ffb900 100%);
+   border: 1px solid #6a67ce;
+   border-radius: 50%;
+   text-align: center;
+   top: 50%;
+   right: 25px;
+   bottom: 5px;
+   margin-top: 50px;
+   margin-bottom: 50px;
+   margin-left: 120px;
+   transition: all 0.5s ease;
+   transition-property: background-color, -webkit-box-shadow;
+ }
+
+ .new-project-button:hover{
+   background-color: #7d26cd;
+   -webkit-box-shadow: 0 0 0 2px #9b30FF;
+ }
+
+.project-list-item{
+  color: #E1E2E4;
+  font-weight: 200;
+  font-size: 14px;
+  margin: 10px 25px;
+}
+
+.project-list-item > button {
+  width: 50px;
+  position: relative;
+  color: #6969FF;
+  display: inline-block;
+  height: 13px;
+  font-size: 10px;
+  padding:  0px 5px;
+  background-color: transparent;
+  border: 1px solid #6a67ce;
+  border-radius: 3px;
+  margin-right: 10px;
+  text-align: center;
+  transition: all 0.5s ease;
+  transition-property: -webkit-box-shadow, background-color, color;
+}
+
+.project-list-item > button:hover{
+  border: 0px;
+  background-color: #02CEFF;
+  -webkit-box-shadow: 0 0 0 3px #80E6FF;
+  color: #fff;
+}
+
+.projects-form{
+  background: #2E3C54;
+  height: 350px;
+  width: 450px;
+  margin: auto;
+  color: #E1E2E4;
+  border-radius: 3px;
+  top: 100px;
+  position: relative;
+}
+
+.projects-form > h1{
+  text-align: center;
+  margin-bottom: 30px;
+  padding-top: 15px;
+}
+
+.projects-form-fields{
+  margin: 20px;
+  display: block;
+}
+
+.projects-fields{
+  display: block;
+  margin-bottom: 10px;
+}
+
+.projects-form-input{
+  border: 1px solid;
+  padding: 8px;
+  width: 90%;
+  border-radius: 3px;
+  font-size: small;
+  display: block;
+}
+
+.projects-form-span{
+  display: block;
+  font-size: larger;
+  margin-bottom: 4px;
+}
+
+.projects-form-submit{
+  position: relative;
+  color: #fff;
+  background-color: #1AAFD0;
+  text-align: center;
+  width: 110px;
+  height: 35px;
+  border-radius: 3px;
+  left: 170px;
+  transition: all 0.3s ease;
+  transition-property: background, -webkit-box-shadow;
+}
+
+.projects-form-submit:hover{
+  background: #02CEFF;
+  -webkit-box-shadow: 0 0 0 3px #80E6FF;
+}

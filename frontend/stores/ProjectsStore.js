@@ -33,6 +33,10 @@ var _setProject = function (project) {
 };
 
 var _removeProject = function (project) {
+  if (_projects[project.id] === _mostRecentProject){
+    _mostRecentProject = {};
+  }
+
   delete _projects[project.id];
 };
 

@@ -17,7 +17,9 @@ var ProjectsIndex = React.createClass({
   },
 
   getInitialState: function () {
-    return { projects: ProjectsStore.all(), clicked: false };
+    return {
+      projects: "",
+      mousedOver: false };
   },
 
   onChange: function () {
@@ -36,7 +38,12 @@ var ProjectsIndex = React.createClass({
     } else {
       this.setState({ projects: projects })
     }
-    this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id)
+
+    if (ProjectsStore.mostRecentProject().id){
+      this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id)
+    } else {
+      this.context.router.push("/user/projects/" + filteredProjects[0].id)
+    }
   },
 
 
@@ -58,7 +65,15 @@ var ProjectsIndex = React.createClass({
     this.context.router.push("/user/projects/new")
   },
 
+  mouseOver: function (event) {
+    event.preventDefault()
+    this.setState({mousedOver: true})
+  },
 
+  mouseLeave: function (event) {
+    event.preventDefault()
+    this.setState({ mousedOver: false })
+  },
 
   render: function () {
     var projects;
@@ -107,18 +122,25 @@ var ProjectsIndex = React.createClass({
   //     </div>
   //   )
   // } else {
+  var newProject = <div></div>;
+
+  if (this.state.mousedOver){
+    newProject = <div>Create a New Project</div>
+  }
+
       return (
         <div className="whole-page group">
           <div className="sidebar">
             <img src={window.landing_logo_url} />
-            <button onClick={this.newProject} className="signup">+</button>
+            <button onClick={this.newProject} onMouseOver={this.mouseOver} onMouseLeave={this.mouseLeave} className="new-project-button">+</button>
+            { newProject }
             <ul>
               {
                 item
               }
             </ul>
           </div>
-          <div className="upward-dog-main">
+          <div className="upward-dog-main group">
             <div>{ children }</div>
           </div>
         </div>
