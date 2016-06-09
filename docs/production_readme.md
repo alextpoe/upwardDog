@@ -1,16 +1,17 @@
-# FresherNote
+# upwardDog
 
-[FresherNote live][heroku] **NB:** This should be a link to your production site
+[upwardDog live][heroku] **NB:** This should be a link to your production site
 
-[heroku]: http://www.herokuapp.com
+[heroku]: http://upward-dog.herokuapp.com
 
-FresherNote is a full-stack web application inspired by Evernote.  It utilizes Ruby on Rails on the backend, a PostgreSQL database, and React.js with a Flux architectural framework on the frontend.  
+upwardDog is a full-stack web application inspired by Asana.  It utilizes Ruby on Rails on the backend, a PostgreSQL database, and React.js with a Flux architectural framework on the frontend.  
 
 ## Features & Implementation
 
- **NB**: don't copy and paste any of this.  Many folks will implement similar features, and many employers will see the READMEs of a lot of a/A grads.  You must write in a way that distinguishes your README from that of other students', but use this as a guide for what topics to cover.  
 
-### Single-Page App
+### Single-Page App w/ Authorization
+
+upwardDog is a single-page app which means that all content is delivered onto a single static page.  This is accomplished through using React.js and the Flux architectural framework.  For security, upwardDog uses BCrypt in the Ruby on Rails backend in combination with the frontend.  In order to achieve security on the front end, upwardDog's root page listens to a `SessionStore`.  Whenever a potential user enters a page on the app, the root page decides whether to render content based on the "user" status of the potential user.  Based on a call to `SessionStore.currentUser()`
 
 FresherNote is truly a single-page; all content is delivered on one static page.  The root page listens to a `SessionStore` and renders content based on a call to `SessionStore.currentUser()`.  Sensitive information is kept out of the frontend of the app by making an API call to `SessionsController#get_user`.
 
@@ -34,7 +35,6 @@ class Api::SessionsController < ApplicationController
 
 ![image of notebook index](https://github.com/appacademy/sample-project-proposal/blob/master/docs/noteIndex.png)
 
-Note editing is implemented using the Quill.js library, allowing for a Word-processor-like user experience.
 
 ### Notebooks
 
