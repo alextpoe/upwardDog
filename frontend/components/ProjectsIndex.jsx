@@ -90,7 +90,9 @@ var ProjectsIndex = React.createClass({
 
     }
 
-    if (this.state.projects.length < 1 && this.props.location.pathname !== "/user/projects"){
+    if (this.state.projects.length < 1 &&
+        this.props.location.pathname !== "/user/projects" &&
+        this.props.location.pathname !== "/user/projects/new"){
       projects = SessionStore.currentUser().projects;
     } else {
       projects = this.state.projects;
