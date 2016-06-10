@@ -57,7 +57,7 @@ var App = React.createClass({
           </div>
         </div>
         <footer className="footer">
-          "It's a dog eat dog world. The best move upward. Dog." - Ringo Starr
+          "It's a dog eat dog world. The best move upward. Dog." - Al Gore
         </footer>
         {this.props.children}
       </div>

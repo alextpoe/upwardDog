@@ -43,7 +43,11 @@ var LoginForm = React.createClass({
       return <li key={ i }>{ errorMsg }</li>;
     });
 
-    return <ul>{ messages }</ul>
+    if (field === "base") {
+      return <ul className="errors">{ messages }</ul>
+    } else {
+      return <ul className="errors-specific">{ messages }</ul>
+    }
   },
 
   bgClick: function (){

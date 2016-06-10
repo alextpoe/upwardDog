@@ -76,6 +76,7 @@ var ProjectsDetail = React.createClass({
     if (SessionStore.isUserLoggedIn()) {
       return (
         <input
+          className="logout"
           type="submit"
           value="Log Out"
           onClick={ SessionApiUtil.logout } />

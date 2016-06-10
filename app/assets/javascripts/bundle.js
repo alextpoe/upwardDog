@@ -25264,8 +25264,10 @@
 	      this.context.router.push("/hello");
 	    } else if (this.props.params.project_id && this.props.params.project_id !== "undefined") {
 	      this.context.router.push("/user/projects/" + this.props.params.project_id);
-	    } else {
+	    } else if (SessionStore.currentUser().projects.length > 0) {
 	      this.context.router.push("/user/projects/" + SessionStore.currentUser().projects[0].id);
+	    } else {
+	      this.context.router.push("/user/projects");
 	    }
 	  },
 	
@@ -33738,7 +33740,7 @@
 	      React.createElement(
 	        'footer',
 	        { className: 'footer' },
-	        '"It\'s a dog eat dog world. The best move upward. Dog." - Ringo Starr'
+	        '"It\'s a dog eat dog world. The best move upward. Dog." - Al Gore'
 	      ),
 	      this.props.children
 	    );
@@ -33803,11 +33805,19 @@
 	      );
 	    });
 	
-	    return React.createElement(
-	      'ul',
-	      null,
-	      messages
-	    );
+	    if (field === "base") {
+	      return React.createElement(
+	        'ul',
+	        { className: 'errors' },
+	        messages
+	      );
+	    } else {
+	      return React.createElement(
+	        'ul',
+	        { className: 'errors-specific' },
+	        messages
+	      );
+	    }
 	  },
 	
 	  bgClick: function () {
@@ -34048,8 +34058,10 @@
 	
 	    if (ProjectsStore.mostRecentProject().id) {
 	      this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id);
-	    } else {
+	    } else if (filteredProjects.length > 0) {
 	      this.context.router.push("/user/projects/" + filteredProjects[0].id);
+	    } else {
+	      this.context.router.push("/user/projects");
 	    }
 	  },
 	
@@ -34082,7 +34094,20 @@
 	
 	  render: function () {
 	    var projects;
-	    if (this.state.projects.length < 1) {
+	    var logout = React.createElement('span', null);
+	
+	    if (this.props.location.pathname === "/user/projects") {
+	      logout = React.createElement(
+	        'button',
+	        {
+	          className: 'logout-projects',
+	          type: 'submit',
+	          onClick: SessionApiUtil.logout },
+	        'Log Out'
+	      );
+	    }
+	
+	    if (this.state.projects.length < 1 && this.props.location.pathname !== "/user/projects") {
 	      projects = SessionStore.currentUser().projects;
 	    } else {
 	      projects = this.state.projects;
@@ -34159,6 +34184,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'upward-dog-main group' },
+	        logout,
 	        React.createElement(
 	          'div',
 	          null,
@@ -34438,6 +34464,7 @@
 	  logout: function () {
 	    if (SessionStore.isUserLoggedIn()) {
 	      return React.createElement('input', {
+	        className: 'logout',
 	        type: 'submit',
 	        value: 'Log Out',
 	        onClick: SessionApiUtil.logout });

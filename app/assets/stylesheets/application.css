@@ -261,9 +261,32 @@
    background: #fff;
  }
 
- .whole-page{
-
+ .errors{
+   position: absolute;
+   top: 130px;
+   left: 105px;
+   animation: fadein 2s;
+   -webkit-animation: fadein 2s;
+   color: #7d26cd
  }
+
+ .errors-specific{
+   left: 10px;
+   animation: fadein 2s;
+   -webkit-animation: fadein 2s;
+   margin-top: 7px;
+   margin-left: 10px;
+   color: #7d26cd
+ }
+
+ @-webkit-keyframes fadein {
+   from {
+      opacity:0;
+    }
+    to {
+    opacity:1;
+  }
+}
 
  .sidebar{
    float: left;
@@ -535,6 +558,7 @@
    text-align: center;
    border-top: 1px solid #ccc;
    width: 100%;
+   font-size: 13px;
  }
 
  .new-project-button{
@@ -664,4 +688,52 @@
   height: 100%;
   bottom: 0px;
   left: 130px;
+}
+
+.logout-projects{
+    width: 50px;
+    position: relative;
+    color: #6969FF;
+    display: inline-block;
+    height: 13px;
+    font-size: 10px;
+    padding:  0px 5px;
+    background-color: transparent;
+    border: 1px solid #6a67ce;
+    border-radius: 3px;
+    left: 50%;
+    top: 20px;
+    text-align: center;
+    transition: all 0.5s ease;
+    transition-property: -webkit-box-shadow, background-color, color;
+  }
+
+.logout-projects:hover{
+  border: 0px;
+  background-color: #02CEFF;
+  -webkit-box-shadow: 0 0 0 3px #80E6FF;
+  color: #fff;
+}
+
+.logout{
+  width: 50px;
+  position: relative;
+  color: #6969FF;
+  display: inline-block;
+  height: 13px;
+  font-size: 10px;
+  padding:  0px 5px;
+  background-color: transparent;
+  border: 1px solid #6a67ce;
+  border-radius: 3px;
+  text-align: center;
+  transition: all 0.5s ease;
+  transition-property: -webkit-box-shadow, background-color, color;
+}
+
+.logout:hover{
+  border: 0px;
+  background-color: #02CEFF;
+  -webkit-box-shadow: 0 0 0 3px #80E6FF;
+  color: #fff;
 }

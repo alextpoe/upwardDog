@@ -21,10 +21,12 @@ var Landing = React.createClass({
       this.context.router.push(
         "/user/projects/" + this.props.params.project_id
       )
-    } else {
+    } else if (SessionStore.currentUser().projects.length > 0){
       this.context.router.push(
         "/user/projects/" + SessionStore.currentUser().projects[0].id
       )
+    } else {
+      this.context.router.push("/user/projects")
     }
   },
 

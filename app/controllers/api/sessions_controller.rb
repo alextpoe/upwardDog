@@ -20,6 +20,7 @@ class Api::SessionsController < ApplicationController
 
   def omni_auth
     @user = User.find_or_create_from_auth_hash(auth_hash)
+    @user.projects.create!(title: "My Tasks") if @user.projects.empty?
     login(@user)
     redirect_to root_url
   end

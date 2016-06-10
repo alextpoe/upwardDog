@@ -41,8 +41,10 @@ var ProjectsIndex = React.createClass({
 
     if (ProjectsStore.mostRecentProject().id){
       this.context.router.push("/user/projects/" + ProjectsStore.mostRecentProject().id)
-    } else {
+    } else if (filteredProjects.length > 0){
       this.context.router.push("/user/projects/" + filteredProjects[0].id)
+    } else {
+      this.context.router.push("/user/projects")
     }
   },
 
@@ -77,7 +79,18 @@ var ProjectsIndex = React.createClass({
 
   render: function () {
     var projects;
-    if (this.state.projects.length < 1){
+    var logout = <span></span>;
+
+    if (this.props.location.pathname === "/user/projects") {
+      logout =
+        <button
+          className="logout-projects"
+          type="submit"
+          onClick={ SessionApiUtil.logout }>Log Out</button>
+
+    }
+
+    if (this.state.projects.length < 1 && this.props.location.pathname !== "/user/projects"){
       projects = SessionStore.currentUser().projects;
     } else {
       projects = this.state.projects;
@@ -143,6 +156,7 @@ var ProjectsIndex = React.createClass({
             </ul>
           </div>
           <div className="upward-dog-main group">
+            {logout}
             <div>{ children }</div>
             <img className="background" src={window.background_url} />
           </div>
