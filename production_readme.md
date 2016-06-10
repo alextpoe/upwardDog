@@ -20,7 +20,7 @@ upwardDog is a single-page app which means that all content is delivered onto a 
 ### Projects
 
 Projects were implemented after tasks were completed.  Due to the organizational structure of upwardDog, this required a reorganization of the tasks to accommodate projects.  Projects began with a projects table and was joined with users in a join table, because projects have many users (employees) and users have many projects.   Because of the join table, projects can now be created through a user.  The projects table contains columns for `title`, `description`, `manager_id`.  
-The React component structure is similar to that of tasks.  The `ProjectsIndex` is the index route and shows the project titles on the sidebar.  The main part of the page has a `ProjectsShow` that shows the title of the currently displayed project.  Projects can be edited through the `ProjectsEdit` component.
+The React component structure is similar to that of tasks.  The `ProjectsIndex` is the index route and shows the project titles on the sidebar.  The main part of the page has a `ProjectsShow` that shows the title of the currently displayed project.  Projects can be edited through the `EditProjectsForm` component.
 
 
 ## Future Directions for the Project

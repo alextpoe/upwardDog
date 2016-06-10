@@ -79,6 +79,11 @@ var TasksIndex = React.createClass({
       )
     }
 
+    taskItem.sort(function(obj1, obj2) {
+      return obj1.key - obj2.key
+    })
+
+
     if (this.state.edited && this.props.children) {
       return (
         <div className="task-container group">

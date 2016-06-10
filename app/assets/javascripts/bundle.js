@@ -32412,6 +32412,10 @@
 	      });
 	    }
 	
+	    taskItem.sort(function (obj1, obj2) {
+	      return obj1.key - obj2.key;
+	    });
+	
 	    if (this.state.edited && this.props.children) {
 	      return React.createElement(
 	        'div',
@@ -34108,7 +34112,7 @@
 	    }
 	
 	    if (this.state.projects.length < 1 && this.props.location.pathname !== "/user/projects" && this.props.location.pathname !== "/user/projects/new") {
-	      projects = SessionStore.currentUser().projects;
+	      projects = ProjectsStore.all();
 	    } else {
 	      projects = this.state.projects;
 	    }

@@ -36,7 +36,7 @@ var ProjectsIndex = React.createClass({
       })
       this.setState({ projects: filteredProjects })
     } else {
-      this.setState({ projects: projects })
+      this.setState({ projects: projects})
     }
 
     if (ProjectsStore.mostRecentProject().id){
@@ -93,7 +93,7 @@ var ProjectsIndex = React.createClass({
     if (this.state.projects.length < 1 &&
         this.props.location.pathname !== "/user/projects" &&
         this.props.location.pathname !== "/user/projects/new"){
-      projects = SessionStore.currentUser().projects;
+      projects = ProjectsStore.all();
     } else {
       projects = this.state.projects;
     }
