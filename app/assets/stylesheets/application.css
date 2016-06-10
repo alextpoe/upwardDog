@@ -271,12 +271,14 @@
  }
 
  .errors-specific{
-   left: 10px;
+   left: 70px;
+   position: absolute;
    animation: fadein 2s;
    -webkit-animation: fadein 2s;
    margin-top: 7px;
    margin-left: 10px;
-   color: #7d26cd
+   color: #7d26cd;
+   width: 305px;
  }
 
  @-webkit-keyframes fadein {
@@ -286,6 +288,11 @@
     to {
     opacity:1;
   }
+}
+
+.errors-specific > li {
+  position: absolute;
+  bottom: 7px;
 }
 
  .sidebar{
