@@ -21,30 +21,7 @@ var ProjectsDetail = React.createClass({
   },
 
   onChange: function () {
-    // this.user = SessionStore.currentUser();
-    // var project = this.props.user.projects[0]
-    //
-    // this.setState({
-    //   title: project.title,
-    //   description: project.description,
-    //   tasks: project.tasks,
-    //   id: project.project_id
-    // })
-    // var possibleProject = ProjectsStore.find(this.props.params.project_id)
-    //
-    // var project = possibleProject ? possibleProject : null
-    // if (project){
-    //   this.setState({
-    //     title: project.title,
-    //     description: project.description,
-    //   })
-    // } else {
-    //   this.setState({
-    //     title: "",
-    //     description: ""
-    //   })
-    // }
-    // debugger
+    
   },
 
 

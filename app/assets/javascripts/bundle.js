@@ -34121,7 +34121,6 @@
 	    if (projects && projects.length > 0) {
 	
 	      item = projects.map(function (project) {
-	        if (!project.id) console.log(project);
 	        return React.createElement(ProjectsIndexItem, { project: project, key: project.id });
 	      });
 	    }
@@ -34136,26 +34135,6 @@
 	      });
 	    });
 	
-	    //   if (this.state.clicked) {
-	    //     return (
-	    //     <div className="whole-page group">
-	    //       <NewProjectsForm>
-	    //       <div className="sidebar">
-	    //         <img src={window.landing_logo_url} />
-	    //         <button onClick={this.newProject} className="signup">+</button>
-	    //         <ul>
-	    //           {
-	    //             item
-	    //           }
-	    //         </ul>
-	    //       </div>
-	    //       <div className="upward-dog-main">
-	    //         { children }
-	    //       </div>
-	    //     </NewProjectsForm>
-	    //     </div>
-	    //   )
-	    // } else {
 	    var newProject = React.createElement('div', null);
 	
 	    if (this.state.mousedOver) {
@@ -34197,7 +34176,6 @@
 	        React.createElement('img', { className: 'background', src: window.background_url })
 	      )
 	    );
-	    // }
 	  }
 	});
 	
@@ -34414,32 +34392,7 @@
 	    };
 	  },
 	
-	  onChange: function () {
-	    // this.user = SessionStore.currentUser();
-	    // var project = this.props.user.projects[0]
-	    //
-	    // this.setState({
-	    //   title: project.title,
-	    //   description: project.description,
-	    //   tasks: project.tasks,
-	    //   id: project.project_id
-	    // })
-	    // var possibleProject = ProjectsStore.find(this.props.params.project_id)
-	    //
-	    // var project = possibleProject ? possibleProject : null
-	    // if (project){
-	    //   this.setState({
-	    //     title: project.title,
-	    //     description: project.description,
-	    //   })
-	    // } else {
-	    //   this.setState({
-	    //     title: "",
-	    //     description: ""
-	    //   })
-	    // }
-	    // debugger
-	  },
+	  onChange: function () {},
 	
 	  componentDidMount: function () {
 	    this.projectsListener = ProjectsStore.addListener(this.onChange);

@@ -103,7 +103,6 @@ var ProjectsIndex = React.createClass({
 
       item = (
         projects.map(function (project) {
-          if (!project.id) console.log( project ); 
           return <ProjectsIndexItem project={ project } key={ project.id }/>
         })
       )
@@ -119,26 +118,6 @@ var ProjectsIndex = React.createClass({
       })
     });
 
-  //   if (this.state.clicked) {
-  //     return (
-  //     <div className="whole-page group">
-  //       <NewProjectsForm>
-  //       <div className="sidebar">
-  //         <img src={window.landing_logo_url} />
-  //         <button onClick={this.newProject} className="signup">+</button>
-  //         <ul>
-  //           {
-  //             item
-  //           }
-  //         </ul>
-  //       </div>
-  //       <div className="upward-dog-main">
-  //         { children }
-  //       </div>
-  //     </NewProjectsForm>
-  //     </div>
-  //   )
-  // } else {
   var newProject = <div></div>;
 
   if (this.state.mousedOver){
@@ -164,7 +143,6 @@ var ProjectsIndex = React.createClass({
           </div>
         </div>
       )
-    // }
   }
 });
 
