@@ -69,6 +69,8 @@ var TasksIndex = React.createClass({
     var tasks = this.state.tasks ? this.state.tasks : [];
     var taskItem = <div></div>;
 
+
+
     if (tasks) {
       taskItem = (
         tasks.map(function (task) {

@@ -34280,7 +34280,7 @@
 	  },
 	
 	  bgClick: function () {
-	    this.context.router.push("/user/projects/" + this.props.params.project_id);
+	    this.context.router.push("/user/projects/" + this.props.user.projects[0].id);
 	  },
 	
 	  onSubmit: function (event) {
@@ -34309,7 +34309,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement('div', { className: 'login' }),
+	      React.createElement('div', { className: 'login', onClick: this.bgClick }),
 	      React.createElement(
 	        'form',
 	        { className: 'projects-form', onSubmit: this.onSubmit },
@@ -34520,11 +34520,15 @@
 	    this.setState({ description: newDescription });
 	  },
 	
+	  bgClick: function () {
+	    this.context.router.push("/user/projects/" + this.props.params.id);
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement('div', { className: 'login' }),
+	      React.createElement('div', { className: 'login', onClick: this.bgClick }),
 	      React.createElement(
 	        'form',
 	        { className: 'projects-form', onSubmit: this.onSubmit },

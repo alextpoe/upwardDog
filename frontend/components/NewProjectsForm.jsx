@@ -12,7 +12,7 @@ var NewProjectsForm = React.createClass({
   },
 
   bgClick: function (){
-    this.context.router.push("/user/projects/" + this.props.params.project_id);
+    this.context.router.push("/user/projects/" + this.props.user.projects[0].id);
   },
 
   onSubmit: function(event) {
@@ -40,7 +40,7 @@ var NewProjectsForm = React.createClass({
   render: function () {
     return (
       <div>
-        <div className="login"></div>
+        <div className="login" onClick={this.bgClick}></div>
         <form className="projects-form" onSubmit={this.onSubmit}>
           <h1 >Create Project</h1>
           <div className="projects-form-fields">
