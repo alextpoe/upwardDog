@@ -172,6 +172,7 @@
    bottom: 0px;
    margin: auto;
    background: rgba(0, 0, 0, 0.4);
+   z-index: 2;
  }
 
  .twitter{
@@ -194,6 +195,7 @@
    left: 50%;
    top: 50%;
    transform: translateY(-50%) translateX(-50%);
+   z-index: 3;
  }
 
  .form-heading{
@@ -372,6 +374,7 @@
    display: block;
    position: absolute;
    opacity: .85;
+   z-index: 1;
  }
 
  .task-main-unclicked{
@@ -509,6 +512,7 @@
 
  .edit-list > li> input:hover,
  .edit-list > li> textarea:hover{
+   padding: 4px 9px 4px 4px;
    border: 1px solid #ccc;
    border-radius: 3px;
  }
@@ -591,18 +595,37 @@
  }
 
  .new-project-button:hover{
+   margin-bottom: 30px;
    background-color: #7d26cd;
    -webkit-box-shadow: 0 0 0 2px #9b30FF;
  }
+
+
 
 .project-list-item{
   color: #E1E2E4;
   font-weight: 200;
   font-size: 14px;
-  margin: 10px 25px;
+  margin: 30px 25px;
 }
 
-.project-list-item > button {
+
+.project-list-item-hover:first-child{
+  color: #E1E2E4;
+  font-weight: 200;
+  font-size: 14px;
+  margin: 30px 25px -17px 25px;
+}
+
+.project-list-item-hover{
+  color: #E1E2E4;
+  font-weight: 200;
+  font-size: 14px;
+  margin: 0px 25px -17px 25px;
+}
+
+
+.project-list-item-hover > button {
   width: 50px;
   position: relative;
   color: #6969FF;
@@ -619,7 +642,7 @@
   transition-property: -webkit-box-shadow, background-color, color;
 }
 
-.project-list-item > button:hover{
+.project-list-item-hover > button:hover{
   border: 0px;
   background-color: #02CEFF;
   -webkit-box-shadow: 0 0 0 3px #80E6FF;
@@ -635,7 +658,7 @@
   border-radius: 3px;
   top: 100px;
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
 
 .projects-form > h1{

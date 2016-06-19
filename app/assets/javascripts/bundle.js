@@ -34160,7 +34160,7 @@
 	        newProject,
 	        React.createElement(
 	          'ul',
-	          null,
+	          { className: 'project-list' },
 	          item
 	        )
 	      ),
@@ -34225,7 +34225,7 @@
 	    if (this.state.hovered) {
 	      return React.createElement(
 	        'li',
-	        { className: 'project-list-item', onMouseOver: this.mouseOver, onMouseLeave: this.mouseLeave },
+	        { className: 'project-list-item-hover', onMouseOver: this.mouseOver, onMouseLeave: this.mouseLeave },
 	        React.createElement(
 	          Link,
 	          { to: "/user/projects/" + this.props.project.id },

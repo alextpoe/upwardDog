@@ -36,7 +36,7 @@ var ProjectsIndexItem = React.createClass({
   render: function () {
     if (this.state.hovered) {
       return (
-        <li className="project-list-item" onMouseOver={this.mouseOver} onMouseLeave={this.mouseLeave}>
+        <li className="project-list-item-hover" onMouseOver={this.mouseOver} onMouseLeave={this.mouseLeave}>
           <Link to={"/user/projects/" + this.props.project.id } >{this.props.project.title}</Link>
           <br/>
           <button type="submit" onClick={this.deleteClick}>Delete</button>

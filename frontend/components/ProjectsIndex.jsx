@@ -130,7 +130,7 @@ var ProjectsIndex = React.createClass({
             <img src={window.landing_logo_url} />
             <button onClick={this.newProject} onMouseOver={this.mouseOver} onMouseLeave={this.mouseLeave} className="new-project-button">+</button>
             { newProject }
-            <ul>
+            <ul className="project-list">
               {
                 item
               }
