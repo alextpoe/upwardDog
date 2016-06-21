@@ -5,6 +5,3 @@ json.array! @projects do |project|
   json.tasks project.tasks
   json.id project.id
 end
-
-# json.completed task.completed
-# json.assignee_id task.assignee_id

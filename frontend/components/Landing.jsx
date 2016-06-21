@@ -47,6 +47,7 @@ var Landing = React.createClass({
   },
 
   render: function () {
+
     return (
       <div>
         { this.logout() }

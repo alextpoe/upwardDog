@@ -1,6 +1,3 @@
-# json.extract! @user, :id, :username, :projects
-
-
 json.id @user.id
 json.username @user.username
 json.projects @user.projects do |project|

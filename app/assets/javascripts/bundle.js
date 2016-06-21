@@ -81,7 +81,7 @@
 	  React.createElement(IndexRoute, { component: ProjectsIndex }),
 	  React.createElement(
 	    Route,
-	    { path: '/user/projects', component: ProjectsIndex },
+	    { path: '/user/projects', component: ProjectsIndex, onEnter: redirectIfNotLoggedIn },
 	    React.createElement(Route, { path: '/user/projects/new', component: NewProjectsForm }),
 	    React.createElement(Route, { path: '/user/projects/:id/edit', component: EditProjectsForm }),
 	    React.createElement(
@@ -100,15 +100,15 @@
 	
 	function _ensureLoggedIn(nextState, replace, asyncDoneCallback) {
 	  if (SessionStore.currentUserHasBeenFetched()) {
-	    redirectIfNotLoggedIn();
+	    asyncDoneCallback();
 	  } else {
-	    SessionApiUtil.fetchCurrentUser(redirectIfNotLoggedIn);
+	    SessionApiUtil.fetchCurrentUser(asyncDoneCallback);
 	  }
+	}
 	
-	  function redirectIfNotLoggedIn() {
-	    if (!SessionStore.isUserLoggedIn()) {
-	      replace('/hello/login');
-	    }
+	function redirectIfNotLoggedIn(nextState, replace) {
+	  if (!SessionStore.isUserLoggedIn()) {
+	    replace('/hello');
 	  }
 	}
 	
@@ -25286,6 +25286,7 @@
 	  },
 	
 	  render: function () {
+	
 	    return React.createElement(
 	      'div',
 	      null,

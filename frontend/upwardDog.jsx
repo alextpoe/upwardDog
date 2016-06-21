@@ -23,14 +23,14 @@ var SessionApiUtil = require('./util/SessionApiUtil');
 var TasksApiUtil = require('./util/TasksApiUtil');
 
 var routes = (
-  <Route path="/" component={Landing}>
+  <Route path="/" component={Landing} >
     <Route path="/hello" component={App} >
       <Route path="/hello/login" component={ LoginForm } />
       <Route path="/hello/signup" component={ LoginForm } />
       <Route path="/hello/login/guest" component={ LoginForm } />
     </Route>
     <IndexRoute component={ProjectsIndex} />
-    <Route path="/user/projects" component={ProjectsIndex}>
+    <Route path="/user/projects" component={ProjectsIndex} onEnter={ redirectIfNotLoggedIn }>
       <Route path="/user/projects/new" component={NewProjectsForm} />
       <Route path="/user/projects/:id/edit" component={EditProjectsForm} />
       <Route path="/user/projects/:project_id" component={ProjectsDetail} >
@@ -47,15 +47,15 @@ var routes = (
 
 function _ensureLoggedIn(nextState, replace, asyncDoneCallback) {
   if (SessionStore.currentUserHasBeenFetched()){
-    redirectIfNotLoggedIn();
+    asyncDoneCallback();
   } else {
-    SessionApiUtil.fetchCurrentUser(redirectIfNotLoggedIn);
+    SessionApiUtil.fetchCurrentUser(asyncDoneCallback);
   }
+}
 
-  function redirectIfNotLoggedIn() {
-    if (!SessionStore.isUserLoggedIn()) {
-      replace('/hello/login');
-    }
+function redirectIfNotLoggedIn(nextState, replace) {
+  if (!SessionStore.isUserLoggedIn()) {
+    replace('/hello');
   }
 }
 
