@@ -3,7 +3,7 @@
 [upwardDog live][heroku]
 [heroku]: http://upward-dog.herokuapp.com
 
-![upwardDog ScreenShot](assets/images/upwardDog-screen-shot.png)
+![upwardDog ScreenShot](app/assets/images/upwardDog-screen-shot.png)
 
 upwardDog is a full-stack web application inspired by Asana.  It utilizes Ruby on Rails on the backend, a PostgreSQL database, and React.js with a Flux architectural framework on the frontend.  
 
