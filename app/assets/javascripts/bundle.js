@@ -34320,8 +34320,6 @@
 	    };
 	  },
 	
-	  onChange: function () {},
-	
 	  componentDidMount: function () {
 	    this.projectsListener = ProjectsStore.addListener(this.onChange);
 	    this.sessionListener = SessionStore.addListener(this.forceUpdate.bind(this));
