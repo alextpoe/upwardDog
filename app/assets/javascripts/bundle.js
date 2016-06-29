@@ -54,15 +54,14 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	
 	var Landing = __webpack_require__(220);
-	var App = __webpack_require__(272);
-	var LoginForm = __webpack_require__(273);
+	var App = __webpack_require__(271);
+	var LoginForm = __webpack_require__(272);
 	var TasksIndex = __webpack_require__(250);
-	var TasksCreate = __webpack_require__(259);
-	var TasksEdit = __webpack_require__(260);
-	var ProjectsIndex = __webpack_require__(276);
-	var ProjectsDetail = __webpack_require__(279);
-	var NewProjectsForm = __webpack_require__(278);
-	var EditProjectsForm = __webpack_require__(280);
+	var TasksEdit = __webpack_require__(259);
+	var ProjectsIndex = __webpack_require__(275);
+	var ProjectsDetail = __webpack_require__(278);
+	var NewProjectsForm = __webpack_require__(277);
+	var EditProjectsForm = __webpack_require__(279);
 	
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
@@ -91,7 +90,6 @@
 	      React.createElement(
 	        Route,
 	        { path: '/user/projects/:project_id/tasks', component: TasksIndex },
-	        React.createElement(Route, { path: '/user/projects/:project_id/tasks/new', component: TasksCreate }),
 	        React.createElement(Route, { path: '/user/projects/:project_id/tasks/:id/edit', component: TasksEdit })
 	      )
 	    )
@@ -32346,8 +32344,7 @@
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
 	var ProjectsApiUtil = __webpack_require__(247);
-	var TasksCreate = __webpack_require__(259);
-	var TasksEdit = __webpack_require__(260);
+	var TasksEdit = __webpack_require__(259);
 	
 	var TasksIndex = React.createClass({
 	  displayName: 'TasksIndex',
@@ -32895,77 +32892,7 @@
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var TasksIndexItem = __webpack_require__(251);
-	var TasksStore = __webpack_require__(256);
-	var SessionStore = __webpack_require__(221);
-	var ClientActions = __webpack_require__(252);
-	var TasksForm = __webpack_require__(258);
-	
-	var TasksCreate = React.createClass({
-	  displayName: 'TasksCreate',
-	
-	  getInitialState: function () {
-	    return {
-	      title: "",
-	      description: "",
-	      manager_id: "",
-	      assignee_id: SessionStore.currentUser().id,
-	      project_id: "",
-	      completed: false
-	    };
-	  },
-	
-	  titleChange: function (event) {
-	    this.setState({ title: event.target.value });
-	  },
-	
-	  descriptionChange: function (event) {
-	    this.setState({ description: event.target.value });
-	  },
-	
-	  onSubmit: function (event) {
-	    event.preventDefault();
-	    ClientActions.createTask(this.state);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      null,
-	      React.createElement(
-	        'li',
-	        null,
-	        'Title: ',
-	        React.createElement('input', { value: this.state.title, onChange: this.titleChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        'Description: ',
-	        React.createElement('input', { value: this.state.description, onChange: this.descriptionChange })
-	      ),
-	      React.createElement(
-	        'li',
-	        null,
-	        React.createElement(
-	          'button',
-	          { type: 'submit', onClick: this.onSubmit },
-	          'Submit'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TasksCreate;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var OnUnload = __webpack_require__(261).OnUnload;
+	var OnUnload = __webpack_require__(260).OnUnload;
 	var TasksIndexItem = __webpack_require__(251);
 	var TasksStore = __webpack_require__(256);
 	var SessionStore = __webpack_require__(221);
@@ -33133,24 +33060,24 @@
 	module.exports = TasksEdit;
 
 /***/ },
-/* 261 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  OnResize: __webpack_require__(262),
-	  OnScroll: __webpack_require__(270),
-	  OnUnload: __webpack_require__(271)
+	  OnResize: __webpack_require__(261),
+	  OnScroll: __webpack_require__(269),
+	  OnUnload: __webpack_require__(270)
 	};
 	
 
 
 /***/ },
-/* 262 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global window */
 	
-	var throttle = __webpack_require__(263);
+	var throttle = __webpack_require__(262);
 	
 	module.exports = {
 	  getInitialState: function() {
@@ -33183,7 +33110,7 @@
 
 
 /***/ },
-/* 263 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33194,9 +33121,9 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var debounce = __webpack_require__(264),
-	    isFunction = __webpack_require__(265),
-	    isObject = __webpack_require__(266);
+	var debounce = __webpack_require__(263),
+	    isFunction = __webpack_require__(264),
+	    isObject = __webpack_require__(265);
 	
 	/** Used as an internal `_.debounce` options object */
 	var debounceOptions = {
@@ -33260,7 +33187,7 @@
 
 
 /***/ },
-/* 264 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33271,9 +33198,9 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var isFunction = __webpack_require__(265),
-	    isObject = __webpack_require__(266),
-	    now = __webpack_require__(268);
+	var isFunction = __webpack_require__(264),
+	    isObject = __webpack_require__(265),
+	    now = __webpack_require__(267);
 	
 	/* Native method shortcuts for methods with the same name as other `lodash` methods */
 	var nativeMax = Math.max;
@@ -33422,7 +33349,7 @@
 
 
 /***/ },
-/* 265 */
+/* 264 */
 /***/ function(module, exports) {
 
 	/**
@@ -33455,7 +33382,7 @@
 
 
 /***/ },
-/* 266 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33466,7 +33393,7 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var objectTypes = __webpack_require__(267);
+	var objectTypes = __webpack_require__(266);
 	
 	/**
 	 * Checks if `value` is the language type of Object.
@@ -33500,7 +33427,7 @@
 
 
 /***/ },
-/* 267 */
+/* 266 */
 /***/ function(module, exports) {
 
 	/**
@@ -33526,7 +33453,7 @@
 
 
 /***/ },
-/* 268 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33537,7 +33464,7 @@
 	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <http://lodash.com/license>
 	 */
-	var isNative = __webpack_require__(269);
+	var isNative = __webpack_require__(268);
 	
 	/**
 	 * Gets the number of milliseconds that have elapsed since the Unix epoch
@@ -33560,7 +33487,7 @@
 
 
 /***/ },
-/* 269 */
+/* 268 */
 /***/ function(module, exports) {
 
 	/**
@@ -33600,12 +33527,12 @@
 
 
 /***/ },
-/* 270 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global window */
 	
-	var throttle = __webpack_require__(263);
+	var throttle = __webpack_require__(262);
 	
 	module.exports = {
 	  getInitialState: function() {
@@ -33631,7 +33558,7 @@
 
 
 /***/ },
-/* 271 */
+/* 270 */
 /***/ function(module, exports) {
 
 	/*global window */
@@ -33658,7 +33585,7 @@
 
 
 /***/ },
-/* 272 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33755,15 +33682,15 @@
 	module.exports = App;
 
 /***/ },
-/* 273 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var SessionStore = __webpack_require__(221);
-	var ErrorStore = __webpack_require__(274);
+	var ErrorStore = __webpack_require__(273);
 	var SessionApiUtil = __webpack_require__(244);
-	var UserApiUtil = __webpack_require__(275);
+	var UserApiUtil = __webpack_require__(274);
 	var ProjectsApiUtil = __webpack_require__(247);
 	
 	var LoginForm = React.createClass({
@@ -33938,7 +33865,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 274 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(222).Store;
@@ -33988,7 +33915,7 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 275 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var SessionActions = __webpack_require__(245);
@@ -34016,7 +33943,7 @@
 	module.exports = UserApiUtil;
 
 /***/ },
-/* 276 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34024,11 +33951,11 @@
 	var ClientActions = __webpack_require__(252);
 	var SessionStore = __webpack_require__(221);
 	var SessionApiUtil = __webpack_require__(244);
-	var ProjectsIndexItem = __webpack_require__(277);
+	var ProjectsIndexItem = __webpack_require__(276);
 	var ProjectsStore = __webpack_require__(257);
 	var TasksIndex = __webpack_require__(250);
 	var TasksStore = __webpack_require__(256);
-	var NewProjectsForm = __webpack_require__(278);
+	var NewProjectsForm = __webpack_require__(277);
 	
 	var ProjectsIndex = React.createClass({
 	  displayName: 'ProjectsIndex',
@@ -34183,7 +34110,7 @@
 	module.exports = ProjectsIndex;
 
 /***/ },
-/* 277 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34262,7 +34189,7 @@
 	module.exports = ProjectsIndexItem;
 
 /***/ },
-/* 278 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34367,13 +34294,13 @@
 	module.exports = NewProjectsForm;
 
 /***/ },
-/* 279 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var TasksIndex = __webpack_require__(250);
-	var ProjectsIndex = __webpack_require__(276);
+	var ProjectsIndex = __webpack_require__(275);
 	var ProjectsStore = __webpack_require__(257);
 	var ClientActions = __webpack_require__(252);
 	var SessionStore = __webpack_require__(221);
@@ -34468,7 +34395,7 @@
 	module.exports = ProjectsDetail;
 
 /***/ },
-/* 280 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

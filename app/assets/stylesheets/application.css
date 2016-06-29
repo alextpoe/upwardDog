@@ -97,7 +97,7 @@
    top: 50%;
    right: 25px;
    bottom: 5px;
-   transition: all 0.5s ease;
+   transition: all 0.3s ease;
    transition-property: -webkit-box-shadow, background-color, color, border;
  }
 
@@ -105,7 +105,7 @@
    background-color: #696969;
    color: #fff;
    -webkit-box-shadow: 0 0 0 2px #4d4d4d;
-   border: 0px;
+   border: 1px solid;
  }
 
  .signup{
@@ -643,9 +643,9 @@
 }
 
 .project-list-item-hover > button:hover{
-  border: 0px;
+  border: 1px solid;
   background-color: #02CEFF;
-  -webkit-box-shadow: 0 0 0 3px #80E6FF;
+  -webkit-box-shadow: 0 0 0 2px #80E6FF;
   color: #fff;
 }
 

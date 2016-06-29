@@ -8,7 +8,6 @@ var TasksForm = require('./TasksForm');
 var SessionStore = require('../stores/SessionStore');
 var SessionApiUtil = require('../util/SessionApiUtil');
 var ProjectsApiUtil = require('../util/ProjectsApiUtil');
-var TasksCreate = require('./TasksCreate');
 var TasksEdit = require('./TasksEdit');
 
 var TasksIndex = React.createClass({
