@@ -22,5 +22,5 @@ node_modules
 /config/application.yml
 
 # Ignore DS_store and byebug files
-/.DS_Store
-/.byebug_history
+.DS_Store
+.byebug_history
